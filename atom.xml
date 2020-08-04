@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://cxx7ud.coding-pages.com/</id>
+    <title>CofCai&apos;s blog</title>
+    <updated>2020-08-04T13:34:02.335Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://cxx7ud.coding-pages.com/"/>
+    <link rel="self" href="https://cxx7ud.coding-pages.com/atom.xml"/>
+    <subtitle>more disciplined, more free</subtitle>
+    <logo>https://cxx7ud.coding-pages.com/images/avatar.png</logo>
+    <icon>https://cxx7ud.coding-pages.com/favicon.ico</icon>
+    <rights>All rights reserved 2020, CofCai&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[sublime中的宏]]></title>
+        <id>https://cxx7ud.coding-pages.com/post/sublime-zhong-de-hong/</id>
+        <link href="https://cxx7ud.coding-pages.com/post/sublime-zhong-de-hong/">
+        </link>
+        <updated>2020-08-04T13:27:42.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="什么是宏">什么是宏</h1>
+<p>宏不仅只在sublime中有，在excel中也有，其它软件中也有，所以宏是一种用于工作自动化的工具（我自己的理解）</p>
+<p><strong>理解1</strong></p>
+<p>计算机科学里的宏（Macro)，是一种<strong>批量处理</strong>的称谓。一般说来，宏是一种<strong>规则或模式</strong>，或称语法替换 ，用于说明某一特定输入（通常是字符串）如何根据预定义的规则转换成对应的输出（通常也是字符串)。这种替换在预编译时进行，称作宏展开。</p>
+<p><strong>理解2</strong></p>
+<p>Microsoft Word中对宏定义为：“宏就是能组织到一起作为一独立的命令使用的一系列word命令，它能使日常工作变得更容易”</p>
+<p><strong>所以</strong></p>
+<p>宏就是一些列动作（规则/命令）的集合，用于批处理，提高工作效率</p>
+<h1 id="sublime中的宏">sublime中的宏</h1>
+<p><a href="https://www.cnblogs.com/binlucky/p/6970917.html">参看1</a></p>
+<p><a href="https://blog.csdn.net/zhezhebie/article/details/71636983">参看2</a></p>
+<h1 id="sublime中的使用步骤">sublime中的使用步骤</h1>
+<ul>
+<li>Ctrl+Q：录制宏</li>
+<li>组织自己的命令/规则</li>
+<li>Ctrl+Q：结束录制宏</li>
+<li>Ctrl+Shift+Q：使用刚才录制的宏</li>
+<li>也可以将录制的宏保存为文件，并设置快捷键</li>
+</ul>
+<h2 id="实例1">实例1</h2>
+<blockquote>
+<p><strong>在行尾添加“-hello”</strong></p>
+</blockquote>
+<p>人工的操作步骤如下（首先让sublime处于VIM模式）：</p>
+<ul>
+<li>按Ctrl+A（跳到最后一行）并进入输入模式</li>
+<li>输入-hello</li>
+<li>按ESC（进入vim模式）</li>
+<li>按j（vim中是光标下移）-（目前回到了最初的VIM模式）</li>
+</ul>
+<p>然后我们重复以上步骤即可（所以可以录制上面的命令保存为文件并设置快捷键）</p>
+<p>即录制过程为：</p>
+<ul>
+<li>先进入VIM模式</li>
+<li>Ctrl+Q（开始录制宏，底部显示正在录制宏）<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1596547947775.png" alt="截图1" loading="lazy"></li>
+<li>按Ctrl+A（跳到最后一行）并进入输入模式</li>
+<li>输入-hello</li>
+<li>按ESC（进入vim模式）</li>
+<li>按j（vim中是光标下移）-（目前回到了最初的VIM模式）</li>
+<li>Ctrl+Q（结束录制宏，底部显示录制了几个命令）<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1596547846140.png" alt="截图2" loading="lazy"></li>
+</ul>
+<p>然后就可以使用Ctrl+Shift+Q使用刚才录制的宏或者为其设置快捷键</p>
+<h2 id="效果">效果</h2>
+<figure data-type="image" tabindex="1"><img src="https://cxx7ud.coding-pages.com//post-images/1596547986457.png" alt="效果" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Hello Gridea]]></title>
+        <id>https://cxx7ud.coding-pages.com/post/hello-gridea/</id>
+        <link href="https://cxx7ud.coding-pages.com/post/hello-gridea/">
+        </link>
+        <updated>2018-12-11T16:00:00.000Z</updated>
+        <summary type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
+✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
+✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
+<!-- more -->
+<p><a href="https://github.com/getgridea/gridea">Github</a><br>
+<a href="https://gridea.dev/">Gridea 主页</a><br>
+<a href="http://fehey.com/">示例网站</a></p>
+<h2 id="特性">特性👇</h2>
+<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
+<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
+<p>🏷️  你可以对文章进行标签分组</p>
+<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
+<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
+<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
+<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
+<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
+<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
+<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
+<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
+<p>未来，它一定会成为你离不开的伙伴</p>
+<p>尽情发挥你的才华吧！</p>
+<p>😘 Enjoy~</p>
+]]></content>
+    </entry>
+</feed>
