@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://cxx7ud.coding-pages.com/</id>
     <title>CofCai&apos;s blog</title>
-    <updated>2020-08-06T14:12:15.243Z</updated>
+    <updated>2020-08-07T11:00:09.520Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://cxx7ud.coding-pages.com/"/>
     <link rel="self" href="https://cxx7ud.coding-pages.com/atom.xml"/>
@@ -10,6 +10,77 @@
     <logo>https://cxx7ud.coding-pages.com/images/avatar.png</logo>
     <icon>https://cxx7ud.coding-pages.com/favicon.ico</icon>
     <rights>All rights reserved 2020, CofCai&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[matlab常用函数]]></title>
+        <id>https://cxx7ud.coding-pages.com/post/matlab-CYHS/</id>
+        <link href="https://cxx7ud.coding-pages.com/post/matlab-CYHS/">
+        </link>
+        <updated>2020-08-07T10:45:58.000Z</updated>
+        <content type="html"><![CDATA[<p><strong>1. 随机类</strong></p>
+<p><strong>1.1 randperm</strong></p>
+<p><strong>作用：随机生成一系列有序的数，参看</strong>https://blog.csdn.net/u013476464/article/details/25198071</p>
+<pre><code class="language-matlab">p = randperm(6)
+p = randperm(10, 3) % 从0~10中产生3个数，且各不一样 
+</code></pre>
+<p><img src="file://D:/CDJ2/%E6%B2%BB%E7%96%97/MATLAB%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0.assets/clipboard.png" alt="img" loading="lazy"><br>
+<strong>1.2 排列组合-nchoosek</strong></p>
+<p>参看：https://blog.csdn.net/yangziluomu/article/details/50215443</p>
+<pre><code class="language-matlab">n = [1 4 2 7 8 3 9 5 6];  % 元素可以重复
+k = 3; res = nchoosek(n, k); % n是一个向量，从n中选k个元素 
+</code></pre>
+<p>结果如下（部分截图）：</p>
+<figure data-type="image" tabindex="1"><img src="D:%5CCDJ2%5C%E6%B2%BB%E7%96%97%5CMATLAB%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0.assets%5Cclipboard.png" alt="img" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="D:%5CCDJ2%5C%E6%B2%BB%E7%96%97%5CMATLAB%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0.assets%5Cclipboard.png" alt="img" loading="lazy"></figure>
+<p><strong>2.获取一个向量元素在另一个向量种的索引</strong></p>
+<p><strong>2.1 ismember</strong></p>
+<p>ismember只能获取首个，不能获取所有的</p>
+<pre><code class="language-matlab">x = [2 1 4 3];
+y = [3 7 3 8 9 1 2 3 7 5 ];
+[is pos] = ismember(x, y); 
+</code></pre>
+<p>结果如下：因为y种没有4，所以第三个索引为0</p>
+<figure data-type="image" tabindex="3"><img src="D:%5CCDJ2%5C%E6%B2%BB%E7%96%97%5CMATLAB%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0.assets%5Cclipboard.png" alt="img" loading="lazy"></figure>
+<p>**2.2 参看：**https://www.ilovematlab.cn/thread-469661-1-1.html</p>
+<pre><code class="language-matlab">a = [6 4 12 12 6 7 2 3 1 6 9 12 15 15];  % a和b的维度可以不一致
+b = [7 12 14 13 2 8 3 4 6 9 10 15 5 11];  % b中的元素也可以重复
+[ia,ib]=find(bsxfun(@eq,a,b')); w=accumarray(ib,1:numel(ib),[],@(x){ia(x)}); celldisp(w) % w是一个元组，维度同a，即w{ia}代表a的第i个元素在b中的索引（可以为多个） 
+</code></pre>
+<p>结果如下：</p>
+<p><img src="file://D:/CDJ2/%E6%B2%BB%E7%96%97/MATLAB%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0.assets/clipboard.png" alt="img" loading="lazy"><br>
+<strong>3. 求向量或矩阵的累计和/积向量</strong></p>
+<p>累计和：cumsum(X)</p>
+<p>累计积：cumprod(X)</p>
+<p>参看：https://blog.csdn.net/qq_32515081/article/details/81053959</p>
+<p>效果：</p>
+<figure data-type="image" tabindex="4"><img src="D:%5CCDJ2%5C%E6%B2%BB%E7%96%97%5CMATLAB%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0.assets%5Cclipboard.png" alt="img" loading="lazy"></figure>
+<p><strong>4. 怎么找到一个向量中的元素与另一个向量中那个元素最近？</strong></p>
+<p>参看：<a href="https://www.ilovematlab.cn/thread-472649-1-1.html">https://www.ilovematlab.cn/thread-472649-1-1.html</a></p>
+<p>方法一：</p>
+<pre><code class="language-matlab">A = [0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6, 4.0]; B = [0, 1, 2.1, 3.1, 4.0]; D = abs(bsxfun(@minus, A.', B));
+M = min(D, [], 1); [Index, ~] = find(bsxfun(@eq, M, D));
+Near = A(Index);
+% 上述代码没有利用排序信息，做了很多不必要的计算。 % 使用循环，如二分法查找，则可以利用排序信息。 
+</code></pre>
+<p>方法二：</p>
+<pre><code class="language-matlab">A = [0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6, 4.0];
+B = [0, 1, 2.1, 3.1, 4.0];
+B_len=length(B);
+Near=zeros(1,B_len);
+Index=zeros(1,B_len);
+j1=0;
+for i=1:B_len   
+	data=A-B(i);
+	[value,id]=min(abs(data));
+	id_min=find(abs(data)==value);
+	id_min_len=length(id_min);
+	j2=j1+id_min_len;
+	Near(j1+1:j2)=A(id_min);
+	Index(j1+1:j2)=id_min;
+	j1=j2;
+end 
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[心理基础课第三章    条件反射（三）]]></title>
         <id>https://cxx7ud.coding-pages.com/post/XL-chapter3/</id>

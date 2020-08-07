@@ -1,0 +1,237 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>matlab常用函数 | CofCai&#39;s blog</title>
+<link rel="shortcut icon" href="https://cxx7ud.coding-pages.com//favicon.ico?v=1596798004581">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cxx7ud.coding-pages.com//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="matlab常用函数 | CofCai&#39;s blog - Atom Feed" href="https://cxx7ud.coding-pages.com//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="1. 随机类
+1.1 randperm
+作用：随机生成一系列有序的数，参看https://blog.csdn.net/u013476464/article/details/25198071
+p = randperm(6)
+p = randp..." />
+    <meta name="keywords" content="朝花夕拾" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://cxx7ud.coding-pages.com/">
+  <img class="avatar" src="https://cxx7ud.coding-pages.com//images/avatar.png?v=1596798004581" alt="">
+  </a>
+  <h1 class="site-title">
+    CofCai&#39;s blog
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              matlab常用函数
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-08-07
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://cxx7ud.coding-pages.com/tag/dzS1QvnZQ/" class="post-tag">
+                  # 朝花夕拾
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://cxx7ud.coding-pages.com//post-images/matlab-CYHS.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p><strong>1. 随机类</strong></p>
+<p><strong>1.1 randperm</strong></p>
+<p><strong>作用：随机生成一系列有序的数，参看</strong>https://blog.csdn.net/u013476464/article/details/25198071</p>
+<pre><code class="language-matlab">p = randperm(6)
+p = randperm(10, 3) % 从0~10中产生3个数，且各不一样 
+</code></pre>
+<p><img src="file://D:/CDJ2/%E6%B2%BB%E7%96%97/MATLAB%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0.assets/clipboard.png" alt="img" loading="lazy"><br>
+<strong>1.2 排列组合-nchoosek</strong></p>
+<p>参看：https://blog.csdn.net/yangziluomu/article/details/50215443</p>
+<pre><code class="language-matlab">n = [1 4 2 7 8 3 9 5 6];  % 元素可以重复
+k = 3; res = nchoosek(n, k); % n是一个向量，从n中选k个元素 
+</code></pre>
+<p>结果如下（部分截图）：</p>
+<figure data-type="image" tabindex="1"><img src="D:%5CCDJ2%5C%E6%B2%BB%E7%96%97%5CMATLAB%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0.assets%5Cclipboard.png" alt="img" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="D:%5CCDJ2%5C%E6%B2%BB%E7%96%97%5CMATLAB%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0.assets%5Cclipboard.png" alt="img" loading="lazy"></figure>
+<p><strong>2.获取一个向量元素在另一个向量种的索引</strong></p>
+<p><strong>2.1 ismember</strong></p>
+<p>ismember只能获取首个，不能获取所有的</p>
+<pre><code class="language-matlab">x = [2 1 4 3];
+y = [3 7 3 8 9 1 2 3 7 5 ];
+[is pos] = ismember(x, y); 
+</code></pre>
+<p>结果如下：因为y种没有4，所以第三个索引为0</p>
+<figure data-type="image" tabindex="3"><img src="D:%5CCDJ2%5C%E6%B2%BB%E7%96%97%5CMATLAB%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0.assets%5Cclipboard.png" alt="img" loading="lazy"></figure>
+<p>**2.2 参看：**https://www.ilovematlab.cn/thread-469661-1-1.html</p>
+<pre><code class="language-matlab">a = [6 4 12 12 6 7 2 3 1 6 9 12 15 15];  % a和b的维度可以不一致
+b = [7 12 14 13 2 8 3 4 6 9 10 15 5 11];  % b中的元素也可以重复
+[ia,ib]=find(bsxfun(@eq,a,b')); w=accumarray(ib,1:numel(ib),[],@(x){ia(x)}); celldisp(w) % w是一个元组，维度同a，即w{ia}代表a的第i个元素在b中的索引（可以为多个） 
+</code></pre>
+<p>结果如下：</p>
+<p><img src="file://D:/CDJ2/%E6%B2%BB%E7%96%97/MATLAB%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0.assets/clipboard.png" alt="img" loading="lazy"><br>
+<strong>3. 求向量或矩阵的累计和/积向量</strong></p>
+<p>累计和：cumsum(X)</p>
+<p>累计积：cumprod(X)</p>
+<p>参看：https://blog.csdn.net/qq_32515081/article/details/81053959</p>
+<p>效果：</p>
+<figure data-type="image" tabindex="4"><img src="D:%5CCDJ2%5C%E6%B2%BB%E7%96%97%5CMATLAB%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0.assets%5Cclipboard.png" alt="img" loading="lazy"></figure>
+<p><strong>4. 怎么找到一个向量中的元素与另一个向量中那个元素最近？</strong></p>
+<p>参看：<a href="https://www.ilovematlab.cn/thread-472649-1-1.html">https://www.ilovematlab.cn/thread-472649-1-1.html</a></p>
+<p>方法一：</p>
+<pre><code class="language-matlab">A = [0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6, 4.0]; B = [0, 1, 2.1, 3.1, 4.0]; D = abs(bsxfun(@minus, A.', B));
+M = min(D, [], 1); [Index, ~] = find(bsxfun(@eq, M, D));
+Near = A(Index);
+% 上述代码没有利用排序信息，做了很多不必要的计算。 % 使用循环，如二分法查找，则可以利用排序信息。 
+</code></pre>
+<p>方法二：</p>
+<pre><code class="language-matlab">A = [0, 0.4, 0.8, 1.2, 1.6, 2.0, 2.4, 2.8, 3.2, 3.6, 4.0];
+B = [0, 1, 2.1, 3.1, 4.0];
+B_len=length(B);
+Near=zeros(1,B_len);
+Index=zeros(1,B_len);
+j1=0;
+for i=1:B_len   
+	data=A-B(i);
+	[value,id]=min(abs(data));
+	id_min=find(abs(data)==value);
+	id_min_len=length(id_min);
+	j2=j1+id_min_len;
+	Near(j1+1:j2)=A(id_min);
+	Index(j1+1:j2)=id_min;
+	j1=j2;
+end 
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://cxx7ud.coding-pages.com/post/XL-chapter3/">
+              <h3 class="post-title">
+                心理基础课第三章    条件反射（三）
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://cxx7ud.coding-pages.com//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
