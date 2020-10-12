@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>卡尔曼滤波 | CofCai&#39;s blog</title>
-<link rel="shortcut icon" href="https://cxx7ud.coding-pages.com//favicon.ico?v=1602509713209">
+<link rel="shortcut icon" href="https://cxx7ud.coding-pages.com//favicon.ico?v=1602510992918">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cxx7ud.coding-pages.com//styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="卡尔曼滤波 | CofCai&#39;s blog - Atom Feed" href="https://cxx7ud.coding-pages.com//atom.xml">
@@ -24,7 +24,7 @@
       <div class="main-content">
         <div class="site-header">
   <a href="https://cxx7ud.coding-pages.com/">
-  <img class="avatar" src="https://cxx7ud.coding-pages.com//images/avatar.png?v=1602509713209" alt="">
+  <img class="avatar" src="https://cxx7ud.coding-pages.com//images/avatar.png?v=1602510992918" alt="">
   </a>
   <h1 class="site-title">
     CofCai&#39;s blog
@@ -97,6 +97,8 @@
               
             </div>
             
+              <img class="post-feature-image" src="https://cxx7ud.coding-pages.com//post-images/kalmanFilter.png" alt="">
+            
             <div class="post-content-wrapper">
               <div class="post-content">
                 <p><a href="http://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/">How a Kalman filter works, in pictures | Bzarg</a><br>
@@ -111,7 +113,7 @@
 <p>我们常常根据系统的上一状态来计算出系统的当前状态，但是由于外界的影响，计算出来的结果和系统真实的结果是有差异的；我们又同时通过系统中的传感器获得系统的当前状态，但是由于传感器本身的误差，我们从传感器获得的结果和系统真实值也是有差异的。<br>
 即我们得到了系统两个具有误差的结果，一个是根据系统的状态空间方程计算而得的、具有过程噪声的计算值，一个是根据传感器测量而得的、具有测量误差的测量值。我们怎么把两个具有误差的结果<strong>融合</strong>为一个误差不太大的、可信的结果。</p>
 <h1 id="整体感受">整体感受</h1>
-<figure data-type="image" tabindex="1"><img src="https://cxx7ud.coding-pages.com//post-images/1602507951554.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://cxx7ud.coding-pages.com//post-images/KF-1.png" alt="" loading="lazy"></figure>
 <h2 id="结合例子理解公式">结合例子理解公式</h2>
 <p>一辆小车上装有位置传感器，并且向前匀速的运动。</p>
 <h2 id="公式1说明">公式1说明</h2>
@@ -123,19 +125,19 @@
 <h1 id="怎么融合">怎么融合？</h1>
 <h2 id="从简单的例子入手-测量一枚硬币的直径">从简单的例子入手-测量一枚硬币的直径</h2>
 <p>由于尺子误差和认为读数误差，结果是不准确的，我们自然会测量多次以平均值作为其真实值。<br>
-<img src="https://cxx7ud.coding-pages.com//post-images/1602508034136.png" alt="" loading="lazy"><br>
+<img src="https://cxx7ud.coding-pages.com//post-images/KF-2.png" alt="" loading="lazy"><br>
 zk代表第k次的测量值，xk_hat代表第k次的估计值（即前k次的平均值）。通过一个简单的变化，最终我们得到了最下面的公式，即：<em><em>当前估计值=上一次估计值+比例</em>（当前测量值-上一次估计值）</em>*，这里的比例其实就是融合比例，谁多一点、谁少一点。<strong>比如</strong>，当k为1时，此时估计值就等于测量值，因为目前就测量了一次，没有更多数据做平均嘛；当k很大时，此时估计值就等于上一次的估计值，因为我有足够多的历史数据了，这一次的测量数据对我的影响很小。</p>
 <h2 id="融合实例">融合实例</h2>
 <p>由两把不同的称得出不同的重量，称1误差的标准差是2g，称2误差的标准差是4g。现在称1的结果是30g，称2的结果是32g，怎么把两个结果融合为一个最优的估计值。从下面的正态分布图可以知道，最终的结果应该在30~32g之间，并且靠近30g更多一点。<br>
-<img src="https://cxx7ud.coding-pages.com//post-images/1602508063648.png" alt="" loading="lazy"><br>
+<img src="https://cxx7ud.coding-pages.com//post-images/KF-3.png" alt="" loading="lazy"><br>
 融合后误差最小就是使融合后方差最小（方差越小越接近真实值）。<br>
-<img src="https://cxx7ud.coding-pages.com//post-images/1602508073809.png" alt="" loading="lazy"><br>
+<img src="https://cxx7ud.coding-pages.com//post-images/kf4.png" alt="" loading="lazy"><br>
 公式1就是前面由平均值导出的融合公式，k为0时，估计值=称1的结果；k为1时，估计值=称2的结果。<strong>现在只需要选取合适的k值，使得估计值的方差最小</strong>。</p>
 <h2 id="协方差矩阵">协方差矩阵</h2>
 <p>这里就不多说了，主要是：cov(W) = E(W*W^t)，即W乘以W的转置的均值。</p>
 <h1 id="卡尔曼滤波详细推导">卡尔曼滤波详细推导</h1>
 <h2 id="卡尔曼增益的推导">卡尔曼增益的推导</h2>
-<p><img src="https://cxx7ud.coding-pages.com//post-images/1602508101218.png" alt="" loading="lazy"><br>
+<p><img src="https://cxx7ud.coding-pages.com//post-images/kf5.png" alt="" loading="lazy"><br>
 <strong>图中红字：</strong><br>
 这里首先要明白一点:传感器的值不一定就等于系统的状态，这里不是说误差的影响，而是传感器特性的影响。比如传感器的1代表了系统的100，这是生产传感器时就规定好的。所以由传感器上的值得到系统的状态还需要乘以100（就是H这个系数），如果传感器的值就代表了系统的状态，那么H=1，比如位置传感器直接给出小车位置，而速度传感器还需要转换才能得出位置。<br>
 接下来的解释:Zk是传感器的测量值，这里面包含vk测量噪声，由传感器的值得到系统的测量值为H-*Zk(相当于乘以100)，这个系统状态的测量值包含了测量噪声。</p>
@@ -145,12 +147,12 @@ zk代表第k次的测量值，xk_hat代表第k次的估计值（即前k次的平
 然后通过公式5把两个具有误差的系统状态融合为一个误差不大的系统状态。<br>
 <strong>定义误差ek=真实值-估计值，寻找Kk，使得ek最小。P为误差ek的协方差矩阵，即使得P的迹最小</strong>。<br>
 <strong>定义先验误差ek<sub>=真实值-先验估计。Pk代表第k次的误差协方差矩阵，Pk</sub>代表第k次的先验误差协方差矩阵。</strong><br>
-<img src="https://cxx7ud.coding-pages.com//post-images/1602508187349.png" alt="" loading="lazy"><br>
+<img src="https://cxx7ud.coding-pages.com//post-images/kf6.png" alt="" loading="lazy"><br>
 省略部分......得到如下结果。<br>
-<img src="https://cxx7ud.coding-pages.com//post-images/1602508198971.png" alt="" loading="lazy"></p>
+<img src="https://cxx7ud.coding-pages.com//post-images/kf7.png" alt="" loading="lazy"></p>
 <h2 id="最终公式">最终公式</h2>
 <p>重要变量：先验估计（即计算值），测量值，先验误差，先验误差协方差矩阵，误差，误差协方差矩阵，卡尔曼增益，最优估计。<br>
-<img src="https://cxx7ud.coding-pages.com//post-images/1602508234141.png" alt="" loading="lazy"></p>
+<img src="https://cxx7ud.coding-pages.com//post-images/kf8.png" alt="" loading="lazy"></p>
 <h1 id="实战">实战</h1>
 <p>见DR_CAN的excel</p>
 <h1 id="扩展的卡尔曼滤波-ekf">扩展的卡尔曼滤波-EKF</h1>
@@ -158,7 +160,7 @@ zk代表第k次的测量值，xk_hat代表第k次的估计值（即前k次的平
 <a href="https://zhuanlan.zhihu.com/p/67138271">参考2</a><br>
 前面是是标准的卡尔曼滤波，即线性卡尔曼滤波，不能作用于非线性系统，而扩展的卡尔曼滤波可用于非线性系统。<br>
 EKF的基本思想是利用泰勒级数展开将<strong>非线性系统线性化</strong>，然后采用卡尔曼滤波框架对信号进行滤波，因此它是一种<strong>次优滤波</strong>。<br>
-<img src="https://cxx7ud.coding-pages.com//post-images/1602507649725.png" alt="" loading="lazy"></p>
+<img src="https://cxx7ud.coding-pages.com//post-images/kf9.png" alt="" loading="lazy"></p>
 
               </div>
               <div class="toc-container">
