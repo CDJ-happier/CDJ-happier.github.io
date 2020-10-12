@@ -1,0 +1,521 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AlphaLinux开发板使用 | CofCai&#39;s blog</title>
+<link rel="shortcut icon" href="https://cxx7ud.coding-pages.com//favicon.ico?v=1602508981222">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cxx7ud.coding-pages.com//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="AlphaLinux开发板使用 | CofCai&#39;s blog - Atom Feed" href="https://cxx7ud.coding-pages.com//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="开发板使用步骤
+交叉编译器
+一、固化系统
+
+参考用户快速体验，也可参考“开发板与pc传输文件、单步更新固件xxxx”。
+
+可以只更新uboot、zImage、设备树或根文件系统中的一个，即单步更新。其实单步更新的原理就是改变emmc中的ub..." />
+    <meta name="keywords" content="嵌入式Linux" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://cxx7ud.coding-pages.com/">
+  <img class="avatar" src="https://cxx7ud.coding-pages.com//images/avatar.png?v=1602508981222" alt="">
+  </a>
+  <h1 class="site-title">
+    CofCai&#39;s blog
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              AlphaLinux开发板使用
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-10-12
+              </span>
+              <span>
+                14 min read
+              </span>
+              
+                <a href="https://cxx7ud.coding-pages.com/tag/KThzdm7dh/" class="post-tag">
+                  # 嵌入式Linux
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="开发板使用步骤">开发板使用步骤</h1>
+<p>交叉编译器</p>
+<h2 id="一-固化系统">一、固化系统</h2>
+<blockquote>
+<p>参考用户快速体验，也可参考“开发板与pc传输文件、单步更新固件xxxx”。</p>
+</blockquote>
+<p>可以只更新uboot、zImage、设备树或根文件系统中的一个，即单步更新。其实单步更新的原理就是改变emmc中的uboot、zImage等，因为Linux系统启动后就可以操作emmc了，就可以把最新的uboot、设备树这些放到emmc中对应的位置，然后重启即可（从emmc启动Linux内核）。<strong>详见3.单步更新</strong>。</p>
+<h3 id="1-使用mfgtool上位机固化系统otg方式">1. 使用mfgtool上位机固化系统（OTG方式）</h3>
+<p>所需材料：<br>
+把-&gt;开发板光盘-&gt;5、开发工具-&gt;4、正点原子 MFG_TOOL 出厂固件烧录工具-&gt;mfgtool 文件夹拷贝到 PC 机（电脑），启动方式选为<strong>USB启动</strong>。</p>
+<h4 id="11-固化到sd卡">1.1 固化到SD卡</h4>
+<ol>
+<li>
+<p>准备一张TF卡</p>
+</li>
+<li>
+<p>选择对应的vbs脚本<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602504257657.png" alt="" loading="lazy"><br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602504279379.png" alt="" loading="lazy"><br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602504330198.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>设置为从SD卡启动系统</p>
+</li>
+</ol>
+<h3 id="12-固化到emmc">1.2 固化到eMMC</h3>
+<figure data-type="image" tabindex="1"><img src="https://cxx7ud.coding-pages.com//post-images/1602504375920.png" alt="" loading="lazy"></figure>
+<p>通过mfgtool将uboot、zImga、dtb固化到eMMC后，通过emmc方式启动可以观察这些文件在emmc中的位置，如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://cxx7ud.coding-pages.com//post-images/1602504395968.png" alt="" loading="lazy"></figure>
+<p>mmc的分区0存放的是uboot，分区1是zimage和设备树，分区2是根文件系统，这些都是通过mfgtoo烧录进去的。mmc分区2的根文件系统可以通过``ext4ls mmc 1:2`进行查看，因为其是ext4类型的文件系统，如下：</p>
+<figure data-type="image" tabindex="3"><img src="https://cxx7ud.coding-pages.com//post-images/1602504545483.png" alt="" loading="lazy"></figure>
+<p><code>ext4ls mmc 1:2 dir</code>可查看mmc1的分区2的dir文件夹下的内容：</p>
+<figure data-type="image" tabindex="4"><img src="https://cxx7ud.coding-pages.com//post-images/1602504530164.png" alt="" loading="lazy"></figure>
+<h4 id="121-续">1.2.1 续</h4>
+<p>上面说明了通过mfgtool将固件烧录到emmc后的一些情况，比如mmc1的part0是存放的uboot。在后面讲Linux内核启动方式的时候和这里有关，所以就先说明一下，加强记忆。启动方式有sd卡、emmc/nand、网络启动，相关的uboot环境变量和命令有bootargs、bootcmd、run。</p>
+<p>bootargs环境变量中的console值指定所使用的终端，一般为<code>console=ttymxc0,115200</code>，root值指定根文件系统所在位置，该值根据不同需求需设置不同的值，如下：</p>
+<pre><code class="language-shell"># 通过nfs挂载根文件系统，就需要告诉内核。即root设置如下值
+root=/dev/nfs nfsroot=169.254.30.41:/home/cdj/Linux/nfs/rootfs,proto=tcp rw ip=169.254.30.42:169.254.30.41:169.254.1.1:255.255.0.0::eth0:off
+# 告诉Linux内核根文件系统在emmc1的分区2，即使用mmc中的根文件系统
+root=/dev/mmcblkp2 rootwait rw
+
+# boot命令通过读取bootcmd环境变量的值进行启动Linux内核，boot delay倒计时结束后也会从bootcmd启动Linux内核。
+setenv bootcmd 'tftp 80800000 zImage;tftp 83000000 imx6ull_alientek_emmc.dtb;bootz 80800000 - 83000000'
+
+
+# run命令可以运行用户自己设置的环境变量
+# 1.设置用于从mmc启动的环境变量的命令，镜像和设备树的名称可根据fatls mmc 1:1 查看。mmc 1:2 保存的是根文件系统
+setenv mybootmmc 'fatload mmc 1:1 80800000 zimage;fatload mmc 1:1 83000000 imx6ull-14x14-emmc-4.3-800x480-c.dtb;bootz 80800000 - 83000000'
+# 2.设置用于从网络启动的环境变量的命令
+setenv mybootnet 'tftp 80800000 zImage;tftp 83000000 imx6ull_alientek_emmc.dtb;bootz 80800000 - 83000000'
+saveenv
+
+# 通过上面的设定，boot和run mybootnet的效果是一样的（都是从网络启动），run mybootmmc是从mmc启动。
+</code></pre>
+<h3 id="2-使用脚本固化系统">2. 使用脚本固化系统</h3>
+<p>省略</p>
+<h3 id="3-单步更新">3. 单步更新</h3>
+<h4 id="31-单步更新uboot到emmc">3.1 单步更新uboot到emmc</h4>
+<ol>
+<li>将最新的uboot拷贝到开发板的/home/root中去</li>
+<li>使用命令<code>echo 0 &gt; /sys/block/mmcblk1boot0/force_ro</code>使能emmc启动分区，这样才能烧写。</li>
+<li>使用命令开始烧写<code>dd if=u-boot-imx6ull-14x14-ddr512-emmc.imx of=mmcblk1boot0 bs=1024 seek=1 conv=fsync</code>。</li>
+<li>烧写完后，关闭烧写的启动分区，即<code>echo 1 &gt;/sys/block/mmcblk1boot0/force_ro</code></li>
+</ol>
+<h4 id="32-单步更新设备树到emmc中">3.2 单步更新设备树到emmc中</h4>
+<ol>
+<li>
+<p>用<code>ls /run/media/mmcblk1p1</code>查看mmc1的分区1有那些设备树</p>
+<figure data-type="image" tabindex="5"><img src="https://cxx7ud.coding-pages.com//post-images/1602504562705.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>将对应的设备树拷贝到/run/media/mmcblk1p1 目录下，也可以把全部设备树拷贝。</p>
+</li>
+</ol>
+<h4 id="33-单步更新内核到emmc">3.3 单步更新内核到emmc</h4>
+<ol>
+<li>同更新设备树一样，直接将zImage拷贝到/run/media/mmcblk1p1 目录下即可。</li>
+<li>将<strong>内核模块</strong>拷贝到开发板，然后解压到/lib/modules目录下即可，即<code>tar xf modules.tar.bz2 -C /lib/modules/</code>。</li>
+</ol>
+<h4 id="34-单步更新根文件系统到emmc">3.4  单步更新根文件系统到emmc</h4>
+<p>**注意：**不能用 eMMC 启动来更新 eMMC 分区里的文件系统，应要使用 <strong>SD 卡启动</strong>（即根文件系统在SD卡中，启动时直接从SD卡搬移到SRAM中去）来更新 eMMC的文件系统！<strong>正在运行的一个系统不能把自己给格式化</strong>。<strong>还需要注意的是</strong>内核模块是在 eMMC 的第二个分区（rootfs 分区）里的，更新文件系统时会把这个分区里的东西全部删除，请更新文件系统后，重新更新内核模块。</p>
+<ol>
+<li>拷贝根文件系统到开发板，如/home/root下。</li>
+<li>删除emmc的第二个分区（rootfs分区），即<code>rm -rf /run/media/mmcblk1p2/*</code>。</li>
+<li>解压根文件系统到emmc的文件系统分区，即<code>tar vxf fsl-image-qt5-v1.3.tar.bz2 -C /run/media/mmcblk1p2/</code>，然后sync一下。</li>
+</ol>
+<p><strong>单步更新到SD卡道理一样，就是将上面的东西复制到SD卡相应的区域</strong></p>
+<h2 id="二-usb-wifi-测试">二、USB WIFI 测试</h2>
+<p>所需材料：E:\Embedded\Alpha Linux\阿尔法Linux开发板光盘资料（A盘）\9、测试文件\shell\wifi\alientek_usb_wifi_setup.sh</p>
+<blockquote>
+<p>source命令通常用于重新执行刚修改的初始化文件，使之立即生效，而不必注销并重新登录。</p>
+</blockquote>
+<p>ping -I 192.168.1.126  www.baidu.com。-I 是指定执行 ping 操作的网卡 IP 地址，我们要使用 wlan0 去 ping 百度网站，因此要通过 “-I”指定 wlan0 的 IP 地址。</p>
+<h3 id="1-station上网模式">1. Station（上网）模式</h3>
+<p>即usbwifi作为station，连接其它热点。</p>
+<ol>
+<li>
+<p>插入usb wif</p>
+</li>
+<li>
+<p><code>wpa_cli -i wlan0 scan_result</code> 或 <code>iwlist wlan0 scan</code>扫描周围的热点</p>
+</li>
+<li>
+<p><code>source ./alientek_usb_wifi_setup.sh -m station -i 'vivo Y93' -p CDJxxxxx -d wlan0</code>:用wlan0（即usbwifi）这个设备连接vivo Y93这个热点。</p>
+<pre><code class="language-shell">参数解释：
+-m station ：设置成 station 模式
+-i vivo Y93 ：无线网络名称(ssid)
+-p CDJ**** ：无线网络密码(psk)
+-d wlan0 ：USB WIFI 节点
+</code></pre>
+<p>若未能正常获取 ip，等待 <code>RTL871X: set group key camid:5</code>这句话出现后输入 <code>udhcpc -i wlan0</code> 指令重新获取 ip。</p>
+</li>
+</ol>
+<h3 id="2-softap热点模式">2. SoftAP（热点）模式</h3>
+<p>即usbwifi开启热点，供其它设备连接，如手机。</p>
+<p><code>source ./alientek_usb_wifi_setup.sh -m softap -d wlan0</code></p>
+<h3 id="3-bridge桥接模式">3. Bridge（桥接）模式</h3>
+<p>测试 USB WIFI 开启热点，并桥接到有线网络，让手机连接到热点并上网。</p>
+<ol>
+<li>开发板的网口插上网线，并保证能上网。</li>
+<li>用 ifconfig 查看有线网络 eth0 或者 eth1 能否获取 ip，并测试 eth0 是否能上网。</li>
+<li><code>source ./alientek_usb_wifi_setup.sh -m bridge -d wlan0 -e eth0</code></li>
+</ol>
+<h2 id="3-uboot相关环境变量">3. uboot相关环境变量</h2>
+<h3 id="1-自启动时间-bootdelay">1. 自启动时间-bootdelay</h3>
+<pre><code class="language-shell">setenv bootdelay 10  # 设置uboot自启动延时时间
+saveenv
+</code></pre>
+<h3 id="2-启动linux内核的参数-bootargs">2. 启动Linux内核的参数-bootargs</h3>
+<p>bootargs 保存着传递给Linux kernel 的参数。如果Linux内核启动时，没有指定根文件系统，那么启动会失败。</p>
+<blockquote>
+<p>启动时通过nfs挂载Ubuntu中的根文件系统，启动后可以再挂载一个文系统，命令如下：mount -t nfs -o nfsvers=3 169.254.30.41:/home/cdj/Linux/nfs/rootfs ./nfs_mnt</p>
+</blockquote>
+<pre><code>setenv bootargs 'console=ttymxc0,115200 root=/dev/mmcblk1p2 rootwait rw'
+saveenv 
+</code></pre>
+<p>bootargs变量的<strong>console</strong>值表示所用的终端，<strong>root</strong>值代表根文件系统在哪里（上面表示的是根文件系统在emmc的块1分区2）。</p>
+<figure data-type="image" tabindex="6"><img src="https://cxx7ud.coding-pages.com//post-images/1602504585316.png" alt="" loading="lazy"></figure>
+<p>根据上面的格式 bootargs 环境变量的 <strong>root 值</strong>（告诉Linux内核根文件系统在Ubuntu主机中，即用nfs挂载根文件系统）如下：<a href="https://www.cnblogs.com/Mike2019/p/12890930.html">参见</a></p>
+<pre><code class="language-shell">root=/dev/nfs nfsroot=169.254.30.41:/home/cdj/Linux/nfs/rootfs,proto=tcp rw ip=169.254.30.42:169.254.30.41:169.254.1.1:255.255.0.0::eth0:off # 告诉内核根文件系统用nfs挂载，位置是xxx处的Ubuntu主机
+root=/dev/mmcblkp2 rootwait rw  # 告诉内核根文件系统在mmc1的分区2
+</code></pre>
+<p>“proto=tcp”表示使用 TCP 协议，“rw”表示 nfs 挂载的根文件系统为可读可写。启动开发板，进入 uboot 命令行模式，然后重新设置 bootargs 环境变量，命令如下：</p>
+<pre><code class="language-shell">setenv bootargs 'console=ttymxc0,115200 root=/dev/nfs nfsroot=169.254.30.41:/home/cdj/Linux/nfs/rootfs,proto=tcp rw ip=169.254.30.42:169.254.30.41:169.254.1.1:255.255.0.0::eth0:off' //设置 bootargs
+saveenv //保存环境变量
+</code></pre>
+<p>设置好以后使用“boot”命令启动 Linux 内核。</p>
+<h3 id="3-网络操作">3. 网络操作</h3>
+<h4 id="31-设置开发板ip">3.1 设置开发板ip</h4>
+<pre><code class="language-shell">setenv ipaddr 169.254.30.42
+setenv ethaddr 00:04:9f:04:d2:35
+setenv gatewayip 169.254.1.1
+setenv netmask 255.255.0.0
+setenv serverip 169.254.30.41  # Ubuntu主机ip
+saveenv
+</code></pre>
+<h4 id="32-nfs命令">3.2 nfs命令</h4>
+<p>我们一般使用 uboot 中的 nfs 命令将 Ubuntu 中的文件<strong>下载到开发板的 DRAM 中</strong>，在使用 之前需要开启 Ubuntu 主机的 NFS 服务，并且要新建一个 NFS 使用的目录，以后所有要通过 NFS 访问的文件都需要放到这个 NFS 目录中。</p>
+<pre><code class="language-shell">nfs [loadAddress] [[hostIPaddr:]bootfilename]
+loadAddress 是要保存的 DRAM 地址，[[hostIPaddr:]bootfilename]是要下载的文件地址。
+nfs 80800000 192.168.1.250:/home/zuozhongkai/linux/nfs/zImage
+</code></pre>
+<p>这 里我们将正点原子官方编译出来的 Linux 镜像文件 zImage 下载到开发板 DRAM 的 0x80800000 这个地址处。</p>
+<h4 id="33-tftp命令">3.3 tftp命令</h4>
+<p>先搭建好、配置好tftp服务器（即Ubuntu）。tftp 命令 不需要输入文件在 Ubuntu 中的完整路径，只需要输入文件名即可，如<code>tftp 80800000 zImage</code>（<strong>也是下载到开发板的DRAM中去</strong>，而不是EMMC）。</p>
+<h4 id="33-scp拷贝命令">3.3 scp拷贝命令</h4>
+<p>参考：开发板与pc传输文件、单步更新固件参考手册V1.0.pdf</p>
+<p>开发板通过网线与Ubuntu直连或在同一路由器下，配置好ip后，使用命令：</p>
+<pre><code class="language-shell">scp ubuntu中的文件 开发板用户名@开发板ip:拷贝到那去
+scp file1 root@169.254.30.42:/home/root
+
+# 如：
+scp CReadme.md root@169.254.30.42:/home/root
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://cxx7ud.coding-pages.com//post-images/1602504605088.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://cxx7ud.coding-pages.com//post-images/1602504619052.png" alt="" loading="lazy"></figure>
+<h3 id="4-启动linux内核命令">4. 启动Linux内核命令</h3>
+<h4 id="41-bootz">4.1 bootz</h4>
+<p>bootz [addr [initrd[:size]] [fdt]] 命令 bootz 有三个参数，addr 是 Linux 镜像文件在 DRAM 中的位置，initrd 是 initrd 文件在 DRAM 中的地址，如果不使用 initrd 的话使用‘-’代替即可，fdt 就是设备树文件在 DRAM 中 的地址。</p>
+<pre><code>tftp 80800000 zImage
+tftp 83000000 imx6ull-alientek-emmc.dtb
+bootz 80800000 – 83000000
+</code></pre>
+<h4 id="41-boot">4.1 boot</h4>
+<p>boot 命令也是用来启动 Linux 系统的，只是 boot 会读取环境变量 bootcmd 来启动 Linux 系统，bootcmd 是一个很重要的环境变量！</p>
+<h5 id="411-比如我们想使用tftp命令从网络启动linux">4.1.1 比如我们想使用tftp命令从网络启动Linux</h5>
+<pre><code class="language-shell">setenv bootcmd 'tftp 80800000 zImage; tftp 83000000 imx6ull-alientek-emmc.dtb; bootz 80800000 - 83000000'
+saveenv
+boot
+</code></pre>
+<h5 id="412-想从emmc启动">4.1.2 想从emmc启动</h5>
+<pre><code class="language-shell">setenv bootcmd 'fatload mmc 1:1 80800000 zImage;fatload mmc 1:1 83000000 imx6ull_alientek_emmc.dtb;bootz 80800000 - 83000000'
+savenev
+boot
+</code></pre>
+<h5 id="5-uboot中的run命令">5. uboot中的run命令</h5>
+<p>run 命令用于运行环境变量中定义的命令，比如可以通过“run bootcmd”来运行 bootcmd 中的启动命令，但是 run 命令最大的作用在于运行我们自定义的环境变量。因为bootcmd只能用一次，如果我既想通过网络启动，又想通过emmc启动的话就需要对bootcmd重新赋值。但是通过run命令，就能不用重新赋值。</p>
+<pre><code class="language-shell"># 设置mybootnet环境变量用于从网络启动
+setenv mybootnet 'tftp 80800000 zImage;tftp 83000000 imx6ull_alientek_emmc.dtb;bootz 80800000 - 83000000'
+# 设置mybootmmc环境变量用于从emmc启动
+setenv mybootmmc 'fatload mmc 1:1 80800000 zImage;fatload mmc 1:1 83000000 imx6ull_alientek_emmc.dtb;bootz 80800000 - 83000000'
+saveenv
+
+run mybootnet
+rum mybootmmc
+</code></pre>
+<h2 id="三-uboot移植">三、uboot移植</h2>
+<h2 id="四-linux内核移植">四、Linux内核移植</h2>
+<h2 id="五-根文件系统构建">五、根文件系统构建</h2>
+<h2 id="六-模块驱动">六、模块驱动</h2>
+<p>Linux三巨头移植好后，开发板就能启动了，然后就是<strong>驱动</strong>的开发编写了。</p>
+<p>驱动有两种被加载的方式：一是编译进内核（Linux内核启动时驱动模块也会被启动）、二是编译成模块，动态加载进内核。下面重点讲编译成模块，动态加载进内核。</p>
+<ol>
+<li>
+<p>编写驱动程序（设备树、platform、等）</p>
+</li>
+<li>
+<p>编译成ko文件</p>
+</li>
+<li>
+<p>把ko文件放到/lib/modules/‘uname -r’下去</p>
+<p><code>uname -r</code>代表Linux的版本，我的是4.1.15。<a href="https://www.cnblogs.com/danmiao/p/10024271.html">uname参考</a></p>
+<figure data-type="image" tabindex="9"><img src="imgassets/1600226320551.png" alt="1600226320551" loading="lazy"></figure>
+</li>
+<li>
+<p>depmod，modprobe xxx</p>
+<p>注意，加载模块时不要写后缀名，不然会报“找不到文件的错误”。</p>
+<figure data-type="image" tabindex="10"><img src="imgassets/1600226412346.png" alt="1600226412346" loading="lazy"></figure>
+</li>
+<li>
+<p>使用驱动。</p>
+</li>
+</ol>
+<p>下面以正点原子提供的usbwifi进行说明。</p>
+<ol>
+<li>
+<p>编写驱动（正点原子已提供源码，只需编译成模块即可/也可直接编译进内核，详见第七十章第一节）。</p>
+</li>
+<li>
+<p>加载驱动（/lib/modules/‘uname -r’/路径下）。</p>
+<pre><code>depmod //第一次加载驱动的时候需要运行此命令
+modprobe 8188eu.ko //RTL8188EUS 模块加载 8188eu.ko 模块
+</code></pre>
+<figure data-type="image" tabindex="11"><img src="imgassets/1600245361026.png" alt="1600245361026" loading="lazy"></figure>
+<p>使用<code>ifconfig -a</code>查看usbWiFi是否加载成功.</p>
+</li>
+<li>
+<p>剩下的就是用应用程序使用加载进内核的驱动程序了，使用usbwifi的后续如下：</p>
+<ol>
+<li>
+<p>在开发板根文件系统的/etc 目录下创建一个名为“wpa_supplicant.conf”的配置文件，此文件用于配置要连接的 WIFI 热点以及 WIFI 秘密，比如我要连接到“ZZK”这个热点上，因此 wpa_supplicant.conf 文件内容如下所示：</p>
+<pre><code class="language-shell">ctrl_interface=/var/run/wpa_supplicant
+ap_scan=1
+network={
+ssid=&quot;vivo Y93&quot;
+psk=&quot;XXXXXXXX&quot;
+}
+# 注意=前后不要有空格，不要用tab键进行缩进。
+</code></pre>
+</li>
+<li>
+<p>在 开 发 板 根 文 件 系 统 下 创 建 一 个“/var/run/wpa_supplicant”目录，wpa_supplicant 工具要用到此目录！</p>
+</li>
+<li>
+<p>连接热点，当 RTL8188 连接到 WIFI 热点上以后会输出<code>“wlan0: CTRL-EVENT-CONNECTED”</code>字样。</p>
+<pre><code class="language-shell">wpa_supplicant -D wext -c /etc/wpa_supplicant.conf -i wlan0 &amp;
+</code></pre>
+</li>
+<li>
+<p>设置wlan0的IP地址，使用<code>udhcpc</code>从路由器（热点）申请，即<code>udhcpc -i wlan0</code>。</p>
+</li>
+<li>
+<p>ping -I wlan0 www.baidu.com</p>
+</li>
+<li>
+<pre><code> wpa_supplicant -D wext -c /etc/wpa_supplicant.conf -i wlan0 &amp;
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%BC%80%E5%8F%91%E6%9D%BF%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4">开发板使用步骤</a>
+<ul>
+<li><a href="#%E4%B8%80-%E5%9B%BA%E5%8C%96%E7%B3%BB%E7%BB%9F">一、固化系统</a>
+<ul>
+<li><a href="#1-%E4%BD%BF%E7%94%A8mfgtool%E4%B8%8A%E4%BD%8D%E6%9C%BA%E5%9B%BA%E5%8C%96%E7%B3%BB%E7%BB%9Fotg%E6%96%B9%E5%BC%8F">1. 使用mfgtool上位机固化系统（OTG方式）</a>
+<ul>
+<li><a href="#11-%E5%9B%BA%E5%8C%96%E5%88%B0sd%E5%8D%A1">1.1 固化到SD卡</a></li>
+</ul>
+</li>
+<li><a href="#12-%E5%9B%BA%E5%8C%96%E5%88%B0emmc">1.2 固化到eMMC</a>
+<ul>
+<li><a href="#121-%E7%BB%AD">1.2.1 续</a></li>
+</ul>
+</li>
+<li><a href="#2-%E4%BD%BF%E7%94%A8%E8%84%9A%E6%9C%AC%E5%9B%BA%E5%8C%96%E7%B3%BB%E7%BB%9F">2. 使用脚本固化系统</a></li>
+<li><a href="#3-%E5%8D%95%E6%AD%A5%E6%9B%B4%E6%96%B0">3. 单步更新</a>
+<ul>
+<li><a href="#31-%E5%8D%95%E6%AD%A5%E6%9B%B4%E6%96%B0uboot%E5%88%B0emmc">3.1 单步更新uboot到emmc</a></li>
+<li><a href="#32-%E5%8D%95%E6%AD%A5%E6%9B%B4%E6%96%B0%E8%AE%BE%E5%A4%87%E6%A0%91%E5%88%B0emmc%E4%B8%AD">3.2 单步更新设备树到emmc中</a></li>
+<li><a href="#33-%E5%8D%95%E6%AD%A5%E6%9B%B4%E6%96%B0%E5%86%85%E6%A0%B8%E5%88%B0emmc">3.3 单步更新内核到emmc</a></li>
+<li><a href="#34-%E5%8D%95%E6%AD%A5%E6%9B%B4%E6%96%B0%E6%A0%B9%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%88%B0emmc">3.4  单步更新根文件系统到emmc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-usb-wifi-%E6%B5%8B%E8%AF%95">二、USB WIFI 测试</a>
+<ul>
+<li><a href="#1-station%E4%B8%8A%E7%BD%91%E6%A8%A1%E5%BC%8F">1. Station（上网）模式</a></li>
+<li><a href="#2-softap%E7%83%AD%E7%82%B9%E6%A8%A1%E5%BC%8F">2. SoftAP（热点）模式</a></li>
+<li><a href="#3-bridge%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F">3. Bridge（桥接）模式</a></li>
+</ul>
+</li>
+<li><a href="#3-uboot%E7%9B%B8%E5%85%B3%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F">3. uboot相关环境变量</a>
+<ul>
+<li><a href="#1-%E8%87%AA%E5%90%AF%E5%8A%A8%E6%97%B6%E9%97%B4-bootdelay">1. 自启动时间-bootdelay</a></li>
+<li><a href="#2-%E5%90%AF%E5%8A%A8linux%E5%86%85%E6%A0%B8%E7%9A%84%E5%8F%82%E6%95%B0-bootargs">2. 启动Linux内核的参数-bootargs</a></li>
+<li><a href="#3-%E7%BD%91%E7%BB%9C%E6%93%8D%E4%BD%9C">3. 网络操作</a>
+<ul>
+<li><a href="#31-%E8%AE%BE%E7%BD%AE%E5%BC%80%E5%8F%91%E6%9D%BFip">3.1 设置开发板ip</a></li>
+<li><a href="#32-nfs%E5%91%BD%E4%BB%A4">3.2 nfs命令</a></li>
+<li><a href="#33-tftp%E5%91%BD%E4%BB%A4">3.3 tftp命令</a></li>
+<li><a href="#33-scp%E6%8B%B7%E8%B4%9D%E5%91%BD%E4%BB%A4">3.3 scp拷贝命令</a></li>
+</ul>
+</li>
+<li><a href="#4-%E5%90%AF%E5%8A%A8linux%E5%86%85%E6%A0%B8%E5%91%BD%E4%BB%A4">4. 启动Linux内核命令</a>
+<ul>
+<li><a href="#41-bootz">4.1 bootz</a></li>
+<li><a href="#41-boot">4.1 boot</a>
+<ul>
+<li><a href="#411-%E6%AF%94%E5%A6%82%E6%88%91%E4%BB%AC%E6%83%B3%E4%BD%BF%E7%94%A8tftp%E5%91%BD%E4%BB%A4%E4%BB%8E%E7%BD%91%E7%BB%9C%E5%90%AF%E5%8A%A8linux">4.1.1 比如我们想使用tftp命令从网络启动Linux</a></li>
+<li><a href="#412-%E6%83%B3%E4%BB%8Eemmc%E5%90%AF%E5%8A%A8">4.1.2 想从emmc启动</a></li>
+<li><a href="#5-uboot%E4%B8%AD%E7%9A%84run%E5%91%BD%E4%BB%A4">5. uboot中的run命令</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89-uboot%E7%A7%BB%E6%A4%8D">三、uboot移植</a></li>
+<li><a href="#%E5%9B%9B-linux%E5%86%85%E6%A0%B8%E7%A7%BB%E6%A4%8D">四、Linux内核移植</a></li>
+<li><a href="#%E4%BA%94-%E6%A0%B9%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%9E%84%E5%BB%BA">五、根文件系统构建</a></li>
+<li><a href="#%E5%85%AD-%E6%A8%A1%E5%9D%97%E9%A9%B1%E5%8A%A8">六、模块驱动</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://cxx7ud.coding-pages.com/post/ebLinux-relaAPI/">
+              <h3 class="post-title">
+                嵌入式Linux驱动开发相关API
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://cxx7ud.coding-pages.com//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

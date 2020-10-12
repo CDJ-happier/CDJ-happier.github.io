@@ -1,0 +1,514 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AlphaLinux学习笔记 | CofCai&#39;s blog</title>
+<link rel="shortcut icon" href="https://cxx7ud.coding-pages.com//favicon.ico?v=1602508981222">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cxx7ud.coding-pages.com//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="AlphaLinux学习笔记 | CofCai&#39;s blog - Atom Feed" href="https://cxx7ud.coding-pages.com//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="Linux根目录说明
+
+文件类型说明
+
+
+嵌入式Linux开发总结
+一、环境的搭建
+一般以Linux（Ubuntu）为开发环境，嵌入式Linux开发的环境主要包括：交叉编译工具链，但由于一般用的都是Windows主机，所以要么双系统，要么配..." />
+    <meta name="keywords" content="嵌入式Linux" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://cxx7ud.coding-pages.com/">
+  <img class="avatar" src="https://cxx7ud.coding-pages.com//images/avatar.png?v=1602508981222" alt="">
+  </a>
+  <h1 class="site-title">
+    CofCai&#39;s blog
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              AlphaLinux学习笔记
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-10-12
+              </span>
+              <span>
+                21 min read
+              </span>
+              
+                <a href="https://cxx7ud.coding-pages.com/tag/KThzdm7dh/" class="post-tag">
+                  # 嵌入式Linux
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="linux根目录说明">Linux根目录说明</h1>
+<figure data-type="image" tabindex="1"><img src="https://cxx7ud.coding-pages.com//post-images/1602508922871.png" alt="" loading="lazy"></figure>
+<h1 id="文件类型说明">文件类型说明</h1>
+<figure data-type="image" tabindex="2"><img src="https://cxx7ud.coding-pages.com//post-images/1602508912500.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://cxx7ud.coding-pages.com//post-images/1602508901987.png" alt="" loading="lazy"></figure>
+<h1 id="嵌入式linux开发总结">嵌入式Linux开发总结</h1>
+<h2 id="一-环境的搭建">一、环境的搭建</h2>
+<p>一般以Linux（Ubuntu）为开发环境，嵌入式Linux开发的环境主要包括：交叉编译工具链，但由于一般用的都是Windows主机，所以要么双系统，要么配虚拟机。</p>
+<p>配虚拟机的话就需要打通Ubuntu与Windows之间的通道，比如文件的传送，我用的是FillZilla客户端（ftp协议）。</p>
+<h3 id="交叉编译工具链">交叉编译工具链</h3>
+<h4 id="交叉编译工具链是干嘛的">交叉编译工具链是干嘛的？</h4>
+<p>在学习C语言时，我记得用的是codeblocks，当我们写好c程序后点击编译运行就能看到cmd命令窗口输出的结果。其实在我们点击<strong>编译运行</strong>这个按钮时，就相当于使用命令gcc来编译c程序使之成为可执行文件（在Windows下是exe格式，在Linux中是elf格式）。但是编译生成的可执行文件只能在此电脑（我的时x86）上运行，不能在arm架构上运行，所以我们可以<strong>借助交叉编译工具在x86架构上编译生成可以在arm架构上运行的程序</strong>。那为什么不直接在arm架构上编译c文件呢？第一：环境没有搭建好，比如开发板上连u-boot、Linux内核、跟文件系统都没有搭建好；第二：就算环境搭建好了，并且也把交叉编译工具链放到了开发板上，但是由于开发办性能不是很好，编译需要相对较长的时间。</p>
+<p>在Ubuntu中用gcc编译的c文件，用file命令查看生成的可执行文件：</p>
+<figure data-type="image" tabindex="4"><img src="https://cxx7ud.coding-pages.com//post-images/1602508890412.png" alt="" loading="lazy"></figure>
+<p>在Ubuntu中用交叉编译工具编译的c文件：</p>
+<figure data-type="image" tabindex="5"><img src="https://cxx7ud.coding-pages.com//post-images/1602508880908.png" alt="" loading="lazy"></figure>
+<h4 id="c文件是如何被编译成可执行文件的">c文件是如何被编译成可执行文件的</h4>
+<p>参看：<a href="https://zhuanlan.zhihu.com/p/86707793">一段C语言代码编译、运行全过程解析</a></p>
+<pre><code class="language-mermaid">graph LR
+C1(main.c) --预处理--&gt;I1(main.i)
+I1--编译--&gt;S1(mian.s)
+S1--汇编--&gt;O1(main.o)
+
+C2(sub.c) --预处理--&gt;I2(sub.i)
+I2--编译--&gt;S2(sub.s)
+S2--汇编--&gt;O2(sub.o)
+
+O1 --&gt; LM
+L(glibc库)--&gt;LM(链接器)
+O2 --&gt; LM
+LM --&gt; res(a.out)
+</code></pre>
+<pre><code class="language-c">$  gcc  -E  hello.c  &gt;  hello.i           //会生成预处理后的C源文件hello.i
+$  gcc  -S  hello.i                       //将hello.i编译成汇编文件hello.s
+$  gcc  -c  hello.s                       //将汇编文件hello.s汇编成hello.o
+$  gcc hello.o  -o hello                  //将目标文件链接成可执行文件hello
+$  ./hello                               // 运行可执行文件hello
+</code></pre>
+<p>我们在Ubuntu中编写一个c文件后，用gcc就能编译链接成可执行文件。但具体过程是怎样的呢？由上面可知，需要预处理，<strong>编译</strong>，汇编，链接。编译时会去找头文件，去哪找呢？gcc工具链中（一个文件夹）；编译时也需要库文件，去哪找呢？还是在gcc工具链中。</p>
+<p>在Ubuntu中用<code>which gcc或whereis gcc</code>可以找到gcc的路径，gcc命令是在/usr/bin下，而编译时所需的库文件在另外的地方，即/usr/lib中，/usr/include下是一些头文件。</p>
+<blockquote>
+<p>ps. Linux中的usr是指Unix System Resource，即Unix系统资源的缩写。/usr 是系统核心所在，包含了所有的共享文件。它是 unix 系统中最重要的目录之一，涵盖了二进制文件，各种文档，各种头文件，还有各种库文件；还有诸多程序，例如 ftp，telnet 等等。</p>
+</blockquote>
+<figure data-type="image" tabindex="6"><img src="https://cxx7ud.coding-pages.com//post-images/1602508858678.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://cxx7ud.coding-pages.com//post-images/1602508845219.png" alt="" loading="lazy"></figure>
+<p><strong>而对于交叉编译来说</strong>，Ubuntu是没有的，需要我们自己安装。交叉编译工具链我（正点原子的教程）安装到了/usr/local/arm中去了。如下，</p>
+<figure data-type="image" tabindex="8"><img src="https://cxx7ud.coding-pages.com//post-images/1602508830957.png" alt="" loading="lazy"></figure>
+<p>bin目录下是一些可执行文件，就是我们常用的交叉编译工具链，如arm-linux-gnueabihf-gcc, arm-linux-gnueabihf-objdump, arm-linux-gnueabihf-ld等。其它目录就是一些库文件和头文件，也包含一些可执行文件。</p>
+<figure data-type="image" tabindex="9"><img src="https://cxx7ud.coding-pages.com//post-images/1602508819296.png" alt="" loading="lazy"></figure>
+<h3 id="linux中设置环境变量">Linux中设置环境变量</h3>
+<p>如果没有设置环境变量的话，在某个shell中使用命令arm-linux-gnueabihf-gcc会报错，只有在交叉编译工具链的目录下才不会报错，解决方法就是将这一目录加入环境变量PATH中去。<a href="https://blog.csdn.net/qq_36119192/article/details/82970778">Linux下设置环境变量参请参考此</a></p>
+<p>针对对所有用户都有效的方法：打开/etc/profile文件，在末尾添加如下内容：</p>
+<p><code>export PATH=$PATH:路径，如export PATH=$PATH:/usr/local/arm/./bin</code></p>
+<h2 id="二-裸机开发方式回顾">二、裸机开发方式回顾</h2>
+<p>不管什么开发，最终都是操作底层硬件寄存器。</p>
+<h3 id="一-stc89c51">一、STC89C51</h3>
+<p>这是最能体现直接操作寄存器的，比如初始化及配置串口时会直接操作相关寄存器。</p>
+<pre><code class="language-c">void SerialInit()
+{
+	TMOD=0x20;
+	TH1=0xf3;	//波特率为4800
+	TL1=0xf3;
+	PCON=0x80;	//SMOD为1,boundrate加倍
+	TR1=1;
+	SCON=0x50;
+	EA=1;
+	ES=1;
+}
+</code></pre>
+<h3 id="二-stm32">二、STM32</h3>
+<p>学习stm32时，最开始选择的库函数版本，当时还有寄存器版本，到现在又有了hal库。寄存器版本和c51差不多，直接操作寄存器；而库函数和hal库版本都是<strong>间接</strong>操作寄存器，即调用相关API对寄存器进行操作。下面是库函数版本：</p>
+<pre><code class="language-c">u8 DS18B20_Init(void)
+{
+ 	GPIO_InitTypeDef  GPIO_InitStructure;
+ 	//使能PORTA口时钟
+ 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+ 	GPIO_InitStructure.GPIO_Pin = DS18B20IO;			
+ 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 	
+ 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 	GPIO_Init(DS18B20PORT, &amp;GPIO_InitStructure);
+ 	GPIO_SetBits(DS18B20PORT,DS18B20IO);    //输出1
+
+	return DS18B20_Check();
+}  
+</code></pre>
+<h2 id="三-嵌入式linux下的开发">三、嵌入式Linux下的开发</h2>
+<p>其实在嵌入式Linux下开发的方式有很多，可以直接操作寄存器，也可以调用厂家的BSP包（相当于库函数），还可以采用框架（设备树、gpio和pinctrl子系统）等。整体过程如下：</p>
+<pre><code class="language-mermaid">graph LR
+APP(APP/read)--系统调用/sys_read--&gt;Driver(Driver/read)
+Driver--设备树--&gt;R(物理寄存器)
+Driver--gpio/pinctrl--&gt;R(物理寄存器)
+Driver--platform--&gt;R(物理寄存器)
+</code></pre>
+<h3 id="一-裸机式开发">一、裸机式开发</h3>
+<p>即直接操作寄存器，如下：</p>
+<pre><code class="language-c">/* main.h文件部分内容
+ * 部分相关寄存器地址 
+ */
+#define CCM_CCGR0 			*((volatile unsigned int *)0X020C4068)
+#define GPIO1_DR 			*((volatile unsigned int *)0X0209C000)
+/* main.c文件部分内容
+ * 将GPIO1_DR的bit3清零	
+ */
+void led_on(void)
+{
+	GPIO1_DR &amp;= ~(1&lt;&lt;3); 
+}
+</code></pre>
+<h3 id="二-库函数式开发">二、库函数式开发</h3>
+<p>即使用厂商提供的API，如下：</p>
+<pre><code class="language-c">//bsp_clk.h头文件内容
+#ifndef __BSP_CLK_H
+#define __BSP_CLK_H
+
+#include &quot;imx6ul.h&quot;	//厂商写好的头文件
+/* 函数声明 */
+void clk_enable(void);
+
+#endif
+</code></pre>
+<h3 id="三-驱动框架下的开发">三、驱动框架下的开发</h3>
+<p>此开发方式涉及设备树、gpio子系统、pinctrl子系统、platform平台总线等。比如可以直接在驱动程序中定义相关寄存器物理地址，然后编写相应的驱动函数（如read、write等）；也可以将寄存器物理地址表示在设备树中，在驱动中使用相关函数获取设备树中的寄存器物理地址。</p>
+<h4 id="什么是设备树">什么是设备树</h4>
+<p>设备树(Device Tree)，将这个词分开就是“设备”和“树”，描述设备树的文件叫做 DTS(Device  Tree Source)，这个 DTS 文件采用树形结构描述板级设备，也就是开发板上的设备信息，比如 CPU 数量、 内存基地址、IIC 接口上接了哪些设备、SPI 接口上接了哪些设备等等。</p>
+<pre><code class="language-mermaid">graph LR
+C(DTS-设备树源文件) --DTC-编译工具--&gt;B(DTB-设备树二进制文件)
+</code></pre>
+<p>对于设备树，需掌握：</p>
+<ol>
+<li>如何通过设备树描述开发板硬件资源，即需要学习设备树的一些语法。</li>
+<li>如何通过Linux内核解析设备树，即如何获取设备树中相应设备的信息，比如寄存器物理地址，即需要掌握常用的<strong>OF操作函数</strong>。</li>
+<li>明白设备树和驱动程序是怎么联系起来的，即设备结点的compatible属性。</li>
+</ol>
+<h4 id="设备树在linux系统中的体现">设备树在Linux系统中的体现</h4>
+<p>设备树在Linux中是以文件及文件夹形式显示。</p>
+<figure data-type="image" tabindex="10"><img src="https://cxx7ud.coding-pages.com//post-images/1602508797875.png" alt="" loading="lazy"></figure>
+<h4 id="linux内核解析dtb文件">Linux内核解析DTB文件</h4>
+<p>Linux 内核在启动的时候会解析 DTB 文件，然后在/proc/device-tree 目录下生成相应的设备树节点文件。</p>
+<h2 id="四-linux三巨头">四、Linux三巨头</h2>
+<p>如果学习过 UCOS/FreeRTOS 应该知道，UCOS/FreeRTOS 移植 就是在官方的 SDK 包里面找一个和自己所使用的芯片一样的工程编译一下，然后<strong>下载</strong>到开发 板就可以了。那么 Linux 的移植是不是也是这样的，下载 Linux 源码，然后找个和我们所使用 的芯片一样的工程编译一下就可以了？很明显不是的！Linux 的移植要复杂的多，在移植 Linux 之前我们需要先移植一个 bootloader 代码，这个 bootloader 代码用于启动 Linux 内核（相当于Windows下的BIOS），bootloader 有很多，常用的就是 U-Boot。移植好 U-Boot 以后再移植 Linux 内核，移植完 Linux 内核以后 Linux 还不能正常启动，还需要再移植一个根文件系统(rootfs)，根文件系统里面包含了一些最常用的命令和文件。所以 <strong>U-Boot</strong>、<strong>Linux kernel</strong> 和 <strong>rootfs</strong> 这三者一起构成了一个完整的 Linux 系 统，一个可以正常使用、功能完善的 Linux 系统</p>
+<figure data-type="image" tabindex="11"><img src="https://cxx7ud.coding-pages.com//post-images/1602508785770.png" alt="" loading="lazy"></figure>
+<h3 id="一-u-boot">一、u-boot</h3>
+<p>bootloader程序会先初始化DDR等外设，然后将Linux内核从flash(NAND， NOR FLASH，SD，MMC 等)拷贝到 DDR 中，最后启动 Linux 内核。</p>
+<p>u-boot可以看作是一个功能丰富、复杂的裸机程序，在编译生成可执行文件前可以根据自己的需求配置相应的功能，比如USB、网络、SD卡等。配置好后通过以下命令编译。</p>
+<pre><code class="language-shell">make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- distclean
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-mx6ull_14x14_ddr512_emmc_defconfig
+make V=1 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- -j12
+</code></pre>
+<h4 id="如何配置呢">如何配置呢？</h4>
+<p>在uboot源码下的configs文件夹中，有许多配置文件，如下：</p>
+<figure data-type="image" tabindex="12"><img src="https://cxx7ud.coding-pages.com//post-images/1602508771764.png" alt="" loading="lazy"></figure>
+<ol>
+<li>
+<p>复制mx6ull_14x14_evk_emmc_defconfig，然后重命名为mx6ull_alientek_emmc_defconfig，修改其内容为：</p>
+<pre><code class="language-shell">CONFIG_SYS_EXTRA_OPTIONS=&quot;IMX_CONFIG=board/freescale/mx6ull_alientek_emmc/imximage.cfg,MX6ULL_EVK_EMMC_REWORK&quot;
+CONFIG_ARM=y
+CONFIG_ARCH_MX6=y
+CONFIG_TARGET_MX6ULL_ALIENTEK_EMMC=y
+CONFIG_CMD_GPIO=y
+</code></pre>
+</li>
+<li>
+<p>在目录 include/configs 下添加 ALPHA 开 发 板 对 应 的 头 文 件 ，复 制 include/configs/mx6ullevk.h，并重命名为 mx6ull_alientek_emmc.h。注意，头文件的头两行宏定义需要修改，根据头文件名修改，即#ifndef A, #define A改为#ifndef B, #define B。<strong>mx6ull_alientek_emmc.h</strong>中有很多宏定义，这些宏定义基本<strong>用于配置 uboot</strong>，也有一些 I.MX6ULL 的配置项目。如果我们自己要想使能或者禁止 uboot 的某些功能，那就在mx6ull_alientek_emmc.h 里面做修改即可。</p>
+</li>
+</ol>
+<h4 id="uboot如何启动linux的">uboot如何启动Linux的</h4>
+<p>这个不用细究，真要用到时再研究。uboot 中有两个非常重要的环境变量 <strong>bootcmd</strong> 和 <strong>bootargs</strong>。</p>
+<p>bootcmd 保存着 uboot 默认命令，uboot 倒计时结束以后就会执行 bootcmd 中的命令，<strong>这些命令</strong>一般都是用来启动 Linux 内核的，比如读取 EMMC 或者NAND Flash 中的 Linux 内核镜像文件和设备树文件到 DRAM 中，然后启动 Linux 内核。</p>
+<p>bootargs 保存着 uboot 传递给 Linux 内核的参数，比如bootargs=“console= ttymxc0, 115200 root=  /dev/mmcblk1p2 rootwait rw”。</p>
+<p>执行以下命令设置两个环境变量的值，然后直接输入boot即可启动Linux内核。</p>
+<pre><code class="language-shell">setenv bootargs 'console=ttymxc0,115200 root=/dev/mmcblk1p2 rootwait rw'
+setenv bootcmd 'mmc dev 1; fatload mmc 1:1 80800000 zImage; fatload mmc 1:1 83000000 imx6ull-alientek-emmc.dtb; bootz 80800000 - 83000000;'	//从mmc启动
+setenv bootcmd 'tftp 80800000 zImage; tftp 83000000 imx6ull-alientek-emmc.dtb; bootz 80800000 - 83000000' //从网络启动
+saveenv
+</code></pre>
+<h3 id="二-linux内核">二、Linux内核</h3>
+<p>获取到源码后使用交叉编译工具链编译（因为我们是要移植到arm开发板上去）源码，命令如下：</p>
+<pre><code class="language-shell">#!/bin/sh
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- distclean
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- imx_v7_defconfig
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- all -j16
+</code></pre>
+<p>编译完成以后就会在 arch/arm/boot 这个目录下生成一个叫做 <strong>zImage</strong> 的文件，zImage 就是我们要用的 Linux 镜像文件。另外也会在 arch/arm/boo/dts 下生成很多.dtb文件，这些.dtb 就是设备树文件。</p>
+<p>进入到目录/sys/bus/cpu/devices/cpu0/cpufreq 中可以看到许多文件，这些文件是关于CPU频率等信息的。</p>
+<h3 id="三-根文件系统">三、根文件系统</h3>
+<p>Linux 中的根文件系统更像是一个文件夹或者叫做目录(在我看来就是一个文件夹，只 不过是特殊的文件夹)，在这个目录里面会有很多的子目录。根目录下和子目录中会有很多的文 件，这些文件是 Linux 运行<strong>所必须的</strong>，比如库、常用的软件和命令、设备文件、配置文件等等。</p>
+<p>根文件系统是 Linux 内核启动以后挂载(mount)的第一个文件系统，然后从根文件系统中读取初始化脚本，比如 rcS，inittab 等。根文件系统和 Linux 内核是分开的，单独的 Linux 内核是没法正常工作的，必须要搭配根文件系统。<strong>如果不提供根文件系统</strong>，Linux 内核 在启动的时候就会提示内核崩溃(Kernel panic)的提示。</p>
+<p>根文件系统的这个“根”字就说明了这个文件系统的重要性，它是其他文件系统的根，没有这个“根”，其他的文件系统或者软件就别想工作。比如我们常用的 ls、mv、ifconfig 等命令其实就是一个个小软件，只是这些软件没有图形界面，而且需要输入命令来运行。这些小软件 就保存在根文件系统中，这些小软件是怎么来的呢？这个就是我们本章教程的目的，教大家来 构建自己的根文件系统，这个根文件系统是满足 Linux 运行的最小根文件系统，后续我们可以根据自己的实际工作需求不断的去填充这个最小根文件系统，最终使其成为一个相对完善的根文件系统。</p>
+<h4 id="根文件系统的各个子目录">根文件系统的各个子目录</h4>
+<ol>
+<li>/bin目录：<br>
+看到“bin”大家应该能想到 bin 文件，bin 文件就是可执行文件。所以此目录下存放着系统需要的可执行文件，一般都是一些命令，比如 ls、mv 等命令。此目录下的命令所有的客户都可以使用。</li>
+<li>/dev目录：<br>
+dev 是 device 的缩写，所以此目录下的文件都是和设备有关的，此目录下的文件都是<strong>设备文件</strong>。在 Linux 下一切皆文件，即使是硬件设备，也是以文件的形式存在的，比如/dev/ttymxc0(I.MX6ULL 根目录会有此文件)就表示 I.MX6ULL 的串口 0，我们要想通过串口0发送或者接收数据就要操作文件/dev/ttymxc0，通过对文件/dev/ttymxc0 的读写操作来实现串口0的数据收发。</li>
+<li>/etc目录：<br>
+此目录下存放着各种配置文件，大家可以进入 Ubuntu 的 etc 目录看一下，里面的配置文件非常多！但是在嵌入式 Linux 下此目录会很简洁。</li>
+<li>/lib目录：<br>
+lib 是 library 的简称，也就是库的意思，因此此目录下存放着 Linux 所必须的库文件。这些库文件是共享库，<strong>命令</strong>和<strong>用户编写的应用程序</strong>要使用这些库文件。</li>
+<li>/mnt目录：<br>
+临时挂载目录，一般是空目录，可以在此目录下创建空的子目录，比如/mnt/sd、/mnt/usb，这样就可以将 SD 卡或者 U 盘挂载到/mnt/sd 或者/mnt/usb 目录中。</li>
+<li>/proc目录：<br>
+此目录一般是空的，当 Linux 系统启动以后会将此目录作为 proc 文件系统的挂载点，proc是个<strong>虚拟文件系统</strong>，没有实际的存储设备。proc 里面的文件都是<strong>临时存在的</strong>，一般用来存储系统运行信息文件。</li>
+<li>/usr目录：<br>
+要注意，usr 不是 user 的缩写，而是 Unix Software[System] Resource 的缩写，也就是 Unix 操作系统软件资源目录。这里有个小知识点，那就是 Linux 一般被认为是类 Unix 操作系统，苹果的 MacOS也是类 Unix 操作系统。既然是软件资源目录，因此/usr 目录下也存放着很多软件，一般系统安装完成以后此目录占用的空间最多。</li>
+<li>/var目录：<br>
+此目录存放一些可以改变的数据。</li>
+<li>/sbin目录：<br>
+此目录页用户存放一些可执行文件，但是此目录下的文件或者说命令只有管理员才能使用，主要用户系统管理。</li>
+<li>/sys目录：<br>
+系统启动以后此目录作为 sysfs 文件系统的挂载点，sysfs 是一个类似于 proc 文件系统的特殊文件系统，sysfs 也是基于 ram 的文件系统，也就是说它也没有实际的存储设备。此目录是系统设备管理的重要目录，此目录通过一定的组织结构<strong>向用户提供详细的内核数据结构信息</strong>。</li>
+<li>/opt目录：<br>
+可选的文件、软件存放区，由用户选择将哪些文件或软件放到此目录中。</li>
+</ol>
+<h4 id="busybox构建根文件系统">BusyBox构建根文件系统</h4>
+<p>得到BusyBox源码后，按需要进行配置（也可以通过可视化配置），然后编译（指定编译结果存放目录rootfs）完成后得到<strong>bin</strong>、<strong>sbin</strong>、<strong>usr</strong>三个目录，以及<strong>linuxrc</strong> 这个文件。前面说过 Linux 内核 init 进程最后会查找用户空间的 init 程序，找到以后就会运行这个用户空间的 init 程序，从而切换到用户态。如果 bootargs 设置 init=/linuxrc，那么 linuxrc 就是可以作为用户空间的 init 程序，所以用户态空间的 init 程序是 busybox 来生成的。</p>
+<h5 id="1-向rootfs的lib目录添加库文件">1、向rootfs的/lib目录添加库文件</h5>
+<p>Linux 中的应用程序一般都是需要动态库的，当然你也可以编译成静态的，但是静态的可执行文件会很大。如果编译为动态的话就需要动态库，所以我们需要先根文件系统中添加动态库，在 rootfs 中创建一个<strong>名为“lib”的文件夹</strong>。</p>
+<p>lib 文件夹创建好了，库文件从哪里来呢？<strong>lib 库文件从交叉编译器中获取</strong>，前面我们搭建交叉编译环境的时候将交叉编译器存放到了“/usr/local/arm/”目录中。交叉编译器里面<strong>有很多的 库文件</strong>，这些库文件具体是做什么的我们作为初学者肯定不知道，既然我不知道那就简单粗暴的把所有的库文件都放到我们的根文件系统中。</p>
+<pre><code>/usr/local/arm/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/arm-linux-gnueabihf/libc/lib
+</code></pre>
+<p>此目录下有很多的<em>so</em>(<em>是通配符)和.a 文件，这些就是库文件，将此目录下所有的</em>so*和.a文件都拷贝到 rootfs/lib 目录中。</p>
+<pre><code>/usr/local/arm/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/arm-linux-gnueabihf/lib
+</code></pre>
+<p>此目录下也有很多的的<em>so</em>和.a 库文件，我们将其也拷贝到 rootfs/lib 目录中</p>
+<h5 id="2-向-rootfs-的usrlib目录添加库文件">2、向 <strong>rootfs</strong> 的usr/lib目录添加库文件</h5>
+<p>在 rootfs 的 usr 目录下创建一个名为 lib 的目录，将如下目录中的 so 和.a 库文件都拷贝到 rootfs/usr/lib 目录中：</p>
+<pre><code>/usr/local/arm/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf/arm-linux-gnueabihf/libc/usr/lib
+</code></pre>
+<h5 id="3-创建etcinitdrcs文件">3、创建/etc/init.d/rcS文件</h5>
+<p>rcS 是个 shell 脚本，Linux 内核启动以后需要启动一些服务，而 rcS 就是规定启动哪些文件的脚本文件。在 rootfs 中创建/etc/init.d/rcS 文件，然后在 rcS 中输入如下所示内容（创建好文件/etc/init.d/rcS 以后一定要给其可执行权限！）：</p>
+<pre><code class="language-shell">#!/bin/sh
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/lib:/usr/lib
+export PATH LD_LIBRARY_PATH runlevel
+ 
+mount -a
+mkdir /dev/pts
+mount -t devpts devpts /dev/pts
+
+echo /sbin/mdev &gt; /proc/sys/kernel/hotplug
+mdev -s
+</code></pre>
+<h5 id="4-创建etcfstab文件">4、创建/etc/fstab文件</h5>
+<p>在 rootfs 中创建/etc/fstab 文件，fstab 在 Linux 开机以后自动配置哪些需要自动挂载的分区，格式如下：</p>
+<pre><code class="language-shell">&lt;file system&gt; &lt;mount point&gt; &lt;type&gt; &lt;options&gt; &lt;dump&gt; &lt;pass&gt;
+proc 			/proc 		proc 	defaults 	0 	0
+tmpfs 			/tmp 		tmpfs 	defaults 	0 	0
+sysfs 			/sys 		sysfs 	defaults 	0 	0
+</code></pre>
+<h5 id="5-创建etcinittab文件">5、创建/etc/inittab文件</h5>
+<p>inittab 的详细内容可以参考 busybox 下的文件 examples/inittab。init 程序会读取/etc/inittab这个文件，inittab 由若干条指令组成。每条指令的结构都是一样的，由以“:”分隔的 4 个段组 成，格式如下：</p>
+<pre><code class="language-shell">格式：&lt;id&gt;:&lt;runlevels&gt;:&lt;action&gt;:&lt;process&gt;
+#etc/inittab
+::sysinit:/etc/init.d/rcS
+console::askfirst:-/bin/sh
+::restart:/sbin/init
+::ctrlaltdel:/sbin/reboot
+::shutdown:/bin/umount -a -r 7 ::shutdown:/sbin/swapoff -a
+</code></pre>
+<p>至此，根文件系统基本构建完成。</p>
+<h4 id="根文件系统初步测试">根文件系统初步测试</h4>
+<p>测试方法就是使用 NFS 挂载，uboot 里面的 bootargs 环境变量会设置“root”的值，所以我们将 root 的值改为 NFS 挂载即可。</p>
+<pre><code class="language-shell">setenv bootargs 'console=ttymxc0,115200 root=/dev/nfs rw nfsroot=192.168.1.250:/home/zuozhongkai/linux/nfs/rootfs ip=192.168.1.251:192.168.1.250:192.168.1.1:255.255.255.0::eth0:off' //设置 bootargs
+saveenv //保存环境变量
+</code></pre>
+<h5 id="软件运行测试">软件运行测试</h5>
+<p>我们使用 Linux 的目的就是运行我们自己的软件，我们编译的应用软件一般都使用动态库，使用动态库的话应用软件体积就很小，但是得提供库文件，库文件我们已经添加到了根文件系统中。我们编写一个小小的测试软件来测试一下库文件是否工作正常，在根文件系统下创建一 个名为“drivers”的文件夹，以后我们学习 Linux 驱动的时候就把所有的实验文件放到这个文件夹里面。</p>
+<p>再Ubuntu下编写hello，world文件，用交叉编译工具编译后拷贝到rootfs/drivers文件夹中去，然后在开发板上运行hello文件。</p>
+<h2 id="五-驱动开发">五、驱动开发</h2>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#linux%E6%A0%B9%E7%9B%AE%E5%BD%95%E8%AF%B4%E6%98%8E">Linux根目录说明</a></li>
+<li><a href="#%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E8%AF%B4%E6%98%8E">文件类型说明</a></li>
+<li><a href="#%E5%B5%8C%E5%85%A5%E5%BC%8Flinux%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93">嵌入式Linux开发总结</a>
+<ul>
+<li><a href="#%E4%B8%80-%E7%8E%AF%E5%A2%83%E7%9A%84%E6%90%AD%E5%BB%BA">一、环境的搭建</a>
+<ul>
+<li><a href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E9%93%BE">交叉编译工具链</a>
+<ul>
+<li><a href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E9%93%BE%E6%98%AF%E5%B9%B2%E5%98%9B%E7%9A%84">交叉编译工具链是干嘛的？</a></li>
+<li><a href="#c%E6%96%87%E4%BB%B6%E6%98%AF%E5%A6%82%E4%BD%95%E8%A2%AB%E7%BC%96%E8%AF%91%E6%88%90%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E7%9A%84">c文件是如何被编译成可执行文件的</a></li>
+</ul>
+</li>
+<li><a href="#linux%E4%B8%AD%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F">Linux中设置环境变量</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%E6%96%B9%E5%BC%8F%E5%9B%9E%E9%A1%BE">二、裸机开发方式回顾</a>
+<ul>
+<li><a href="#%E4%B8%80-stc89c51">一、STC89C51</a></li>
+<li><a href="#%E4%BA%8C-stm32">二、STM32</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89-%E5%B5%8C%E5%85%A5%E5%BC%8Flinux%E4%B8%8B%E7%9A%84%E5%BC%80%E5%8F%91">三、嵌入式Linux下的开发</a>
+<ul>
+<li><a href="#%E4%B8%80-%E8%A3%B8%E6%9C%BA%E5%BC%8F%E5%BC%80%E5%8F%91">一、裸机式开发</a></li>
+<li><a href="#%E4%BA%8C-%E5%BA%93%E5%87%BD%E6%95%B0%E5%BC%8F%E5%BC%80%E5%8F%91">二、库函数式开发</a></li>
+<li><a href="#%E4%B8%89-%E9%A9%B1%E5%8A%A8%E6%A1%86%E6%9E%B6%E4%B8%8B%E7%9A%84%E5%BC%80%E5%8F%91">三、驱动框架下的开发</a>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%AE%BE%E5%A4%87%E6%A0%91">什么是设备树</a></li>
+<li><a href="#%E8%AE%BE%E5%A4%87%E6%A0%91%E5%9C%A8linux%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E4%BD%93%E7%8E%B0">设备树在Linux系统中的体现</a></li>
+<li><a href="#linux%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%90dtb%E6%96%87%E4%BB%B6">Linux内核解析DTB文件</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%9B%9B-linux%E4%B8%89%E5%B7%A8%E5%A4%B4">四、Linux三巨头</a>
+<ul>
+<li><a href="#%E4%B8%80-u-boot">一、u-boot</a>
+<ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E5%91%A2">如何配置呢？</a></li>
+<li><a href="#uboot%E5%A6%82%E4%BD%95%E5%90%AF%E5%8A%A8linux%E7%9A%84">uboot如何启动Linux的</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-linux%E5%86%85%E6%A0%B8">二、Linux内核</a></li>
+<li><a href="#%E4%B8%89-%E6%A0%B9%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F">三、根文件系统</a>
+<ul>
+<li><a href="#%E6%A0%B9%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%84%E4%B8%AA%E5%AD%90%E7%9B%AE%E5%BD%95">根文件系统的各个子目录</a></li>
+<li><a href="#busybox%E6%9E%84%E5%BB%BA%E6%A0%B9%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F">BusyBox构建根文件系统</a>
+<ul>
+<li><a href="#1-%E5%90%91rootfs%E7%9A%84lib%E7%9B%AE%E5%BD%95%E6%B7%BB%E5%8A%A0%E5%BA%93%E6%96%87%E4%BB%B6">1、向rootfs的/lib目录添加库文件</a></li>
+<li><a href="#2-%E5%90%91-rootfs-%E7%9A%84usrlib%E7%9B%AE%E5%BD%95%E6%B7%BB%E5%8A%A0%E5%BA%93%E6%96%87%E4%BB%B6">2、向 <strong>rootfs</strong> 的usr/lib目录添加库文件</a></li>
+<li><a href="#3-%E5%88%9B%E5%BB%BAetcinitdrcs%E6%96%87%E4%BB%B6">3、创建/etc/init.d/rcS文件</a></li>
+<li><a href="#4-%E5%88%9B%E5%BB%BAetcfstab%E6%96%87%E4%BB%B6">4、创建/etc/fstab文件</a></li>
+<li><a href="#5-%E5%88%9B%E5%BB%BAetcinittab%E6%96%87%E4%BB%B6">5、创建/etc/inittab文件</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%B9%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%88%9D%E6%AD%A5%E6%B5%8B%E8%AF%95">根文件系统初步测试</a>
+<ul>
+<li><a href="#%E8%BD%AF%E4%BB%B6%E8%BF%90%E8%A1%8C%E6%B5%8B%E8%AF%95">软件运行测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%BA%94-%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91">五、驱动开发</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://cxx7ud.coding-pages.com/post/cpuStart/">
+              <h3 class="post-title">
+                CPU如何启动的
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://cxx7ud.coding-pages.com//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

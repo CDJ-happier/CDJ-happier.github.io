@@ -1,0 +1,301 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>sublime配置sftp及添加编译系统 | CofCai&#39;s blog</title>
+<link rel="shortcut icon" href="https://cxx7ud.coding-pages.com//favicon.ico?v=1602508981222">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cxx7ud.coding-pages.com//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="sublime配置sftp及添加编译系统 | CofCai&#39;s blog - Atom Feed" href="https://cxx7ud.coding-pages.com//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="刚开始是为了在sublimeText中配置人工智能插件自动补全Kite，但是不知道成功没成功，因为刚开始没有弄成功，后来就去下了其它的插件，所以不知道现在起作用的是哪一个。
+sublime的功能很强大，甚至有vim中的命令模式，插入模式等，..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://cxx7ud.coding-pages.com/">
+  <img class="avatar" src="https://cxx7ud.coding-pages.com//images/avatar.png?v=1602508981222" alt="">
+  </a>
+  <h1 class="site-title">
+    CofCai&#39;s blog
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              sublime配置sftp及添加编译系统
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-10-12
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>刚开始是为了在sublimeText中配置人工智能插件自动补全Kite，但是不知道成功没成功，因为刚开始没有弄成功，后来就去下了其它的插件，所以不知道现在起作用的是哪一个。<br>
+sublime的功能很强大，<strong>甚至有vim中的命令模式，插入模式等</strong>，但是我还没弄透<br>
+还可以配置fpt/sftp来编辑远程文件，见最后<br>
+还有很多快捷键，太爽了，就是不会用</p>
+<h1 id="进入正题">进入正题</h1>
+<blockquote>
+<p>如何在sublimeText中配置各种环境，比如C/C++环境、python环境、matlab环境、make环境(搭配C/C++)</p>
+</blockquote>
+<hr>
+<h2 id="首先来看sublime的界面">首先来看sublime的界面：</h2>
+<p><img src="https://cxx7ud.coding-pages.com//post-images/1602507084876.png" alt="" loading="lazy"><br>
+菜单栏中的“工具”--&gt;编译系统--&gt;选择新建编译系统。<br>
+新建编译系统后弹出一个文件，点击保存默认在<strong>D:\CDJ\Sublime Text 3\sublimetext3\Sublime Text Build 3176 x64\Data\Packages\User</strong><br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602507373311.png" alt="" loading="lazy"><br>
+但是我们要在文件中配置一些信息，具体如下：</p>
+<h2 id="配置cc环境">配置C/C++环境</h2>
+<p>在文件中输入以下内容，并将文件保存为c_cpp_compile.sublime-build</p>
+<pre><code class="language-c">{ 
+    &quot;cmd&quot;: [&quot;g++&quot;, &quot;${file}&quot;, &quot;-std=c++11&quot;, &quot;-o&quot;, &quot;${file_path}\\\\${file_base_name}&quot;, &quot;&amp;&quot;, &quot;start&quot;, &quot;cmd&quot;, &quot;/c&quot;, &quot;${file_path}\\\\${file_base_name} &amp; echo. &amp; pause&quot;],
+    &quot;file_regex&quot;: &quot;^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$&quot;, &quot;working_dir&quot;: &quot;${file_path}&quot;,
+    &quot;selector&quot;: &quot;source.c, source.c++&quot;, &quot;shell&quot;: true,
+    &quot;encoding&quot;:&quot;cp936&quot;, 
+
+    &quot;variants&quot;:
+    [
+        {
+            &quot;name&quot; : &quot;Build Only&quot;,
+            &quot;cmd&quot;:[&quot;g++&quot;, &quot;${file}&quot;, &quot;-std=c++11&quot;, &quot;-o&quot;, &quot;${file_path}\\\\${file_base_name}&quot;]
+        },
+        {
+            &quot;name&quot; : &quot;Run Only&quot;,
+            &quot;cmd&quot; : [&quot;start&quot;, &quot;cmd&quot;, &quot;/c&quot;, &quot;${file_path}\\\\${file_base_name} &amp; echo. &amp; pause&quot;]
+        },
+        {
+            &quot;name&quot; : &quot;Pipe Build and Run&quot;,
+            &quot;cmd&quot;:[&quot;g++&quot;, &quot;${file}&quot;, &quot;-std=c++11&quot;, &quot;-o&quot;, &quot;${file_path}\\\\${file_base_name}&quot;,&quot;&amp;&quot;,&quot;${file_path}\\\\${file_base_name}&quot;, &quot;&lt;&quot;,&quot;${file_path}\\\\in&quot;,&quot;&gt;&quot;,&quot;${file_path}\\\\out&quot;]
+        },
+        {
+            &quot;name&quot; : &quot;Pipe Run Only&quot;,
+            &quot;cmd&quot; : [&quot;${file_base_name}&quot;, &quot;&lt;&quot;,&quot;in&quot;,&quot;&gt;&quot;,&quot;out&quot;]
+        },
+        {
+            &quot;name&quot; : &quot;Project Build &amp; Run&quot;,
+            &quot;cmd&quot; : [&quot;g++&quot;, &quot;${file_path}\\\\*.cpp&quot;, &quot;-std=c++11&quot;, &quot;-o&quot;, &quot;${file_path}\\\\project&quot;, &quot;&amp;&quot;, &quot;start&quot;, &quot;cmd&quot;, &quot;/c&quot;, &quot;${file_path}\\\\project &amp; echo. &amp; pause&quot;]
+        },
+        {
+            &quot;name&quot; : &quot;Project Build Only&quot;,
+            &quot;cmd&quot; : [&quot;g++&quot;, &quot;${file_path}\\\\*.cpp&quot;, &quot;-std=c++11&quot;, &quot;-o&quot;, &quot;${file_path}\\\\project&quot;]
+        },
+        {
+            &quot;name&quot; : &quot;Project Run Only&quot;,
+            &quot;cmd&quot; : [&quot;start&quot;, &quot;cmd&quot;, &quot;/c&quot;, &quot;${file_path}\\\\project &amp; echo. &amp; pause&quot;]
+        }
+    ]
+}
+</code></pre>
+<h3 id="如何使用配置好的cc环境呢">如何使用配置好的C/C++环境呢？</h3>
+<p>先随便编写一个C文件，比如下面：<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602507198013.png" alt="" loading="lazy"><br>
+<strong>然后在菜单栏中的工具中选择“编译系统”为我们刚才创建的c_cpp_compile</strong>，然后CTRL+B可以快速编译，CTRL+shift+B可以选择做什么（比如只编译，只运行，编译&amp;运行。有这些选择的前提是在配置文件时添加了相应的配置信息），如下：<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602507217414.png" alt="" loading="lazy"><br>
+c_cpp_compile是我配置的文件名，而后面跟着的Build Only, Run Only等是在配置文件中配置的信息。选择Build Only会在目标文件同目录下生成可执行文件（其实这个原理就是在配置文件中使用了命令来执行，就像是在cmd使用gcc/g++来编译某个c文件，请看c_cpp_compile配置文件的第一行以及&quot;variants&quot;字段中的内容）。<br>
+选择Run Only后出现以下内容：<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602507232764.png" alt="" loading="lazy"></p>
+<h2 id="配置python环境">配置Python环境</h2>
+<p>同理，菜单栏中的工具中的编译系统<strong>新建编译系统</strong>，输入以下内容：<br>
+第一行配置自己想用的python解释器</p>
+<pre><code class="language-c">{
+ &quot;cmd&quot;: [&quot;D:/InitalSoftware/Anaconda3/envs/tensorflow/python.exe&quot;,&quot;-u&quot;,&quot;$file&quot;],
+ &quot;file_regex&quot;: &quot;^[ ]*File \&quot;(...*?)\&quot;, line ([0-9]*)&quot;,
+ &quot;selector&quot;: &quot;source.python&quot;,
+ &quot;encoding&quot;: &quot;cp936&quot;,
+}
+</code></pre>
+<p>当然，可以添加一些其它配置，但这样就已经可以执行python文件了。保存为python35.sublime-build。</p>
+<h3 id="如何使用python环境">如何使用python环境</h3>
+<ol>
+<li>编写python脚本</li>
+<li>编译系统选择刚才创建的python35</li>
+<li>CTRL+SHIFT+B调出选择框（不过此处只有一个配置，所以可以直接CTRL+B）</li>
+<li>结果如下<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602507298656.png" alt="" loading="lazy"></li>
+</ol>
+<h2 id="配置matlab环境">配置matlab环境</h2>
+<p>同理，内容是：<br>
+第一含配置matlab解释器</p>
+<pre><code class="language-c">{
+    &quot;cmd&quot;: [&quot;D:/InitalSoftware/Matlab2018b/bin/matlab.exe&quot;, &quot;-nodesktop&quot;, &quot;-nosplash&quot;, &quot;-r&quot;, &quot;\&quot;run('$file')\&quot;&quot;],
+    &quot;selector&quot;: &quot;source.m&quot;,
+    &quot;working_dir&quot;: &quot;${project_path:${folder}}&quot;
+}
+</code></pre>
+<h3 id="如何使用matlab环境呢">如何使用matlab环境呢？</h3>
+<ol>
+<li>编写matlab脚本</li>
+<li>选择刚才创建的matlab编译系统</li>
+<li>CTRL+B</li>
+<li>出结果（我不建议用sublime来运行matlab，因为也是调用matlab命令行，没意义）<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602506990284.png" alt="" loading="lazy"></li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://cxx7ud.coding-pages.com//post-images/1602506979694.png" alt="" loading="lazy"></figure>
+<h3 id="sublime还可以配置其它的很多东西就不一一阐述了">sublime还可以配置其它的很多东西，就不一一阐述了。</h3>
+<p>（可以使用编译系统来完成一些重复性操作，比如创建一个bat文件，然后创建一个sublime-build文件，其中的cmd就是刚才的bat文件（可执行））</p>
+<h2 id="来说一说如何用sublime编辑远程文件">来说一说如何用sublime编辑远程文件</h2>
+<p>先配置：<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602506956354.png" alt="" loading="lazy"><br>
+选择setup Server，出现以下界面：<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602506933209.png" alt="" loading="lazy"><br>
+我配置的是：<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602506905296.png" alt="" loading="lazy"><br>
+保存后就可以远程编辑了，选择Browse Server，然后选择要连接的服务器即可，如下：<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602506891878.png" alt="" loading="lazy"></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E8%BF%9B%E5%85%A5%E6%AD%A3%E9%A2%98">进入正题</a>
+<ul>
+<li><a href="#%E9%A6%96%E5%85%88%E6%9D%A5%E7%9C%8Bsublime%E7%9A%84%E7%95%8C%E9%9D%A2">首先来看sublime的界面：</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AEcc%E7%8E%AF%E5%A2%83">配置C/C++环境</a>
+<ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E9%85%8D%E7%BD%AE%E5%A5%BD%E7%9A%84cc%E7%8E%AF%E5%A2%83%E5%91%A2">如何使用配置好的C/C++环境呢？</a></li>
+</ul>
+</li>
+<li><a href="#%E9%85%8D%E7%BD%AEpython%E7%8E%AF%E5%A2%83">配置Python环境</a>
+<ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8python%E7%8E%AF%E5%A2%83">如何使用python环境</a></li>
+</ul>
+</li>
+<li><a href="#%E9%85%8D%E7%BD%AEmatlab%E7%8E%AF%E5%A2%83">配置matlab环境</a>
+<ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8matlab%E7%8E%AF%E5%A2%83%E5%91%A2">如何使用matlab环境呢？</a></li>
+<li><a href="#sublime%E8%BF%98%E5%8F%AF%E4%BB%A5%E9%85%8D%E7%BD%AE%E5%85%B6%E5%AE%83%E7%9A%84%E5%BE%88%E5%A4%9A%E4%B8%9C%E8%A5%BF%E5%B0%B1%E4%B8%8D%E4%B8%80%E4%B8%80%E9%98%90%E8%BF%B0%E4%BA%86">sublime还可以配置其它的很多东西，就不一一阐述了。</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9D%A5%E8%AF%B4%E4%B8%80%E8%AF%B4%E5%A6%82%E4%BD%95%E7%94%A8sublime%E7%BC%96%E8%BE%91%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6">来说一说如何用sublime编辑远程文件</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://cxx7ud.coding-pages.com/post/sublime-REPL/">
+              <h3 class="post-title">
+                sublime创建交互式python环境及调试
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://cxx7ud.coding-pages.com//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

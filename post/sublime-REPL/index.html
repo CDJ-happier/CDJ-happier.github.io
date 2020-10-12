@@ -1,0 +1,239 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>sublime创建交互式python环境及调试 | CofCai&#39;s blog</title>
+<link rel="shortcut icon" href="https://cxx7ud.coding-pages.com//favicon.ico?v=1602508981222">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cxx7ud.coding-pages.com//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="sublime创建交互式python环境及调试 | CofCai&#39;s blog - Atom Feed" href="https://cxx7ud.coding-pages.com//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="2020-04-01这一天写了一篇关于sublime如何配置成各种开发环境的文章，C语言、C++、Python等。然而后来发现配置的Python开发环境不能进行交互式，比如不能使用input函数获取用户输入。然后就开始百度，度了很久，很多相..." />
+    <meta name="keywords" content="sublime" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://cxx7ud.coding-pages.com/">
+  <img class="avatar" src="https://cxx7ud.coding-pages.com//images/avatar.png?v=1602508981222" alt="">
+  </a>
+  <h1 class="site-title">
+    CofCai&#39;s blog
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              sublime创建交互式python环境及调试
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-10-12
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="https://cxx7ud.coding-pages.com/tag/i5ot-lyUg/" class="post-tag">
+                  # sublime
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>2020-04-01这一天写了一篇关于sublime如何配置成各种开发环境的文章，C语言、C++、Python等。然而后来发现配置的Python开发环境不能进行交互式，比如不能使用input函数获取用户输入。然后就开始百度，度了很久，很多相似的文章，网络越来越乱了，随便转载，真恶心。</p>
+<h1 id="开始进入正题">开始进入正题</h1>
+<h2 id="第一步">第一步</h2>
+<p>刚开始，百度到的都是要先安装sublimeREPL这个插件，确实要安装，然后安装好后，那些垃圾博客就开始说明怎么用，没有一些实质性的讲解，事实是会遇到很多其它问题。<br>
+遇到的博客都是安装好sublimeREPL后执行Python-RUN current file<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602506486298.png" alt="" loading="lazy"><br>
+交互式界面打是打开了，但是报了一个错误，就是没有找到python解释器。虽然我配置过python解释器，但是那个是编译系统中进行配置的，而这个需要对sublimeREPL所使用的解释器进行配置。百度了好久都没有一篇博客说明，最后终于发现了一篇，才慢慢搞明白是怎么回事。[参看](https://www.jianshu.com/p/561ab6d620b4）</p>
+<h2 id="第二步">第二步</h2>
+<p>在sublime中通过浏览插件进入到插件安装的目录，如下：<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602506480070.png" alt="" loading="lazy"><br>
+接着依次进入到SublimeREPL、config中，出现以下界面：<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602506498390.png" alt="" loading="lazy"></p>
+<p>仔细观察会发现这些就是第一幅图中sublimeREPL中对应的各种交互式环境。因此我们可以创建不同版本的python环境，下面我们就来创建python35的交互式环境（编译系统中我也是用python35来执行python环境的）</p>
+<h2 id="第三步-创建一个python35的交互式环境">第三步-创建一个python35的交互式环境</h2>
+<ol>
+<li>在config文件夹下创建一个文件夹取名为ython35，把Python文件夹下的所有文件复制一份到Python35</li>
+<li>然后打开Default.sublime-commands，将里面出现的所有python替换成python3.5</li>
+<li>打开Menu.sublime-menu，除了&quot;syntax&quot;: &quot;Packages/Python/Python.tmLanguage&quot;,里面的python不变（使用软件自带的python语法规则）</li>
+<li>注意：要更换掉Menu.sublime-menu文件中&quot;cmd&quot;的值，即python解释器路径，选择python35的路径（其实这里才是创建python35环境的核心）。&quot;cmd&quot;默认的值是[&quot;python&quot;, &quot;-i&quot;, &quot;-u&quot;,&quot;$file_basename&quot;]，要将列表中的&quot;python&quot;改为我们要使用的python解释器路径。</li>
+<li>保存，然后在第一幅图中会看到多了一个python35的选项。ok，完美</li>
+</ol>
+<h2 id="第四步-使用创建好的交互式环境">第四步-使用创建好的交互式环境</h2>
+<ol>
+<li>绑定快捷键<br>
+首选项--&gt;快捷键设置，然后弹出新的串口，分为两页。左边页为软件默认的快捷键、右边页为用户自定义快捷键，可以更改。我在里面添加如下代码实现F5以交互式python环境运行代码，F8可以进入调试模式</li>
+</ol>
+<pre><code class="language-c">[
+    {
+    &quot;keys&quot;: [&quot;f5&quot;],
+    &quot;caption&quot;: &quot;SublimeREPL: Python35 - RUN current file&quot;,  # 其实就相当于手动在菜单栏中选择sublimeREPL--&gt;Python35--&gt;RUN current file
+    &quot;command&quot;: &quot;run_existing_window_command&quot;,
+    &quot;args&quot;: {
+        &quot;id&quot;: &quot;repl_python_run&quot;,
+        &quot;file&quot;: &quot;config/Python35/Main.sublime-menu&quot;}
+    },
+    {
+    &quot;keys&quot;: [&quot;f8&quot;],
+    &quot;caption&quot;: &quot;SublimeREPL: Python35 - PDB current file&quot;,
+    &quot;command&quot;: &quot;run_existing_window_command&quot;,
+    &quot;args&quot;: {
+        &quot;id&quot;: &quot;repl_python_pdb&quot;,
+        &quot;file&quot;: &quot;config/Python35/Main.sublime-menu&quot;}
+    },   
+]
+</code></pre>
+<ol start="2">
+<li><strong>编写python程序</strong>，按下F5，进入到交互式界面，重点讲F8，如何单步调试<br>
+按下F8，进入到调式窗口，如下：<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602506414767.png" alt="" loading="lazy"><br>
+（<strong>对了，如何实现两个文件并列显示在菜单栏中---视图---布局---选择各种布局</strong>）<br>
+右边就是按下F8后弹出的调试窗口（注意看出现了Pdb）。如何调试了，这个就要学一些调试命令了。具体可百度学习pdb调试命令和其机制（分为侵入/非侵入方式），这里推荐两篇关于命令的文章：https://blog.csdn.net/qingkong1994/article/details/80038199 及https://www.zhihu.com/tardis/sogou/art/37294138<br>
+常用命令：b、l、ll、n、c、s。效果如下：<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602506382829.png" alt="" loading="lazy"></li>
+</ol>
+<h2 id="总结">总结</h2>
+<ol>
+<li>现在回想起来，只是那些博客没有说明白，我没有成功的原因是没有替换掉&quot;cmd&quot;的值，即python解释器的路径</li>
+<li>编译系统中我创建的python35环境不能进行交互式运行</li>
+<li>通过sublimeREPL，在其config文件夹下创建自己需要的交互式环境</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%BC%80%E5%A7%8B%E8%BF%9B%E5%85%A5%E6%AD%A3%E9%A2%98">开始进入正题</a>
+<ul>
+<li><a href="#%E7%AC%AC%E4%B8%80%E6%AD%A5">第一步</a></li>
+<li><a href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5">第二步</a></li>
+<li><a href="#%E7%AC%AC%E4%B8%89%E6%AD%A5-%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AApython35%E7%9A%84%E4%BA%A4%E4%BA%92%E5%BC%8F%E7%8E%AF%E5%A2%83">第三步-创建一个python35的交互式环境</a></li>
+<li><a href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5-%E4%BD%BF%E7%94%A8%E5%88%9B%E5%BB%BA%E5%A5%BD%E7%9A%84%E4%BA%A4%E4%BA%92%E5%BC%8F%E7%8E%AF%E5%A2%83">第四步-使用创建好的交互式环境</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://cxx7ud.coding-pages.com/post/sublime-compiler/">
+              <h3 class="post-title">
+                sublime配置编译系统
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://cxx7ud.coding-pages.com//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,586 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>嵌入式Linux驱动开发相关API | CofCai&#39;s blog</title>
+<link rel="shortcut icon" href="https://cxx7ud.coding-pages.com//favicon.ico?v=1602508981222">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cxx7ud.coding-pages.com//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="嵌入式Linux驱动开发相关API | CofCai&#39;s blog - Atom Feed" href="https://cxx7ud.coding-pages.com//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="1. 字符设备注册与注销
+static inline int register_chrdev(unsigned int major, const char *name,const struct file_operations *fops)
+..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://cxx7ud.coding-pages.com/">
+  <img class="avatar" src="https://cxx7ud.coding-pages.com//images/avatar.png?v=1602508981222" alt="">
+  </a>
+  <h1 class="site-title">
+    CofCai&#39;s blog
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              嵌入式Linux驱动开发相关API
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-10-12
+              </span>
+              <span>
+                13 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="1-字符设备注册与注销">1. 字符设备注册与注销</h2>
+<pre><code class="language-c">static inline int register_chrdev(unsigned int major, const char *name,const struct file_operations *fops)
+// 返回值：
+// major 值为 0（自动分配） ，正常的话返回申请到的主设备号，失败返回-EBUSY。
+// 指定 major 值后，正常返回0，不正常返回-EBUSY。
+
+static inline void unregister_chrdev(unsigned int major, const char *name)
+</code></pre>
+<p><strong>register_chrdev</strong> 函数用于注册字符设备，此函数一共有三个参数，这三个参数的含义如下：</p>
+<ol>
+<li>
+<p><strong>major</strong>：主设备号，Linux 下每个设备都有一个设备号，设备号分为主设备号和次设备号两部分，关于设备号后面会详细讲解。</p>
+</li>
+<li>
+<p><strong>name</strong>：设备名字，指向一串字符串。</p>
+</li>
+<li>
+<p><strong>fops</strong>：结构体 file_operations 类型指针，指向设备的操作函数集合变量。</p>
+</li>
+</ol>
+<p><strong>unregister_chrdev</strong> 函数用户注销字符设备，此函数有两个参数，这两个参数含义如下：</p>
+<ol>
+<li>
+<p><strong>major</strong>：要注销的设备对应的主设备号。</p>
+</li>
+<li>
+<p><strong>name</strong>：要注销的设备对应的设备名。</p>
+</li>
+</ol>
+<p>为了方便管理，Linux 中每个设备都有一个设备号，设备号由主设备号和次设备号两部分组成，主设备号表示某一个<strong>具体的驱动</strong>，次设备号表示使用这个驱动的<strong>各个设备</strong>（ 或这样理解：主设备号用来区分不同种类的设备，而次设备号用来区分同一类型的多个设备。对于常用设备，Linux有约定俗成的编号，如硬盘的主设备号是3 ）。</p>
+<h2 id="device_createclass_create">device_create()/class_create()</h2>
+<p>我们在刚开始写Linux设备驱动程序的时候，很多时候都是利用mknod命令<strong>手动</strong>创建设备节点，实际上Linux内核为我们提供了一组函数，可以用来在模块加载的时候<strong>自动</strong>在/dev目录下创建相应设备节点，并在卸载模块时删除该节点，当然前提条件是用户空间移植了udev。</p>
+<p>内核中定义了struct class结构体，顾名思义，一个struct class结构体类型变量对应一个类，内核同时提供了class_create(…)函数，可以用它来创建一个类，这个类存放于sysfs下面，<strong>一旦创建好了这个类</strong>，再调用device_create(…)函数来<strong>在/dev目录</strong>下创建相应的设备节点。这样，加载模块的时候，用户空间中的<strong>udev会自动响应</strong>device_create(…)函数，去/sysfs下寻找对应的类从而创建设备节点。</p>
+<pre><code class="language-c">struct class_device *class_device_create(struct class *cls,struct class_device *parent,dev_t devt,struct  device *device,const char *fmt, ...)
+
+    
+    
+    
+/* 在probe函数中 */
+major = register_chrdev(0, &quot;100ask_led&quot;, &amp;led_drv);
+/* led_class这个类存放在sysfs下面 */
+led_class = class_create(THIS_MODULE,&quot;100ask_led_class&quot;);
+
+/* /dev/100ask_led0 */
+/* udev根据led_class去sysfs中找到对应的类，并创建设备(major, 0) */
+device_create(led_class, NULL, MKDEV(major, 0), NULL, &quot;100ask_led%d&quot;, 0);
+
+    
+</code></pre>
+<h1 id="of函数-获取设备树中的信息">of函数-获取设备树中的信息</h1>
+<blockquote>
+<p>参考：include/linux/of.h以及of_xxx.h，如of_gpio.h中包含获取设备树中gpio的api的接口，还有of_irq.h等。</p>
+</blockquote>
+<pre><code class="language-c">extern struct device_node *of_find_node_by_phandle(phandle handle);
+extern struct device_node *of_get_parent(const struct device_node *node);
+extern struct device_node *of_get_next_parent(struct device_node *node);
+extern struct device_node *of_get_next_child(const struct device_node *node, struct device_node *prev);
+extern struct device_node *of_get_next_available_child(
+const struct device_node *node, struct device_node *prev);
+
+extern struct device_node *of_get_child_by_name(const struct device_node *node, const char *name);
+
+extern int of_property_read_u8_array(const struct device_node *np, const char *propname, u8 *out_values, size_t sz);
+extern int of_property_read_u16_array(const struct device_node *np, const char *propname, u16 *out_values, size_t sz);
+
+extern int of_property_read_string(
+    struct device_node *np,
+    const char *propname,
+    const char **out_string);
+extern int of_property_match_string(
+    struct device_node *np,
+    const char *propname,
+    const char *string);
+
+
+extern int of_add_property(struct device_node *np, struct property *prop);
+extern int of_remove_property(struct device_node *np, struct property *prop);
+extern int of_update_property(struct device_node *np, struct property *newprop);
+</code></pre>
+<h2 id="获取设备树中gpio的个数及编号api">获取设备树中gpio的个数及编号api</h2>
+<blockquote>
+<p>参考:linux/of_gpio.h</p>
+</blockquote>
+<pre><code class="language-c">/**
+ * of_gpio_named_count() - Count GPIOs for a device
+ * @np:		device node to count GPIOs for
+ * @propname:	property name containing gpio specifier(s)
+ *
+ * The function returns the count of GPIOs specified for a node.
+ * Note that the empty GPIO specifiers count too. Returns either
+ *   Number of gpios defined in property,
+ *   -EINVAL for an incorrectly formed gpios property, or
+ *   -ENOENT for a missing gpios property
+ *
+ * Example:
+ * gpios = &lt;0
+ *          &amp;gpio1 1 2
+ *          0
+ *          &amp;gpio2 3 4&gt;;
+ *
+ * The above example defines four GPIOs, two of which are not specified.
+ * This function will return '4'
+ */
+static inline int of_gpio_named_count(struct device_node *np, const char* propname)
+{
+	return of_count_phandle_with_args(np, propname, &quot;#gpio-cells&quot;);
+}
+
+/**
+ * of_gpio_count() - Count GPIOs for a device
+ * @np:		device node to count GPIOs for
+ *
+ * Same as of_gpio_named_count, but hard coded to use the 'gpios' property
+ */
+static inline int of_gpio_count(struct device_node *np)
+{
+	//其实就是调用上面那个函数，只不过name固定为“gpios”
+    return of_gpio_named_count(np, &quot;gpios&quot;);
+}
+
+static inline int of_get_gpio_flags(struct device_node *np, int index, enum of_gpio_flags *flags)
+{
+	return of_get_named_gpio_flags(np, &quot;gpios&quot;, index, flags);
+}
+
+/**
+ * of_get_named_gpio() - Get a GPIO number to use with GPIO API
+ * @np:		device node to get GPIO from
+ * @propname:	Name of property containing gpio specifier(s)
+ * @index:	index of the GPIO
+ *
+ * Returns GPIO number to use with Linux generic GPIO API, or one of the errno
+ * value on the error condition.
+ */
+static inline int of_get_named_gpio(struct device_node *np, const char *propname, int index)
+{
+	return of_get_named_gpio_flags(np, propname, index, NULL);
+}
+
+/**
+ * of_get_gpio() - Get a GPIO number to use with GPIO API
+ * @np:		device node to get GPIO from
+ * @index:	index of the GPIO
+ *
+ * Returns GPIO number to use with Linux generic GPIO API, or one of the errno
+ * value on the error condition.
+ */
+static inline int of_get_gpio(struct device_node *np, int index)
+{
+	return of_get_gpio_flags(np, index, NULL);
+}
+</code></pre>
+<h2 id="获取设备树中gpio的描述符">获取设备树中gpio的描述符</h2>
+<blockquote>
+<p>参考:linux/of_gpio.h</p>
+</blockquote>
+<p>下面都是特殊的函数,我们使用时使用对应的函数即可,比如对于<code>__gpiod_get</code>我们使用<code>gpiod_get</code>即可，<strong>参数和返回值是一样的</strong>。</p>
+<pre><code class="language-c">/* Return the number of GPIOs associated with a device / function */
+int gpiod_count(struct device *dev, const char *con_id);
+
+/* Acquire and dispose GPIOs */
+struct gpio_desc *__must_check __gpiod_get(
+    struct device *dev,
+    const char *con_id,
+    enum gpiod_flags flags);
+struct gpio_desc *__must_check __gpiod_get_index(
+    struct device *dev,
+    const char *con_id,
+    unsigned int idx,
+    enum gpiod_flags flags);
+struct gpio_desc *__must_check __gpiod_get_optional(
+    struct device *dev,
+    const char *con_id,
+    enum gpiod_flags flags);
+struct gpio_desc *__must_check __gpiod_get_index_optional(
+    struct device *dev,
+    const char *con_id,
+    unsigned int index,
+    enum gpiod_flags flags);
+struct gpio_descs *__must_check gpiod_get_array(
+    struct device *dev,
+    const char *con_id,
+    enum gpiod_flags flags);
+struct gpio_descs *__must_check gpiod_get_array_optional(
+    struct device *dev,
+    const char *con_id,
+    enum gpiod_flags flags);
+void gpiod_put(struct gpio_desc *desc);
+void gpiod_put_array(struct gpio_descs *descs);
+</code></pre>
+<h1 id="gpio子系统api">gpio子系统API</h1>
+<blockquote>
+<p>基于gpio号的 gpio相关函数参考Linux内核源码：include/linux/gpio.h</p>
+<p>基于描述符的gpiod相关函数参考内核源码：include/linux/gpio/consumer.h</p>
+</blockquote>
+<p>相关结构体：</p>
+<pre><code class="language-c">/* 基于gpio编号的 */
+/**
+ * struct gpio - a structure describing a GPIO with configuration
+ * @gpio:	the GPIO number
+ * @flags:	GPIO configuration as specified by GPIOF_*
+ * @label:	a literal description string of this GPIO
+ */
+struct gpio {
+	unsigned	gpio;
+	unsigned long	flags;
+	const char	*label;
+};
+
+/* 基于gpio描述符的 */
+/**
+ * Struct containing an array of descriptors that can be obtained using
+ * gpiod_get_array().
+ */
+struct gpio_descs { /* 注意有个s，代表描述序列 */
+	unsigned int ndescs;
+	struct gpio_desc *desc[];
+};
+</code></pre>
+<p>基于gpio的API：</p>
+<pre><code class="language-c">bool gpio_is_valid(int number);
+int gpio_request(unsigned gpio, const char *label);
+int gpio_request_one(unsigned gpio, unsigned long flags, const char *label);
+int gpio_request_array(const struct gpio *array, size_t num);
+void gpio_free(unsigned gpio);
+void gpio_free_array(const struct gpio *array, size_t num);
+int gpio_direction_input(unsigned gpio);
+int gpio_direction_output(unsigned gpio, int value);
+int gpio_set_debounce(unsigned gpio, unsigned debounce);
+int gpio_get_value(unsigned gpio);
+void gpio_set_value(unsigned gpio, int value);
+int gpio_cansleep(unsigned gpio);
+int gpio_get_value_cansleep(unsigned gpio);
+int irq_to_gpio(unsigned irq);
+int devm_gpio_request(struct device *dev, unsigned gpio,
+				    const char *label);
+......
+</code></pre>
+<p>基于gpiod的API：</p>
+<pre><code class="language-c">void devm_gpiod_put(struct device *dev, struct gpio_desc *desc);
+void devm_gpiod_put_array(struct device *dev, struct gpio_descs *descs);
+
+int gpiod_get_direction(struct gpio_desc *desc);
+int gpiod_direction_input(struct gpio_desc *desc);
+int gpiod_direction_output(struct gpio_desc *desc, int value);
+int gpiod_direction_output_raw(struct gpio_desc *desc, int value);
+
+/* Value get/set from non-sleeping context */
+int gpiod_get_value(const struct gpio_desc *desc);
+void gpiod_set_value(struct gpio_desc *desc, int value);
+void gpiod_set_array(unsigned int array_size,
+		     struct gpio_desc **desc_array, int *value_array);
+int gpiod_get_raw_value(const struct gpio_desc *desc);
+void gpiod_set_raw_value(struct gpio_desc *desc, int value);
+void gpiod_set_raw_array(unsigned int array_size,
+			 struct gpio_desc **desc_array, int *value_array);
+
+/* Value get/set from sleeping context */
+int gpiod_get_value_cansleep(const struct gpio_desc *desc);
+void gpiod_set_value_cansleep(struct gpio_desc *desc, int value);
+void gpiod_set_array_cansleep(unsigned int array_size,
+			      struct gpio_desc **desc_array,
+			      int *value_array);
+int gpiod_get_raw_value_cansleep(const struct gpio_desc *desc);
+void gpiod_set_raw_value_cansleep(struct gpio_desc *desc, int value);
+void gpiod_set_raw_array_cansleep(unsigned int array_size, struct gpio_desc **desc_array, int *value_array);
+
+int gpiod_set_debounce(struct gpio_desc *desc, unsigned debounce);
+
+int gpiod_is_active_low(const struct gpio_desc *desc);
+int gpiod_cansleep(const struct gpio_desc *desc);
+
+int gpiod_to_irq(const struct gpio_desc *desc);
+
+/* 老gpio和新gpio之间进行转换的解口 */
+struct gpio_desc *gpio_to_desc(unsigned gpio);
+int desc_to_gpio(const struct gpio_desc *desc);
+</code></pre>
+<h2 id="2-gpiod_get">2. gpiod_get()</h2>
+<p>使用以下两个函数获取GPIO设备，多个设备时需要<strong>附带index参数</strong>。函数返回一个<strong>GPIO描述符</strong>，或一个错误编码，可以使用IS_ERR()进行检查:</p>
+<pre><code class="language-c">struct gpio_desc *gpiod_get(struct device *dev, const char *con_id, enum gpiod_flags flags)
+ 
+struct gpio_desc *gpiod_get_index(struct device *dev, const char *con_id, unsigned int idx, enum gpiod_flags flags)
+</code></pre>
+<p>gpiod_get_index()<br>
+<img src="https://cxx7ud.coding-pages.com//post-images/1602504078839.png" alt="" loading="lazy"></p>
+<h2 id="gpiod_put">gpiod_put()</h2>
+<h2 id="request_irq">request_irq</h2>
+<p><a href="https://www.cnblogs.com/ranson7zop/p/7567161.html">reference</a></p>
+<pre><code class="language-c">int request_irq(
+    unsigned int irq,
+    irq_handler_t handler,
+    unsigned long irqflags,
+    const char *devname,
+    void *dev_id);
+
+err = request_irq(
+    gpio_keys_100ask[i].irq, //硬中断号，向内核申请
+    gpio_key_isr, 			//相应的中断服务程序
+    IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING, //属性
+    &quot;100ask_gpio_key&quot;,		//中断名称，一般和驱动名称一样
+    &amp;gpio_keys_100ask[i]);	//会传给中断服务程序
+
+</code></pre>
+<ul>
+<li>
+<p><strong>irq</strong>是要申请的硬件中断号。</p>
+</li>
+<li>
+<p><strong>handler是向系统注册的中断处理函数</strong>，是一个回调函数，中断发生时，系统调用这个函数，dev_id参数将被传递给它。</p>
+</li>
+<li>
+<p><strong>irqflags是中断处理的属性</strong>，若设置了IRQF_DISABLED （老版本中的SA_INTERRUPT，本版zhon已经不支持了），则表示中断处理程序是快速处理程序，快速处理程序被调用时屏蔽所有中断，慢速处理程序不屏蔽；若设置了IRQF_SHARED （老版本中的SA_SHIRQ），则表示多个设备共享中断，若设置了IRQF_SAMPLE_RANDOM（老版本中的SA_SAMPLE_RANDOM），表示对系统熵有贡献，对系统获取随机数有好处。（这几个flag是可以通过或的方式同时使用的）</p>
+</li>
+<li>
+<p><strong>devname设置中断名称</strong>，通常是设备驱动程序的名称  在cat /proc/interrupts中可以看到此名称。</p>
+</li>
+<li>
+<p><strong>dev_id在中断共享时会用到</strong>，一般设置为这个设备的设备结构体或者NULL。</p>
+</li>
+</ul>
+<p>request_irq()返回0表示成功，返回-INVAL表示中断号无效或处理函数指针为NULL，返回-EBUSY表示中断已经被占用且不能共享。</p>
+<h2 id="of_get_next_child">of_get_next_child</h2>
+<p><a href="https://biscuitos.github.io/blog/DTS-of_get_next_child/">获取子结点</a></p>
+<pre><code class="language-c">struct device_node *of_get_next_child(const struct device_node *node, struct device_node *prev)
+</code></pre>
+<p>函数参数和返回值含义如下：</p>
+<ul>
+<li><strong>node</strong>：父节点。</li>
+<li><strong>prev</strong>：前一个子节点，也就是从哪一个子节点开始迭代的查找下一个子节点。可以设置<strong>为NULL</strong>，表示从第一个子节点开始。</li>
+<li>**返回值：**找到的下一个子节点。</li>
+</ul>
+<h3 id="实例">实例</h3>
+<p>设备树文件：</p>
+<pre><code class="language-c">/ {
+        DTS_demo {
+                compatible = &quot;DTS_demo, BiscuitOS&quot;;
+                status = &quot;okay&quot;;
+
+                child0 {
+                        compatible = &quot;Child0, BiscuitOS&quot;;
+                };
+
+                child1 {
+                        compatbile = &quot;Child1, BiscuitOS&quot;;
+                };
+        };
+};
+</code></pre>
+<p>驱动文件中probe函数：</p>
+<pre><code class="language-c">/* probe platform driver */
+static int DTS_demo_probe(struct platform_device *pdev)
+{
+    struct device_node *np = pdev-&gt;dev.of_node;
+    struct device_node *parent;
+    struct device_node *nparent;
+    struct device_node *child;
+    struct device_node *nchild;
+  
+    printk(&quot;DTS probe entence...\n&quot;);
+
+    /* Find child */
+    child = of_get_next_child(np, NULL);
+    if (child)
+        printk(&quot;\&quot;%s\&quot;'s child: \&quot;%s\&quot;\n&quot;, np-&gt;full_name, child-&gt;full_name);
+    else
+        printk(&quot;The device node doesn't have child\n&quot;);
+
+    /* Find next child */
+    nchild = of_get_next_available_child(np, child);
+    if (nchild)
+        printk(&quot;\&quot;%s\&quot;'s next child: \&quot;%s\&quot;\n&quot;, np-&gt;full_name, nchild-&gt;full_name);
+
+    /* find parent */
+    parent = of_get_parent(child);
+    if (parent)
+        printk(&quot;\&quot;%s\&quot;'s parent: \&quot;%s\&quot;\n&quot;, child-&gt;full_name, parent-&gt;full_name);
+
+    /* Lterate to a node's parent */
+    nparent = of_get_next_parent(child);
+    if (nparent)
+        printk(&quot;\&quot;%s\&quot;'s next parent: \&quot;%s\&quot;\n&quot;, child-&gt;full_name, parent-&gt;full_name);
+
+    return 0;
+}
+</code></pre>
+<p>结果：</p>
+<pre><code class="language-shell">[    3.581300] DTS probe entence...
+[    3.581316] &quot;/DTS_demo&quot;'s child: &quot;/DTS_demo/child0&quot;
+[    3.581332] &quot;/DTS_demo&quot;'s next child: &quot;/DTS_demo/child1&quot;
+[    3.581347] &quot;/DTS_demo/child0&quot;'s parent: &quot;/DTS_demo&quot;
+[    3.581362] &quot;/DTS_demo/child0&quot;'s next parent: &quot;/DTS_demo&quot;
+</code></pre>
+<p>解释：full-name对于node来说，就是自己的结点名；而对于其子节点来说，full-name则是父节点名字/自己的名字，如上面的结果``/DTS_demo&quot;'s child: &quot;/DTS_demo/child0`。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E6%B3%A8%E5%86%8C%E4%B8%8E%E6%B3%A8%E9%94%80">1. 字符设备注册与注销</a></li>
+<li><a href="#device_createclass_create">device_create()/class_create()</a></li>
+</ul>
+</li>
+<li><a href="#of%E5%87%BD%E6%95%B0-%E8%8E%B7%E5%8F%96%E8%AE%BE%E5%A4%87%E6%A0%91%E4%B8%AD%E7%9A%84%E4%BF%A1%E6%81%AF">of函数-获取设备树中的信息</a>
+<ul>
+<li><a href="#%E8%8E%B7%E5%8F%96%E8%AE%BE%E5%A4%87%E6%A0%91%E4%B8%ADgpio%E7%9A%84%E4%B8%AA%E6%95%B0%E5%8F%8A%E7%BC%96%E5%8F%B7api">获取设备树中gpio的个数及编号api</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E8%AE%BE%E5%A4%87%E6%A0%91%E4%B8%ADgpio%E7%9A%84%E6%8F%8F%E8%BF%B0%E7%AC%A6">获取设备树中gpio的描述符</a></li>
+</ul>
+</li>
+<li><a href="#gpio%E5%AD%90%E7%B3%BB%E7%BB%9Fapi">gpio子系统API</a>
+<ul>
+<li><a href="#2-gpiod_get">2. gpiod_get()</a></li>
+<li><a href="#gpiod_put">gpiod_put()</a></li>
+<li><a href="#request_irq">request_irq</a></li>
+<li><a href="#of_get_next_child">of_get_next_child</a>
+<ul>
+<li><a href="#%E5%AE%9E%E4%BE%8B">实例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://cxx7ud.coding-pages.com/post/eblinux-relaStruct/">
+              <h3 class="post-title">
+                嵌入式Linux驱动开发相关结构体
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://cxx7ud.coding-pages.com//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,225 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CPU如何启动的 | CofCai&#39;s blog</title>
+<link rel="shortcut icon" href="https://cxx7ud.coding-pages.com//favicon.ico?v=1602508981222">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cxx7ud.coding-pages.com//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="CPU如何启动的 | CofCai&#39;s blog - Atom Feed" href="https://cxx7ud.coding-pages.com//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="CPU上电后程序是如何执行的？
+参考资料
+1.内存管理-程序是如何运行的
+2.嵌入式代码里的启动文件为什么比main先启动？
+3.【嵌入式】使代码在RAM中运行
+4.跟涛哥一起学嵌入式 20：一段C语言代码编译、运行全过程解析
+5.嵌入式系..." />
+    <meta name="keywords" content="嵌入式" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://cxx7ud.coding-pages.com/">
+  <img class="avatar" src="https://cxx7ud.coding-pages.com//images/avatar.png?v=1602508981222" alt="">
+  </a>
+  <h1 class="site-title">
+    CofCai&#39;s blog
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              CPU如何启动的
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-10-12
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://cxx7ud.coding-pages.com/tag/BqSYYs6a7/" class="post-tag">
+                  # 嵌入式
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="cpu上电后程序是如何执行的">CPU上电后程序是如何执行的？</h1>
+<h2 id="参考资料">参考资料</h2>
+<p><a href="https://www.jianshu.com/p/f42ad2f9af73">1.内存管理-程序是如何运行的</a><br>
+<a href="https://www.zhihu.com/question/315393646">2.嵌入式代码里的启动文件为什么比main先启动？</a><br>
+<a href="https://www.jianshu.com/p/4e3d40b8b4ab">3.【嵌入式】使代码在RAM中运行</a><br>
+<a href="https://zhuanlan.zhihu.com/p/86707793">4.跟涛哥一起学嵌入式 20：一段C语言代码编译、运行全过程解析</a><br>
+<a href="https://www.zhihu.com/question/387640455">5.嵌入式系统中，FLASH中的程序代码必须搬到RAM中运行吗？</a></p>
+<h2 id="学习总结">学习总结</h2>
+<h3 id="参考链接1总结">参考链接1总结</h3>
+<figure data-type="image" tabindex="1"><img src="https://cxx7ud.coding-pages.com//post-images/1602508656258.webp" alt="" loading="lazy"></figure>
+<p>对于CPU来说，内存是一个存放指令和数据的地方，并不能在内存中完成计算功能，例如要计算 a = b + c，必须将 a、b、c 都读取到CPU内部才能进行加法运算 。 内存是为了解决硬盘速度慢，CPU中的缓存是为了解决内存速度慢 。</p>
+<h4 id="关于缓存命中">关于缓存命中</h4>
+<p>缓存的容量是有限的，CPU只能从缓存中读取到部分数据，对于使用不是很频繁的数据，会绕过缓存，直接到内存中读取。所以不是每次都能从缓存中得到数据，这就是缓存的命中率，能够从缓存中读取就命中，否则就没命中。</p>
+<h3 id="参考链接2总结">参考链接2总结</h3>
+<p>知友1：<br>
+main函数的进行是需要栈的支持。最起码栈地址要配置好。另外，还有全局变量要在main之前提前初始化。还有其它配置工作。 实际单片机的main只是包装起来的一个循环，它的外层还有太多初始化硬件的程序，只是不开放给最顶层的程序员了。</p>
+<p>知友2：<br>
+一，启动代码主要作用：1）准备C代码的运行环境，比如堆，栈等；2）处理中断向量表。<br>
+二，main 只是一个函数而已。在PC上，一般也就不修改（也是可以改的）。在嵌入式系统，很简单就可以改：你是可以把main修改成你喜欢的名称，然后在启动代码调用的那里，也改成相同的名称就可以。</p>
+<h3 id="参考链接5总结">参考链接5总结</h3>
+<h4 id="问题概述">问题概述</h4>
+<p>比如ARM，PowerPC等架构的MCU在上电后存储在FLASH的程序（比如用户编写好的应用程序)执行过程是怎样的呢？</p>
+<ol>
+<li>FLASH中的代码是如何得到运行的呢？比如PC指针是在哪里由谁设置的？</li>
+<li>这些代码需要搬到RAM中才能运行吗？不这样做会有什么不妥吗？</li>
+<li>如果需要搬到RAM，那是片内还是片外有什么区别吗？</li>
+<li>如果用户存在FLASH的实际代码大小（比如1MB），超过了RAM的可用空间（比如512KB），那这个搬移过程是啥样的？</li>
+<li>片外扩展的FLASH和SRAM与片内的想比，除了空间大小有差别，性能速度上会有怎样的差异呢？</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#cpu%E4%B8%8A%E7%94%B5%E5%90%8E%E7%A8%8B%E5%BA%8F%E6%98%AF%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C%E7%9A%84">CPU上电后程序是如何执行的？</a>
+<ul>
+<li><a href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99">参考资料</a></li>
+<li><a href="#%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93">学习总结</a>
+<ul>
+<li><a href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A51%E6%80%BB%E7%BB%93">参考链接1总结</a>
+<ul>
+<li><a href="#%E5%85%B3%E4%BA%8E%E7%BC%93%E5%AD%98%E5%91%BD%E4%B8%AD">关于缓存命中</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A52%E6%80%BB%E7%BB%93">参考链接2总结</a></li>
+<li><a href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A55%E6%80%BB%E7%BB%93">参考链接5总结</a>
+<ul>
+<li><a href="#%E9%97%AE%E9%A2%98%E6%A6%82%E8%BF%B0">问题概述</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://cxx7ud.coding-pages.com/post/kalmanFilter/">
+              <h3 class="post-title">
+                卡尔曼滤波
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://cxx7ud.coding-pages.com//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
