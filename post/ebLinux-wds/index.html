@@ -1,0 +1,333 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>嵌入式Linux驱动开发框架-韦东山 | CofCai&#39;s blog</title>
+<link rel="shortcut icon" href="https://cxx7ud.coding-pages.com//favicon.ico?v=1602566701335">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cxx7ud.coding-pages.com//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="嵌入式Linux驱动开发框架-韦东山 | CofCai&#39;s blog - Atom Feed" href="https://cxx7ud.coding-pages.com//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="嵌入式Linux驱动开发的最终目的
+从裸机开发经历来看
+从C51到STM32开发的经历来看，最终都是操作寄存器以达到某些目的。
+正点原子的嵌入式Linux教程也是从裸机开发开始的
+汇编点灯
+/************************..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://cxx7ud.coding-pages.com/">
+  <img class="avatar" src="https://cxx7ud.coding-pages.com//images/avatar.png?v=1602566701335" alt="">
+  </a>
+  <h1 class="site-title">
+    CofCai&#39;s blog
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              嵌入式Linux驱动开发框架-韦东山
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-08-24
+              </span>
+              <span>
+                9 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="嵌入式linux驱动开发的最终目的">嵌入式Linux驱动开发的最终目的</h1>
+<h2 id="从裸机开发经历来看">从裸机开发经历来看</h2>
+<p>从C51到STM32开发的经历来看，最终<strong>都是操作寄存器</strong>以达到某些目的。</p>
+<h2 id="正点原子的嵌入式linux教程也是从裸机开发开始的">正点原子的嵌入式Linux教程也是从裸机开发开始的</h2>
+<h2 id="汇编点灯">汇编点灯</h2>
+<pre><code class="language-assembly">/********************************************************
+描述	   : 裸机实验1 汇编点灯
+		使用汇编来点亮开发板上的LED灯，学习和掌握如何用汇编语言来完成对I.MX6U处理器的GPIO初始化和控制。
+********************************************************/
+
+.global _start  /* 全局标号 */
+
+/*
+ * 描述：	_start函数，程序从此函数开始执行此函数完成时钟使能、
+ *		  GPIO初始化、最终控制GPIO输出低电平来点亮LED灯。
+ */
+_start:
+	/* 1、使能所有时钟 */
+	ldr r0, =0X020C4068 	/* CCGR0 */
+	ldr r1, =0XFFFFFFFF  
+	str r1, [r0]
+    /* 省略CCGR1~6 */
+
+	/* 2、设置GPIO1_IO03复用为GPIO1_IO03 */
+	ldr r0, =0X020E0068	/* 将寄存器SW_MUX_GPIO1_IO03_BASE加载到r0中 */
+	ldr r1, =0X5
+	str r1,[r0]
+
+	/* 3、配置GPIO1_IO03的IO属性	
+	 *bit 16:0 HYS关闭
+	 *bit [15:14]: 00 默认下拉
+     *bit [13]: 0 kepper功能
+     *bit [12]: 1 pull/keeper使能
+     *bit [11]: 0 关闭开路输出
+     *bit [7:6]: 10 速度100Mhz
+     *bit [5:3]: 110 R0/6驱动能力
+     *bit [0]: 0 低转换率
+     */
+    ldr r0, =0X020E02F4	/*寄存器SW_PAD_GPIO1_IO03_BASE */
+    ldr r1, =0X10B0
+    str r1,[r0]
+
+	/* 4、设置GPIO1_IO03为输出 */
+    ldr r0, =0X0209C004	/*寄存器GPIO1_GDIR */
+    ldr r1, =0X0000008		
+    str r1,[r0]
+
+	/* 5、打开LED0
+	 * 设置GPIO1_IO03输出低电平
+	 */
+	ldr r0, =0X0209C000	/*寄存器GPIO1_DR */
+   	ldr r1, =0		
+   	str r1,[r0]
+
+/*
+ * 描述：	loop死循环
+ */
+loop:
+	b loop 			
+</code></pre>
+<h2 id="嵌入式linux驱动的目的">嵌入式Linux驱动的目的</h2>
+<p>从上面的裸机开发可以知道嵌入式Linux驱动开发的目的<strong>还是操作物理寄存器</strong>，只不过为什么叫驱动开发呢？我的理解有两个：</p>
+<ol>
+<li>以前像C51和STM32之类单片机的开发，驱动和应用其实是没有分开的（没有驱动这个概念）。即一个工程甚至是一个文件里面即包括驱动（操作物理寄存器），也包括应用（实现实际的功能）。</li>
+<li>而对于用Linux这样优秀的操作系统来做开发，应该做到分离和分层。这样可以很好的、很快的、很轻易的做到快速开发，以及分工合作。<strong>驱动</strong>就只管做好操作物理寄存器，并提供相应的API给应用程序（具体是给内核，内核再给用户），这就是驱动工程师该做的事情。<strong>应用程序</strong>就只管应用需求的开发，不用在意底层的实现，只管调用底层提供的API即可，这就是应用开发工程师该做的事情。</li>
+</ol>
+<h1 id="韦东山老师的教学路线">韦东山老师的教学路线</h1>
+<p>上面我们说了，嵌入式Linux开发分为两类：应用开发和驱动开发。</p>
+<h2 id="实现最基本的需求">实现最基本的需求</h2>
+<p>主要分为应用程序部分和驱动部分。整体框架如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://cxx7ud.coding-pages.com//post-images/ebLinux3.png" alt="" loading="lazy"></figure>
+<h3 id="应用程序部分">应用程序部分</h3>
+<p>直接调用open、read、write、close等函数。</p>
+<h3 id="驱动程序部分">驱动程序部分</h3>
+<p>实现chr_open、chr_read、chr_write、chr_close等函数供应用程序调用。而在这些函数中要实现其自己的功能，比如配置寄存器、操作寄存器等。</p>
+<h2 id="面向对象的思想">面向对象的思想</h2>
+<p>在驱动程序中的相应函数中直接操作寄存器会使程序移植、维护变得困难，可以将操作物理寄存器和驱动分开。即整体框架如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://cxx7ud.coding-pages.com//post-images/ebLinux1.png" alt="" loading="lazy"></figure>
+<p>对于开发板上的led灯，可以抽象出一个led_opr结构体，其中包括对led的初始化和配置函数，并且将led_opr结构体提供给上层。</p>
+<pre><code class="language-c">struct led_operations {
+	int num;
+	int (*init) (int which); /* 初始化LED, which-哪个LED */ 
+	int (*ctl) (int which, char status); /* 控制LED, which-哪个LED, status:1-亮,0-灭 */
+};
+
+struct led_operations *get_board_led_opr(void);
+</code></pre>
+<p>主要有3个c文件，app.c， driver.c， led_opr.c。调用关系为： app.c调用相关函数，进入到driver.c驱动程序中，而在驱动程序中的open函数中调用led_opr.c提供的led_opr结构体中的init成员初始化led灯，在驱动程序中的write函数中调用led_opr.c提供的led_opr结构体中的ctrl成员控制led灯。</p>
+<p>以后只需改变led_opr结构体中相应函数即可，不必理会driver.c文件。</p>
+<h2 id="面向对象更进一步">面向对象更进一步</h2>
+<p>上面说了，如果led变了，那么就需要改变led_opr结构体中相应函数的具体实现。但是对于某些开发板来说，虽然它们板上的led所用的GPIO管脚不一样，但是用的芯片是一样的，而对于同一款芯片来说，GPIO的操作都是一样的。</p>
+<p>所以我们可以把开发板和芯片分离，即针对某一款芯片编写一个c文件来初始化GPIO；对于开发板编写一个c文件来实现控制哪一个led（GPIO），即在这一个文件中说明led用的是哪一个GPIO资源。</p>
+<p>主要有4个文件，app.c， driver.c， led_resource.c， chip_gpio.c。调用关系为：app.c调用相关函数，进入到driver.c驱动程序中，而在驱动程序中的open函数中调用chip_gpio.c提供的init函数（同上面的led_opr），在init函数中初始化相应的led管脚，具体是哪一个管脚呢？由led_resource.c指定。也可一这么说，在init函数中调用led_resource.c提供的led_pin；在驱动程序中的write函数中调用chip_gpio.c提供的ctrl函数（同上面的led_opr）操作相应的led管脚（led对应的gpio已经由init函数获得）。</p>
+<h2 id="更进一步总线驱动">更进一步/总线驱动</h2>
+<p>前面一直在说对led的操作，那么对于其它的呢？比如蜂鸣器、spi等。那么Linux内核抽象出了platform_device和platform_driver，一个定义资源，一个实现操作。</p>
+<figure data-type="image" tabindex="3"><img src="https://cxx7ud.coding-pages.com//post-images/ebLinux2.png" alt="" loading="lazy"></figure>
+<p>更具体的图：</p>
+<figure data-type="image" tabindex="4"><img src="https://cxx7ud.coding-pages.com//post-images/ebLinux6.png" alt="" loading="lazy"></figure>
+<p>和上面比，其实platform_device=led_resource.c，platform_driver=chip_gpio.c。</p>
+<figure data-type="image" tabindex="5"><img src="https://cxx7ud.coding-pages.com//post-images/ebLinux5.png" alt="" loading="lazy"></figure>
+<p>chip_demo_gpio.c（chip_gpio.c）相当于最开始的中根据platform_device指定的资源进行初始化和操作，该文件中有platform_driver结构体，其中有probe成员。</p>
+<figure data-type="image" tabindex="6"><img src="https://cxx7ud.coding-pages.com//post-images/ebLinux4.png" alt="" loading="lazy"></figure>
+<p>board_A_led.c（相当于最开始的led_resource.c）中根据platform_device指定需要操作对象，上图中的resource成员指定了2个gpio管脚。</p>
+<p>文件有点多，说明一下它们之间的关系：</p>
+<p>platform_device这个文件加载时，platform_driver结构体中的probe成员会自动执行（如果两者匹配成功的话），并且platform_device作为probe的参数，所以就可以在probe中获得platform_device指定的pin管脚资源。而platform_driver这个文件是操作物理寄存器的，所以它加载到内核时，首先把自己操作物理寄存器的init和ctrl方法告诉（写一个函数返回封装的led_opr）给它的上层驱动程序leddrv.c，而又由于platform_driver已经获得了具体的资源，所以init和ctrl都有了具体的操作对象。</p>
+<h2 id="设备树的引入">设备树的引入</h2>
+<p>设备树的引入是为了解决platform_device的，因为每个设备都要写一个.c文件，这样的话会让Linux源码中充满着垃圾（.c文件），所以现在就用设备树代替.c文件中的platform_device。</p>
+<p>即用设备树来描述开发板的情况，设备树中的每个结点都会被Linux内核解析成一个device_node结构体，然后某些device_node结构体会被解析成platform_device。</p>
+<pre><code class="language-mermaid">graph LR
+设备树中的结点 --&gt; device_node
+device_node --部分--&gt; platform_device
+</code></pre>
+<h2 id="最终总结">最终总结</h2>
+<h3 id="应用驱动">应用+驱动</h3>
+<p>在应用中使用相应的函数，在驱动中实现相应的函数。并且在相应的函数中（如open、write等）直接操作物理寄存器。</p>
+<p>所含文件：app.c、driver.c</p>
+<p>特点：如果更换led灯的话，driver.c要重写。</p>
+<h3 id="应用驱动框架led_opr">应用+驱动框架+led_opr</h3>
+<p>在驱动相应的函数中不去操作物理寄存器，而是使用下层提供的led_opr结构体，其中包含init和write等成员，在下层中实现init、write等函数（操作寄存器）。</p>
+<p>所含文件：app.c、driver.c、led_opr.c</p>
+<p>特点：led灯更换后只需修改led_opr.c文件。</p>
+<h3 id="应用驱动框架led_resourcechip_gpio">应用+驱动框架+led_resource+chip_gpio</h3>
+<p>正如上面所说，led灯更换后，led_opr需要修改。所以我们可以继续封装，led_resource.c中指明用到了那些设备/资源，chip_gpio.c中是对某款芯片所有的gpio的操作。这样我们在led_resource中指明所用的设备（led），在driver.c相应的函数中（open、write等）从led_resource中获取指定管脚，然后再调用chip_gpio提供的一些函数（如init、ctrl等）来操作指定管脚。</p>
+<p>所含文件：app.c、driver.c、led_resource.c、chip_gpio.c</p>
+<p>特点：led更换后只需修改led_resource.c文件。即led_resource指明led灯的管脚，chip_gpio实现某款芯片所有gpio的操作（init和ctrl），driver.c根据led_resource指明的引脚告诉chip_gpio操作那个引脚。</p>
+<h3 id="应用驱动框架platform_deviceplatform_driver">应用+驱动框架+platform_device+platform_driver</h3>
+<p>和上面一个一样的，只不过采用Linux内核提供的总线驱动框架来编写驱动程序。platform_device声明设备/led所用的资源，platform_driver实现对platform_device声明的设备进行操作(platform_driver可以写入到驱动框架中去)。</p>
+<p>所含文件：app.c、driver.c、led_resource.c(platform_device)、chip_gpio.c(platform_driver)</p>
+<h3 id="应用驱动框架设备树platform_driver">应用+驱动框架+设备树+platform_driver</h3>
+<p>和上面一样，只不过platform_device写入到设备树中去了（前面说过，设备树中的结点会被内核解析成device_node，某些device_node被解析成platform_device）。然后platform_driver可以和驱动框架写一块。最终的文件只含：</p>
+<p>所含文件：app.c、driver.c(platform_driver)、设备树.dts</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%B5%8C%E5%85%A5%E5%BC%8Flinux%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E7%9A%84%E6%9C%80%E7%BB%88%E7%9B%AE%E7%9A%84">嵌入式Linux驱动开发的最终目的</a>
+<ul>
+<li><a href="#%E4%BB%8E%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%E7%BB%8F%E5%8E%86%E6%9D%A5%E7%9C%8B">从裸机开发经历来看</a></li>
+<li><a href="#%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90%E7%9A%84%E5%B5%8C%E5%85%A5%E5%BC%8Flinux%E6%95%99%E7%A8%8B%E4%B9%9F%E6%98%AF%E4%BB%8E%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%E5%BC%80%E5%A7%8B%E7%9A%84">正点原子的嵌入式Linux教程也是从裸机开发开始的</a></li>
+<li><a href="#%E6%B1%87%E7%BC%96%E7%82%B9%E7%81%AF">汇编点灯</a></li>
+<li><a href="#%E5%B5%8C%E5%85%A5%E5%BC%8Flinux%E9%A9%B1%E5%8A%A8%E7%9A%84%E7%9B%AE%E7%9A%84">嵌入式Linux驱动的目的</a></li>
+</ul>
+</li>
+<li><a href="#%E9%9F%A6%E4%B8%9C%E5%B1%B1%E8%80%81%E5%B8%88%E7%9A%84%E6%95%99%E5%AD%A6%E8%B7%AF%E7%BA%BF">韦东山老师的教学路线</a>
+<ul>
+<li><a href="#%E5%AE%9E%E7%8E%B0%E6%9C%80%E5%9F%BA%E6%9C%AC%E7%9A%84%E9%9C%80%E6%B1%82">实现最基本的需求</a>
+<ul>
+<li><a href="#%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E9%83%A8%E5%88%86">应用程序部分</a></li>
+<li><a href="#%E9%A9%B1%E5%8A%A8%E7%A8%8B%E5%BA%8F%E9%83%A8%E5%88%86">驱动程序部分</a></li>
+</ul>
+</li>
+<li><a href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%80%9D%E6%83%B3">面向对象的思想</a></li>
+<li><a href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E6%9B%B4%E8%BF%9B%E4%B8%80%E6%AD%A5">面向对象更进一步</a></li>
+<li><a href="#%E6%9B%B4%E8%BF%9B%E4%B8%80%E6%AD%A5%E6%80%BB%E7%BA%BF%E9%A9%B1%E5%8A%A8">更进一步/总线驱动</a></li>
+<li><a href="#%E8%AE%BE%E5%A4%87%E6%A0%91%E7%9A%84%E5%BC%95%E5%85%A5">设备树的引入</a></li>
+<li><a href="#%E6%9C%80%E7%BB%88%E6%80%BB%E7%BB%93">最终总结</a>
+<ul>
+<li><a href="#%E5%BA%94%E7%94%A8%E9%A9%B1%E5%8A%A8">应用+驱动</a></li>
+<li><a href="#%E5%BA%94%E7%94%A8%E9%A9%B1%E5%8A%A8%E6%A1%86%E6%9E%B6led_opr">应用+驱动框架+led_opr</a></li>
+<li><a href="#%E5%BA%94%E7%94%A8%E9%A9%B1%E5%8A%A8%E6%A1%86%E6%9E%B6led_resourcechip_gpio">应用+驱动框架+led_resource+chip_gpio</a></li>
+<li><a href="#%E5%BA%94%E7%94%A8%E9%A9%B1%E5%8A%A8%E6%A1%86%E6%9E%B6platform_deviceplatform_driver">应用+驱动框架+platform_device+platform_driver</a></li>
+<li><a href="#%E5%BA%94%E7%94%A8%E9%A9%B1%E5%8A%A8%E6%A1%86%E6%9E%B6%E8%AE%BE%E5%A4%87%E6%A0%91platform_driver">应用+驱动框架+设备树+platform_driver</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://cxx7ud.coding-pages.com/post/cpuStart/">
+              <h3 class="post-title">
+                CPU上电如何启动的
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://cxx7ud.coding-pages.com//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
