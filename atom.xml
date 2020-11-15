@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://cxx7ud.coding-pages.com/</id>
     <title>CofCai&apos;s blog</title>
-    <updated>2020-10-31T12:18:42.401Z</updated>
+    <updated>2020-11-15T07:55:24.554Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://cxx7ud.coding-pages.com/"/>
     <link rel="self" href="https://cxx7ud.coding-pages.com/atom.xml"/>
@@ -10,6 +10,163 @@
     <logo>https://cxx7ud.coding-pages.com/images/avatar.png</logo>
     <icon>https://cxx7ud.coding-pages.com/favicon.ico</icon>
     <rights>All rights reserved 2020, CofCai&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[CPU Cache]]></title>
+        <id>https://cxx7ud.coding-pages.com/post/cpu-cache/</id>
+        <link href="https://cxx7ud.coding-pages.com/post/cpu-cache/">
+        </link>
+        <updated>2020-11-15T07:53:31.000Z</updated>
+        <content type="html"><![CDATA[<p>[toc]</p>
+<blockquote>
+<p>Author🚹:CofCai</p>
+<p>personal page🏠:https://cxx7ud.coding-pages.com/</p>
+<p>CSDN page🏠:https://blog.csdn.net/weixin_44360592?spm=1011.2124.3001.5113</p>
+<p>Email✉️:cai.dongjun@nexuslink.cn</p>
+</blockquote>
+<h1 id="references">References</h1>
+<p><a href="http://igoro.com/archive/gallery-of-processor-cache-effects/">gallery-of-processor-cache-effects</a></p>
+<p><a href="https://blog.csdn.net/jiary5201314/article/details/44676425?utm_medium=distribute.pc_relevant.none-task-blog-title-3&amp;spm=1001.2101.3001.4242">7个示例科普CPU Cache</a></p>
+<p><a href="https://mp.weixin.qq.com/s/_hZtklfMINCqYTlBwmz7pA">利用CPU Cache写出高性能代码</a></p>
+<p><a href="https://www.cnblogs.com/nycsde/p/13722270.html">LRU Cache的实现</a></p>
+<h1 id="程序局部性原理">程序局部性原理</h1>
+<p>程序局部性原理是CPU Cache的理论基础。</p>
+<h2 id="时间局部性">时间局部性</h2>
+<p>时间局部性是指被CPU访问的数据，<strong>短期内</strong>还要被继续访问，比如循环、递归、方法的反复调用等。</p>
+<h2 id="空间局部性">空间局部性</h2>
+<p>空间局部性是指被CPU访问的数据的<strong>相邻数据</strong>，CPU短期内还要被继续访问，比如顺序执行的代码、连续创建的两个对象、数组等。</p>
+<h1 id="一致性原理">一致性原理</h1>
+<h2 id="写入策略">写入策略</h2>
+<h3 id="直写模式writethrough">直写模式(WriteThrough)</h3>
+<p>在数据更新时，将数据同时写入内存和Cache，该策略操作简单，但是因为每次都要写入内存，速度较慢。</p>
+<h3 id="回写模式writeback">回写模式(WriteBack)</h3>
+<p>在数据更新时，只将数据写入到Cache中，只有在数据被替换出Cache时，被修改的数据才会被写入到内存中，该策略因为不需要写入到内存中，所以速度较快。但数据仅写在了Cache中，Cache数据和内存数据不一致，此时如果有其它CPU访问数据，就会读到脏数据，出现bug，所以这里需要用到Cache的一致性协议来保证CPU读到的是最新的数据。</p>
+<h2 id="一致性">一致性</h2>
+<p>多个CPU对某块内存同时读写，就会引起冲突的问题，被称为Cache一致性问题。通过MESI协议解决，当一个CPU1修改了Cache中的某字节数据时，那么其它的所有CPU都会收到通知，它们的相应Cache就会被置为无效状态，当其他的CPU需要访问此字节的数据时，发现自己的Cache相关数据已失效，这时CPU1会立刻把数据写到内存中，其它的CPU就会立刻从内存中读取该数据。</p>
+<p>MESI是通过四种状态的控制来解决Cache一致性问题的，四种状态分别是：</p>
+<ul>
+<li>M(Modified，已修改)</li>
+<li>E(Exclusive，独占)</li>
+<li>S(Shared，共享)</li>
+<li>I(Invalidated，已失效)</li>
+</ul>
+<h1 id="主存与cache的映射关系">主存与Cache的映射关系</h1>
+<h2 id="直接映射">直接映射</h2>
+<p>每个主存块只能映射Cache的一个特定块。直接映射是最简单的地址映射方式，它的硬件简单，成本低，地址转换速度快，但是这种方式不太灵活，Cache的存储空间得不到充分利用，每个主存块在Cache中只有一个固定位置可存放，容易产生冲突，使Cache效率下降，因此只适合大容量Cache采用。</p>
+<p>例如，如果一个程序需要重复引用主存中第0块与第16块，最好将主存第0块与第16块同时复制到Cache中，但由于它们都只能复制到Cache的第0块中去，即使Cache中别的存储空间空着也不能占用，因此这两个块会不断地交替装入Cache中，导致命中率降低。</p>
+<h2 id="全相连映射">全相连映射</h2>
+<p>主存中任何一块都可以映射到Cache中的任何一块位置上，但设计困难。</p>
+<h2 id="组相连映射">组相连映射</h2>
+<p>组相联映射实际上是直接映射和全相联映射的<strong>折中方案</strong>，主存和Cache都分组，主存中一个组内的块数与Cache中的分组数相同，组间采用直接映射，组内采用全相联映射。也就是说，将Cache分成u组，每组v块，主存块存放到哪个组是固定的，至于存到该组哪一块则是灵活的。例如，主存分为256组，每组8块，Cache分为8组，每组2块。</p>
+<h1 id="cache的替换策略">Cache的替换策略</h1>
+<p>LRU(Least Recently Use)策略，即最近最少使用。</p>
+<h1 id="代码分析">代码分析</h1>
+<pre><code class="language-c">/**
+ * author:		CofCai
+ * datatime:	2020-11-10 15:37:50
+ * file description:
+ *	 该文件用于验证CPU Cache的作用，主要是看到了一篇微信公众号
+ *	 的推送，然后读完这篇文章，发现我们的通信软件基础课上讲过类似
+ *	 的问题，所以在此记录一下。
+ *	 原文文章《利用CPU Cache写出高性能代码》：
+ *	 		https://mp.weixin.qq.com/s/_hZtklfMINCqYTlBwmz7pA
+ *	 		另附：http://igoro.com/archive/gallery-of-processor-cache-effects/
+ *	 一致性原理：cache中和内存中的数据可能不一样（不同步），直写模式和回写模式
+ *	 程序局部性原理（cache的理论基础）：时间局部性、空间局部性
+ *	 通过不停改变矩阵的大小，还能大致得出你电脑的CPU Cache的大小(搞懂矩阵在内存中的分布)。
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;time.h&gt;
+
+#define	row 	512
+#define col 	512
+#define count 	20		//调用traverse_by_row/col函数一次：遍历matrix矩阵count次
+
+int matrix[row][col] = {0};		//测试矩阵
+
+void traverse_by_row();
+void traverse_by_col();
+double test();				/* 调用traverse_by_row/col函数一次 */
+
+int main(int argc, char const *argv[])
+{
+	printf(&quot;test matrix is %d rows, %d cols!\n&quot;, row, col);
+	int t, times = 20;
+	double res[20] = {0};
+
+	FILE *pFile=fopen(&quot;./cache.csv&quot;,&quot;wt+&quot;);
+        if(pFile==NULL)
+        {
+            printf(&quot;cache.csv opened failed&quot;);
+            return -1;
+        }
+
+	for (t = 0; t &lt; times; t++)
+	{
+		res[t] = test();
+		fprintf(pFile,&quot;%f,&quot;,res[t]);
+	}
+
+	printf(&quot;test over\n&quot;);
+
+	return 0;
+}
+
+void traverse_by_row()
+{
+	int sum_row = 0;
+	for (int r = 0; r &lt; row; ++r)
+	{
+		for (int c = 0; c &lt; col; ++c)
+		{
+			sum_row += matrix[r][c];
+		}
+	}
+}
+
+void traverse_by_col()
+{
+	int sum_col = 0;
+	for (int c = 0; c &lt; col; ++c)
+	{
+		for (int r = 0; r &lt; row; ++r)
+		{
+			sum_col += matrix[r][c];
+		}
+	}
+}
+
+double test()
+{
+	clock_t start, finish;
+	double tot_time1, tot_time2;
+
+	/** 按行遍历，会快一些 */
+	start = clock();
+	for (int i = 0; i &lt; count; ++i)
+	{
+		traverse_by_row();
+	}
+	finish = clock();
+	tot_time1 = (double)(finish - start);
+	printf(&quot;traverse by row %d times, totally spend %.2f\n&quot;, count, tot_time1);
+
+
+	/** 按列遍历，会慢一些 */
+	start = clock();
+	for (int i = 0; i &lt; count; ++i)
+	{
+		traverse_by_col();
+	}
+	finish = clock();
+	tot_time2 = (double)(finish - start);
+	printf(&quot;traverse by col %d times, totally spend %.2f\n&quot;, count, tot_time2);
+
+	return (tot_time2 - tot_time1);
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[数字滤波器的设计]]></title>
         <id>https://cxx7ud.coding-pages.com/post/DSP/</id>
@@ -2271,731 +2428,6 @@ X(e^{j\omega})=\frac{2\pi}{N}\sum_{k={-\infin}}^{\infin}{\widetilde{X(k)}}\delta
 <h2 id="ft与lt的关系">FT与LT的关系</h2>
 <p>因为并不是所有的信号都能傅里叶变换（需要满足绝对可积），所以可以乘上一个<strong>衰减因子</strong><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>e</mi><mrow><mo>−</mo><mi>δ</mi><mi>t</mi></mrow></msup></mrow><annotation encoding="application/x-tex">e^{-{\delta}t}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8491079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03785em;">δ</span></span><span class="mord mathdefault mtight">t</span></span></span></span></span></span></span></span></span></span></span></span>，这样能使新构造的信号满足<strong>绝对可积</strong>，进而实现从时域变换到频域（此时是<strong>复频域</strong>）。因为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>e</mi><mrow><mo>−</mo><mi>j</mi><mi>ω</mi><mi>t</mi></mrow></msup><msup><mi>e</mi><mrow><mo>−</mo><mi>δ</mi><mi>t</mi></mrow></msup><mo>=</mo><msup><mi>e</mi><mrow><mo>−</mo><mrow><mo>(</mo><mrow><mi>δ</mi><mo>+</mo><mi>j</mi><mi>ω</mi></mrow><mo>)</mo><mi>t</mi></mrow></mrow></msup><mo>=</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>s</mi><mi>t</mi></mrow></msup></mrow><annotation encoding="application/x-tex">e^{-j{\omega}t}e^{-{\delta}t}=e^{-{({\delta+j\omega})t}}=e^{-st}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8491079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ω</span></span><span class="mord mathdefault mtight">t</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03785em;">δ</span></span><span class="mord mathdefault mtight">t</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8879999999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8879999999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03785em;">δ</span><span class="mbin mtight">+</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ω</span></span><span class="mclose mtight">)</span><span class="mord mathdefault mtight">t</span></span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.7935559999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7935559999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathdefault mtight">s</span><span class="mord mathdefault mtight">t</span></span></span></span></span></span></span></span></span></span></span></span>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mo>=</mo><mi>δ</mi><mo>+</mo><mi>j</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">s=\delta+j\omega</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.03785em;">δ</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span></span></span></span>即为复频域，当δ为0时，即退化为傅里叶变换。</p>
 <p>即LT变换是FT的推广，从频域推广到复频域。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[驱动程序基石]]></title>
-        <id>https://cxx7ud.coding-pages.com/post/driverbase/</id>
-        <link href="https://cxx7ud.coding-pages.com/post/driverbase/">
-        </link>
-        <updated>2020-09-29T12:11:35.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="前言">前言</h1>
-<p>应用程序进入到驱动程序会经过系统调用，并且在系统调用中会做出相应的处理。根据调用的函数不同，做的处理也不同；但是都会生成驱动程序的struct file结构体，这个结构体对于应用程序来说应该就是fd（文件描述符），对于驱动程序来说就是struct file（或struct inode，注意struct file和struct inode的联系和区别）。</p>
-<pre><code class="language-mermaid">graph LR
-APP/open --&gt; sys_call/sys_open
-sys_call/sys_open --&gt; drv/drv_open
-</code></pre>
-<p>比如fs/select.c函数中的sys_poll函数。</p>
-<pre><code class="language-c">/* 应用程序调用poll或select后，系统调用就会到这里来。在此函数中对超时时间做简单判断后，就调用do_sys_poll。
-*/
-SYSCALL_DEFINE3(poll, struct pollfd __user *, ufds, unsigned int, nfds, int, timeout_msecs)
-
-/* 此函数中又会调用其它函数 */
-int do_sys_poll(struct pollfd __user *ufds, unsigned int nfds, struct timespec *end_time)
-
-/* 最终会调用驱动中的poll函数，并对返回值做相应处理 */
-</code></pre>
-<h1 id="休眠与唤醒">休眠与唤醒</h1>
-<blockquote>
-<p>正点原子和韦东山的代码很不相似，感觉完全不一样，正点原子更加繁琐。</p>
-</blockquote>
-<p><strong>当应用程序必须等待某个事件发生</strong>，比如必须等待按键被按下时，<strong>可以使用“休眠-唤醒”机制</strong>：</p>
-<ol>
-<li>APP 调用 read 等函数试图读取数据，比如读取按键；</li>
-<li>APP 进入内核态，也就是调用驱动中的对应函数，发现有数据则复制到用户空间并马上返回；</li>
-<li>如果 APP 在内核态，也就是在驱动程序中发现没有数据，则 APP 休眠；</li>
-<li>当有数据时，比如当按下按键时，驱动程序的<strong>中断服务程序被调用</strong>，它会记录数据、唤醒 APP；</li>
-<li>APP 继续运行它的内核态代码，也就是驱动程序中的函数，复制数据到用户空间并马上返回。</li>
-</ol>
-<p>请记住：<strong>在中断处理函数中，不能休眠</strong>，也就不能调用会导致休眠的函数。</p>
-<h2 id="等待队列头和等待队列项">等待队列头和等待队列项</h2>
-<h3 id="等待队列头">等待队列头</h3>
-<p>阻塞访问最大的好处就是当设备文件不可操作的时候进程可以进入休眠态，这样可以将CPU 资源让出来。但是，当设备文件可以操作的时候就必须唤醒进程，一般在中断函数里面完 成唤醒工作。Linux 内核提供了**等待队列(wait queue)**来实现阻塞进程的唤醒工作，如果我们要在驱动中使用等待队列，必须创建并初始化一个等待队列头，等待队列头使用结构体 wait_queue_head_t 表示，wait_queue_head_t 结构体定义在文件 include/linux/wait.h 中，结构体内容如下所示：</p>
-<h4 id="休眠函数">休眠函数</h4>
-<blockquote>
-<p>参看：include/linux/wait.h</p>
-</blockquote>
-<figure data-type="image" tabindex="1"><img src="https://cxx7ud.coding-pages.com//post-images/1602505104294.png" alt="" loading="lazy"></figure>
-<pre><code class="language-c">#define wait_event(wq, condition)					\
-do {									\
-	might_sleep();							\
-	if (condition)							\
-		break;							\
-	__wait_event(wq, condition);					\
-} while (0)
-</code></pre>
-<pre><code class="language-c">#define wait_event_timeout(wq, condition, timeout)			\
-({									\
-	long __ret = timeout;						\
-	might_sleep();							\
-	if (!___wait_cond_timeout(condition))				\
-		__ret = __wait_event_timeout(wq, condition, timeout);	\
-	__ret;								\
-})
-</code></pre>
-<pre><code class="language-c">#define wait_event_interruptible(wq, condition)				\
-({									\
-	int __ret = 0;							\
-	might_sleep();							\
-	if (!(condition))						\
-		__ret = __wait_event_interruptible(wq, condition);	\
-	__ret;								\
-})
-</code></pre>
-<h4 id="唤醒函数">唤醒函数</h4>
-<figure data-type="image" tabindex="2"><img src="https://cxx7ud.coding-pages.com//post-images/1602505088683.png" alt="" loading="lazy"></figure>
-<pre><code class="language-c">void __wake_up(
-    wait_queue_head_t *q, 
-    unsigned int mode, 
-    int nr, 
-    void *key);
-
-void __wake_up_locked(
-    wait_queue_head_t *q, 
-    unsigned int mode, 
-    int nr);
-
-#define wake_up(x)		__wake_up(x, TASK_NORMAL, 1, NULL)
-#define wake_up_nr(x, nr)	__wake_up(x, TASK_NORMAL, nr, NULL)
-#define wake_up_all(x)	__wake_up(x, TASK_NORMAL, 0, NULL)
-
-#define wake_up_interruptible(x)	__wake_up(x, TASK_INTERRUPTIBLE, 1, NULL)
-#define wake_up_interruptible_nr(x, nr)	__wake_up(x, TASK_INTERRUPTIBLE, nr, NULL)
-#define wake_up_interruptible_all(x)	__wake_up(x, TASK_INTERRUPTIBLE, 0, NULL)
-</code></pre>
-<h4 id="一般框架">一般框架</h4>
-<figure data-type="image" tabindex="3"><img src="https://cxx7ud.coding-pages.com//post-images/1602505073328.png" alt="" loading="lazy"></figure>
-<p>要休眠的线程，放在 wq 队列里，中断处理函数从 wq 队列里把它取出来唤醒。</p>
-<p>所以，我们要做这几件事：</p>
-<ol>
-<li>
-<p>初始化 wq 队列</p>
-</li>
-<li>
-<p>在驱动的 read 函数中，调用 wait_event_interruptible</p>
-<p>它本身会判断 event 是否为 FALSE，如果为 FASLE 表示无数据，则休眠。 当从 wait_event_interruptible 返回后，把数据复制回用户空间。</p>
-</li>
-<li>
-<p>在<strong>中断服务程序里</strong>设置 event 为 TRUE，并调用 wake_up_interruptible 唤醒线程。</p>
-</li>
-</ol>
-<figure data-type="image" tabindex="4"><img src="https://cxx7ud.coding-pages.com//post-images/1602505055466.png" alt="" loading="lazy"></figure>
-<h1 id="poll机制">poll机制</h1>
-<p>对于休眠唤醒机制，必须要有人唤醒才能返回；但是poll可以设置超时时间，时间到后还是没有等到相应的时间也会返回。</p>
-<figure data-type="image" tabindex="5"><img src="https://cxx7ud.coding-pages.com//post-images/1602505041971.png" alt="" loading="lazy"></figure>
-<h2 id="驱动编写要点">驱动编写要点</h2>
-<ol>
-<li>在驱动中把当前线程放入某个等待队列wq（但不会导致休眠），并且根据实际情况（比如当前有无按键值可以读）返回驱动程序的状态（如POLLIN）。</li>
-<li>在系统调用sys_poll中会对驱动中的poll的返回值做相应处理，比如如果poll的返回值不为0而是POLLIN，那么sys_poll就会记录下这个状态并且返回到应用程序中（时间超时后就算没有得到相关事件也会返回）。</li>
-<li>进入中断表明某件事情发生，比如按键按下了，那么驱动中的poll就可以根据这个状态返回POLLIN，表明现在有按键可以读。</li>
-</ol>
-<pre><code class="language-c">static unsigned int gpio_key_drv_poll(struct file *fp, poll_table * wait)
-{
-	printk(&quot;%s %s line %d\n&quot;, __FILE__, __FUNCTION__, __LINE__);
-    /* 把当前线程fp放入等待队列中，wait是系统调用传进来的参数 */
-	poll_wait(fp, &amp;gpio_key_wait, wait);
-    /* 判断是否有按键值，有就返回POLLIN */
-	return is_key_buf_empty() ? 0 : POLLIN | POLLRDNORM;
-}
-
-
-static irqreturn_t gpio_key_isr(int irq, void *dev_id)
-{
-	struct gpio_key *gpio_key = dev_id;
-	int val;
-	int key;
-	
-	val = gpiod_get_value(gpio_key-&gt;gpiod);
-	printk(&quot;key %d %d\n&quot;, gpio_key-&gt;gpio, val);
-	key = (gpio_key-&gt;gpio &lt;&lt; 8) | val;
-    /* 现在有按键可读了 */
-	put_key(key);
-    /* 并唤醒等待队列中的所有线程 */
-	wake_up_interruptible(&amp;gpio_key_wait);
-	
-	return IRQ_HANDLED;
-}
-</code></pre>
-<h2 id="应用程序编写要点">应用程序编写要点</h2>
-<pre><code class="language-c">struct pollfd fds[1];
-int timeout_ms = 5000;
-
-fds[0].fd = fd;  /* 要监控的fd */
-fds[0].events = POLLIN; /* 监控事件的类型-有数据可读 */
-
-while (1)
-{
-    /* 3. 读文件 */
-    ret = poll(fds, 1, timeout_ms);
-    /* 返回事件revents的标志是否为POLLIN，这个标志是sys_poll根据drv_poll的返回值进行设定的 */
-    if ((ret == 1) &amp;&amp; (fds[0].revents &amp; POLLIN))
-    {
-        read(fd, &amp;val, 4);
-        printf(&quot;get button : 0x%x\n&quot;, val);
-    }
-    else
-    {
-        printf(&quot;timeout\n&quot;);
-    }
-}
-
-close(fd);
-</code></pre>
-<h1 id="异步通知">异步通知</h1>
-<blockquote>
-<p>信号的种类：include/uapi/asm-generic/signal.h</p>
-</blockquote>
-<p>核心就是驱动程序在合适的时刻给应用程序<strong>发信号</strong>。</p>
-<ol>
-<li>谁发：驱动程序发</li>
-<li>发什么：信号</li>
-<li>发什么信号：SIGIO</li>
-<li>怎么发：内核里提供有函数</li>
-<li>发给谁：APP，APP 要把自己（pid）告诉驱动</li>
-<li>APP 收到后做什么：执行信号处理函数</li>
-<li>信号处理函数和信号，之间怎么挂钩：APP 注册信号处理函数</li>
-</ol>
-<p>APP 打开驱动程序时，内核（系统调用）会创建对应的 struct file 结构体，file 中有 f_flags；f_flags 中有一个 FASYNC 位，它被设置为 1 时表示使能异步通知功能。<strong>当 f_flags 中的 FASYNC 位发生变化时，驱动程序的 fasync 函数被调用</strong>。</p>
-<figure data-type="image" tabindex="6"><img src="https://cxx7ud.coding-pages.com//post-images/1602505023223.png" alt="" loading="lazy"></figure>
-<pre><code class="language-c">struct fasync_struct *button_fasync;
-</code></pre>
-<figure data-type="image" tabindex="7"><img src="https://cxx7ud.coding-pages.com//post-images/1602504990127.png" alt="" loading="lazy"></figure>
-<h2 id="驱动编写要点-2">驱动编写要点</h2>
-<ul>
-<li>编写<code>fasync</code>函数提供给<code>file_operation</code>结构体，在此函数中调用<code>fasync_helper(fd,file,on,&amp;fasync_struct)</code>，此函数的目的是将驱动与app相联系起来，以便以后驱动知道把信号发给谁（file中含有app的pid，然后此函数把pid赋给fasync_struct）。</li>
-<li>在中断中使用函数<code>kill_fasync(fasync_struct,SIGIO,POLL_IN)</code>向app发信号。
-<ul>
-<li>第 1 个参数：fasync-&gt;fa_file 非空时，可以从中得到 PID，表示发给哪一个 APP；</li>
-<li>第 2 个参数表示发什么信号：SIGIO；</li>
-<li>第 3 个参数表示为什么发信号：POLL_IN，有数据可以读了(APP 用不到这个参数)。</li>
-</ul>
-</li>
-</ul>
-<h2 id="应用编写要点">应用编写要点</h2>
-<ul>
-<li>
-<p>要把自己的pid告诉驱动（通过系统调用告诉驱动）</p>
-<pre><code class="language-c">/* 告诉fd(驱动程序)我(应用程序)的pid */
-fcntl(fd, F_SETOWN, getpid());
-</code></pre>
-</li>
-<li>
-<p>使能驱动的异步通知功能</p>
-<pre><code class="language-c">/* get flags，获得标志 */
-flags = fcntl(fd, F_GETFL);	
-/* set flags，设置标志 ，即使能异步通知功能 */
-fcntl(fd, F_SETFL, flags | FASYNC);	
-</code></pre>
-</li>
-<li>
-<p>绑定信号函数</p>
-<pre><code class="language-c">signal(SIGIO, sig_func);
-static void sig_func(int sig)
-{
-	int val;
-	read(fd, &amp;val, 4);
-	printf(&quot;get button : 0x%x\n&quot;, val);
-}
-</code></pre>
-</li>
-</ul>
-<h1 id="阻塞与非阻塞">阻塞与非阻塞</h1>
-<p>所谓阻塞，就是等待某件事情发生。比如调用 read 读取按键时，如果没有按键数据则 read 函数不会返回，它会让线程休眠等待。</p>
-<ul>
-<li>使用 poll 时，如果传入的超时时间不为 0，这种访问方法也是<strong>阻塞的</strong>。</li>
-<li>使用 poll 时，可以设置超时时间为 0，这样即使没有数据它也会立刻返回，这就是<strong>非阻塞方式</strong>。</li>
-</ul>
-<figure data-type="image" tabindex="8"><img src="https://cxx7ud.coding-pages.com//post-images/1602504970012.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="9"><img src="https://cxx7ud.coding-pages.com//post-images/1602504944393.png" alt="" loading="lazy"></figure>
-<h2 id="驱动编写要点-3">驱动编写要点</h2>
-<pre><code class="language-c">static ssize_t gpio_key_drv_read (struct file *file, char __user *buf, size_t size, loff_t *offset)
-{
-	//printk(&quot;%s %s line %d\n&quot;, __FILE__, __FUNCTION__, __LINE__);
-	int err;
-	int key;
-
-	if (is_key_buf_empty() &amp;&amp; (file-&gt;f_flags &amp; O_NONBLOCK))
-		return -EAGAIN;
-	
-	wait_event_interruptible(gpio_key_wait, !is_key_buf_empty());
-	key = get_key();
-	err = copy_to_user(buf, &amp;key, 4);
-	
-	return 4;
-}
-</code></pre>
-<p>从驱动代码也可以看出来，当 APP 打开某个驱动时，在内核中会有一个 struct file 结构体对应这个驱动，这个结构体中有 f_flags，就是打开文件时的标记位；可以设置 f_flasgs 的 O_NONBLOCK 位，表示非阻塞；也可以清除这个位表示阻塞。</p>
-<p><strong>驱动程序要根据这个标记位决定事件未就绪时是休眠和还是立刻返回。</strong></p>
-<p>如果没有按键可以读取并且是非阻塞，那么就立刻返回；否则就休眠。<br>
-<img src="https://cxx7ud.coding-pages.com//post-images/1602504916967.png" alt="" loading="lazy"></p>
-<h2 id="应用程序编写要点-2">应用程序编写要点</h2>
-<pre><code class="language-c">/* 2. 非阻塞模式打开文件 */
-fd = open(argv[1], O_RDWR | O_NONBLOCK);
-if (fd == -1)
-{
-    printf(&quot;can not open file %s\n&quot;, argv[1]);
-    return -1;
-}
-/* 会立刻被执行 */
-for (i = 0; i &lt; 10; i++) 
-{
-    if (read(fd, &amp;val, 4) == 4)
-        printf(&quot;get button: 0x%x\n&quot;, val);
-    else
-        printf(&quot;get button: -1\n&quot;);
-}
-
-flags = fcntl(fd, F_GETFL);
-/* 阻塞模式打开 */
-fcntl(fd, F_SETFL, flags &amp; ~O_NONBLOCK);
-
-/* 有按键按下才会打印 */
-while (1)
-{
-    if (read(fd, &amp;val, 4) == 4)
-        printf(&quot;get button: 0x%x\n&quot;, val);
-    else
-        printf(&quot;while get button: -1\n&quot;);
-}
-close(fd);
-</code></pre>
-<h2 id="实验结果">实验结果</h2>
-<p>非阻塞立刻执行</p>
-<figure data-type="image" tabindex="10"><img src="https://cxx7ud.coding-pages.com//post-images/1602504888375.png" alt="" loading="lazy"></figure>
-<p>阻塞方式（按下一次按键才打印一次）</p>
-<figure data-type="image" tabindex="11"><img src="https://cxx7ud.coding-pages.com//post-images/1602504865739.png" alt="" loading="lazy"></figure>
-<h1 id="定时器">定时器</h1>
-<blockquote>
-<p>expire的意思是到期、期满。</p>
-</blockquote>
-<h2 id="内部机制">内部机制</h2>
-<p>怎么实现定时器，逻辑上很简单：每发生一次硬件中断时，硬件中断处理完后就会看看有没有软件中断要处理。</p>
-<p>定时器就是通过软件中断来实现的，它属于 <strong>TIMER_SOFTIRQ 软中断</strong>。</p>
-<p>对于 TIMER_SOFTIRQ 软中断，初始化代码如下：</p>
-<pre><code class="language-c">void __init init_timers(void)
-{
-    init_timer_cpus();
-    init_timer_stats();
-    open_softirq(TIMER_SOFTIRQ, run_timer_softirq);
-}
-</code></pre>
-<p>当发生硬件中断时，硬件中断处理完后，内核会调用软件中断的处理函数。对于 TIMER_SOFTIRQ，会调用 run_timer_softirq，它的函数如下：</p>
-<pre><code class="language-c">run_timer_softirq
-	__run_timers(base);
- 		while (time_after_eq(jiffies, base-&gt;clk)) {
-			......
-			expire_timers(base, heads + levels);
- 				fn = timer-&gt;function;
- 				data = timer-&gt;data;
- 				call_timer_fn(timer, fn, data);
- 					fn(data);
-</code></pre>
-<p>简单地说，add_timer 函数会把 timer 放入内核里某个链表；</p>
-<ul>
-<li>
-<p>在 TIMER_SOFTIRQ 的处理函数中，会从链表中把这些超时的 timer 取出来，执行其中的函数。</p>
-</li>
-<li>
-<p>怎么判断是否超时？jiffies 大于或等于 timer-&gt;expires 时，timer 就超时。</p>
-</li>
-</ul>
-<p>内核中有很多 timer，如果高效地找到超时的 timer？这是比较复杂的，<a href="https://blog.csdn.net/tianmohust/article/details/8707162">可以看看这文章</a>。</p>
-<h2 id="使用步骤">使用步骤</h2>
-<figure data-type="image" tabindex="12"><img src="https://cxx7ud.coding-pages.com//post-images/1602504840896.png" alt="" loading="lazy"></figure>
-<ul>
-<li><code>setup_timer(定时器，对应函数，传给对应函数的数据)</code>。</li>
-<li>配置定时器成员，如<code>gpio_keys_100ask[i].key_timer.expires = ~0;	/* 先设置超时时间为最大值 */</code>。</li>
-<li>向内核添加定时器<code>add_timer(&amp;gpio_keys_100ask[i].key_timer)</code>。</li>
-<li>中断发生时，说明可能有按键被按下，此时在中断中设置定时器的<strong>到期时间</strong>用于消抖，即<code>mod_timer(&amp;gpio_key-&gt;key_timer, jiffies + HZ/50)</code>。</li>
-</ul>
-<pre><code class="language-c">static irqreturn_t gpio_key_isr(int irq, void *dev_id)
-{
-	struct gpio_key *gpio_key = dev_id;
-	printk(&quot;gpio_key_isr key %d irq happened\n&quot;, gpio_key-&gt;gpio);
-    /* 消抖时间设为20ms */
-	mod_timer(&amp;gpio_key-&gt;key_timer, jiffies + HZ/50);
-	return IRQ_HANDLED;
-}
-
-/* 定时器对应的超时函数 */
-static void key_timer_expire(unsigned long data)
-{
-	/* data ==&gt; gpio */
-	struct gpio_key *gpio_key = data;
-	int val;
-	int key;
-
-	val = gpiod_get_value(gpio_key-&gt;gpiod);
-
-	printk(&quot;key_timer_expire key %d %d\n&quot;, gpio_key-&gt;gpio, val);
-	key = (gpio_key-&gt;gpio &lt;&lt; 8) | val;
-	put_key(key);
-	wake_up_interruptible(&amp;gpio_key_wait);
-	kill_fasync(&amp;button_fasync, SIGIO, POLL_IN);
-}
-</code></pre>
-<h1 id="中断下半部-tasklet">中断下半部-tasklet</h1>
-<p>中断处理的两个原则：</p>
-<ul>
-<li>不能嵌套</li>
-<li>越快越好</li>
-</ul>
-<p>在处理当前中断时，即使发生了其他中断，其他中断也不会得到处理，所以中断的处理要越快越好。但是某些中断要做的事情稍微耗时，这时可以把中断拆分为上半部、下半部。</p>
-<ul>
-<li>在上半部处理紧急的事情，在上半部的处理过程中，中断是<strong>被禁止的</strong>；</li>
-<li>在下半部处理耗时的事情，在下半部的处理过程中，中断是<strong>使能的</strong>。</li>
-</ul>
-<h2 id="理解中断上下部的要点">理解中断上下部的要点</h2>
-<ul>
-<li>正在中断函数中时，是不能相应其它中断的，即中断是被<strong>禁止的</strong></li>
-<li>中断上半部（也就是isr）处理完后，会进入中断下半部（也可能不会进入），此时是可以响应其它中断的。</li>
-<li>在中断下半部发生中断后又会进入中断isr中，执行完毕后不会执行新的下半部，而是<strong>接着上一次的下半部</strong>。</li>
-</ul>
-<p>中断下半部使用结构体 tasklet_struct 来表示，它在内核include\linux\interrupt.h 中定义：</p>
-<pre><code class="language-c">struct tasklet_struct
-{
-    struct tasklet_struct *next;
-    unsigned long state;
-    atomic_t count;
-    void (*func)(unsigned long);
-    unsigned long data;
-};
-</code></pre>
-<p>其中的 <strong>state</strong> 有 2 位：</p>
-<ul>
-<li>
-<p>bit0 表示 TASKLET_STATE_SCHED，即<strong>调度状态位</strong></p>
-<p>等于 1 时表示已经执行了函数<code>tasklet_schedule</code> 把该 tasklet 放入队列了；函数<code>tasklet_schedule</code> 会判断该位，如果已经等于 1 那么它就不会再次把 tasklet 放入队列。</p>
-</li>
-<li>
-<p>bit1 表示 TASKLET_STATE_RUN，即<strong>运行状态位</strong></p>
-<p>等于 1 时，表示正在运行 tasklet 中的 func 函数；函数执行完后内核会把该位清 0。</p>
-</li>
-</ul>
-<p>其中的 <strong>count</strong> 表示该 tasklet 是否使能：</p>
-<ul>
-<li>等于 0 表示使能了。</li>
-<li>非 0 表示被禁止了。对于 count 非 0 的tasklet，里面的 func 函数不会被执行。</li>
-</ul>
-<h2 id="相关函数">相关函数</h2>
-<pre><code class="language-c">/* 相关宏定义 */
-#define DECLARE_TASKLET(name, func, data) \
-struct tasklet_struct name = { NULL, 0, ATOMIC_INIT(0), func, data }
-/* 与上面不同的是count成员被初始化为1， 即默认失能；使用前需要用函数tasklet_enable一下 */
-#define DECLARE_TASKLET_DISABLED(name, func, data) \
-struct tasklet_struct name = { NULL, 0, ATOMIC_INIT(1), func, data }
-
-extern void tasklet_init(
-    struct tasklet_struct *t,
-	void (*func)(unsigned long), 
-    unsigned long data);
-
-/* 其实就是把count减1 */
-static inline void tasklet_enable(struct tasklet_struct *t);
-/* 把count加1 */
-static inline void tasklet_disable(struct tasklet_struct *t);
-/* 把t放入某个链表，并且设置它的TASKLET_STATE_SCHED状态为1 */
-static inline void tasklet_schedule(struct tasklet_struct *t);
-
-extern void tasklet_kill(struct tasklet_struct *t);
-</code></pre>
-<h2 id="tasklet内部机制">tasklet内部机制</h2>
-<p>tasklet 属于<code>TASKLET_SOFTIRQ</code> 软件中断，入口函数为 tasklet_action，这在内核 <code>kernel\softirq.c</code>中设置：</p>
-<pre><code class="language-c">void __init softirq_init(void)
-{
-	int cpu;
-
-	for_each_possible_cpu(cpu) {
-		per_cpu(tasklet_vec, cpu).tail =
-			&amp;per_cpu(tasklet_vec, cpu).head;
-		per_cpu(tasklet_hi_vec, cpu).tail =
-			&amp;per_cpu(tasklet_hi_vec, cpu).head;
-	}
-
-	open_softirq(TASKLET_SOFTIRQ, tasklet_action);
-	open_softirq(HI_SOFTIRQ, tasklet_hi_action);
-}
-</code></pre>
-<p>当发生硬件中断时，内核处理完硬件中断后，会处理软件中断。对于<code>TASKLET_SOFTIRQ</code> 软件中断，会调用<code>tasklet_action</code> 函数。执行过程还是挺简单的：从队列中找到 tasklet，进行状态判断后执行 func 函数，从队列中删除 tasklet。 <strong>从这里可以看出</strong>：</p>
-<ul>
-<li><code>tasklet_schedule</code> 调度 tasklet 时，其中的函数并不会立刻执行，而只是把 tasklet 放入队列；</li>
-<li>调用一次 <code>tasklet_schedule</code>，只会导致 tasklet 的函数<strong>被执行一次</strong>；</li>
-<li>如果 tasklet 的函数尚未执行，<strong>多次调用<code>tasklet_schedule</code> 也是无效</strong>的，只会放入队列一次。</li>
-</ul>
-<h2 id="驱动编写要点-4">驱动编写要点</h2>
-<ul>
-<li>在probe中使用<code>tasklet_init(t, func, data)</code>初始化tasklet；</li>
-<li>在中断服务中调用<code>tasklet_schedule(tasklet)</code>使其加入到队列中去</li>
-<li>在func中做相应的事</li>
-</ul>
-<pre><code class="language-c">tasklet_init(
-    &amp;gpio_keys_100ask[i].tasklet, 
-    key_tasklet_func, 
-    &amp;gpio_keys_100ask[i]);
-
-static irqreturn_t gpio_key_isr(int irq, void *dev_id)
-{
-	struct gpio_key *gpio_key = dev_id;
-	//printk(&quot;gpio_key_isr key %d irq happened\n&quot;, gpio_key-&gt;gpio);
-	tasklet_schedule(&amp;gpio_key-&gt;tasklet);
-	mod_timer(&amp;gpio_key-&gt;key_timer, jiffies + HZ/50);
-	return IRQ_HANDLED;
-}
-
-static void key_tasklet_func(unsigned long data)
-{
-	/* data ==&gt; gpio */
-	struct gpio_key *gpio_key = data;
-	int val;
-	int key;
-	val = gpiod_get_value(gpio_key-&gt;gpiod);
-	printk(&quot;key_tasklet_func key %d %d\n&quot;, gpio_key-&gt;gpio, val);
-}
-</code></pre>
-<h2 id="应用编写要点-2">应用编写要点</h2>
-<p>tasklet只是实现中断下半部的一种方法，和阻塞、非阻塞这些没有矛盾关系，是可以在一起用的，具体场景具体分析。</p>
-<h1 id="工作队列">工作队列</h1>
-<p>前面讲的定时器、下半部 tasklet，它们都是在<strong>中断上下文</strong>中执行，它们<strong>无法休眠</strong>。当要处理更复杂的事情时，往往更耗时。这些更耗时的工作放在定时器或是下半部中，会使得系统很卡；并且循环等待某件事情完成也太浪费 CPU 资源了。</p>
-<p>如果使用<strong>线程</strong>来处理这些耗时的工作，那就可以解决系统卡顿的问题：因为<strong>线程可以休眠</strong>。</p>
-<p>在内核中，我们并不需要自己去创建线程，可以使用**“工作队列”(workqueue)**。内核初始化工作队列时，就为它创建了内核线程。以后我们要使用“工作队列”，只需要把“工作”放入“工作队列中”，对应的内核线程就会取出“工作”，执行里面的函数。</p>
-<pre><code class="language-c">/* 某个工作 */
-struct work_struct {
-	atomic_long_t data;
-	struct list_head entry;
-	work_func_t func;
-#ifdef CONFIG_LOCKDEP
-	struct lockdep_map lockdep_map;
-#endif
-};
-
-/* 工作队列（我没找到在哪定义的） */
-struct workqueue_struct;
-</code></pre>
-<h2 id="注意">注意</h2>
-<ul>
-<li>
-<p>工作是<code>work_struct</code>，而工作队列是<code>workqueue_struct</code></p>
-</li>
-<li>
-<p>工作队列是一个内核线程，而我们要做的就是定义一个工作任务<code>work_struct</code>，然后使用<code>schedule_work</code>把它加入到工作队列中去。</p>
-</li>
-<li>
-<p>工作队列中有多个工作时，工作队列线程是一个一个取出来执行</p>
-</li>
-<li>
-<p>我们也可以提供自己的工作队列，使用<code>schedule_work</code>是把工作放入Linux系统提供的工作队列中，使用<code>queue_work</code>可以把工作放到指定的工作队列中去。</p>
-</li>
-<li>
-<p><code>container_of(结构体的成员a1的位置,结构体类型,a1是结构体的那个成员)</code>可以获取结构体S的首地址。</p>
-<pre><code class="language-c">struct stu {
-	int a;
-	char b;
-	int arr[5];
-}
-struct stu s1;
-/* 我们知道s1的b成员位置是add，那么怎么获得s1的位置呢？*/
-s1=contianer_of(add,struct stu,b);
-</code></pre>
-</li>
-</ul>
-<h2 id="相关函数-2">相关函数</h2>
-<pre><code class="language-c">/* 定义自己的工作队列，Linux提供默认的system_wq工作队列 */
-#define create_workqueue(name)						\
-	alloc_workqueue(&quot;%s&quot;, WQ_MEM_RECLAIM, 1, (name))
-
-#define INIT_WORK(_work, _func)						\
-	__INIT_WORK((_work), (_func), 0)
-
-#define __INIT_WORK(_work, _func, _onstack)				\
-	do {								\
-		__init_work((_work), _onstack);				\
-		(_work)-&gt;data = (atomic_long_t) WORK_DATA_INIT();	\
-		INIT_LIST_HEAD(&amp;(_work)-&gt;entry);			\
-		(_work)-&gt;func = (_func);				\
-	} while (0)
-#endif
-</code></pre>
-<figure data-type="image" tabindex="13"><img src="https://cxx7ud.coding-pages.com//post-images/1602504809148.png" alt="" loading="lazy"></figure>
-<h2 id="内部工作机制">内部工作机制</h2>
-<p>比较复杂，暂且不分析</p>
-<h2 id="使用步骤-2">使用步骤</h2>
-<ul>
-<li>
-<p>构造一个<code>work_struct</code>结构体，里面有对应的函数</p>
-<pre><code class="language-c">INIT_WORK(
-    &amp;gpio_keys_100ask[i].work,
-    key_work_func);
-
-/* 通过container_of可以得到结构体的首地址 */
-static void key_work_func(struct work_struct *work)
-{
-    /* 获得gpio_key的首地址 */
-	struct gpio_key *gpio_key = container_of(
-        work, struct gpio_key, work);
-	int val;
-
-	val = gpiod_get_value(gpio_key-&gt;gpiod);
-
-	printk(&quot;key_work_func: the process is %s pid %d\n&quot;,current-&gt;comm, current-&gt;pid);	
-	printk(&quot;key_work_func key %d %d\n&quot;, gpio_key-&gt;gpio, val);
-}
-</code></pre>
-</li>
-<li>
-<p>使用<code>schedule_work(work)</code>将工作放入工作队列，内核线程会运行work中的函数。（在中断中调用此函数进入中断下半部）</p>
-<pre><code class="language-c">static irqreturn_t gpio_key_isr(int irq, void *dev_id)
-{
-	struct gpio_key *gpio_key = dev_id;
-	//printk(&quot;gpio_key_isr key %d irq happened\n&quot;, gpio_key-&gt;gpio);
-	schedule_work(&amp;gpio_key-&gt;work);
-	return IRQ_HANDLED;
-}
-</code></pre>
-</li>
-</ul>
-<h1 id="中断的线程化处理">中断的线程化处理</h1>
-<p>工作队列有一个<strong>缺点</strong>：工作队列中有多个 work，前一个 work 没处理完会影响后面的 work。解决方法有很多种，比如干脆自己创建一个内核线程，不跟别的 work 凑在一块了。</p>
-<p>对于中断处理，还有另一种方法：threaded irq，<strong>线程化的中断处理</strong>。中断的处理仍然可以认为分为上半部、下半部。上半部用来处理紧急的事情，下半部用一个内核线程来处理，这个内核线程专用于这个中断。</p>
-<h2 id="内部机制-2">内部机制</h2>
-<p>暂不分析</p>
-<h2 id="相关函数-3">相关函数</h2>
-<figure data-type="image" tabindex="14"><img src="https://cxx7ud.coding-pages.com//post-images/1602504787811.png" alt="" loading="lazy"></figure>
-<pre><code class="language-c">/* 参考：kernel/irq/manage.c */
-int request_threaded_irq(
-		unsigned int irq, 		/* 那个中断 */
-		irq_handler_t handler,	/* 中断上半部，可以为空 */
-		irq_handler_t thread_fn, 	/* 中断下半部 */
-		unsigned long irqflags,	/* 中断类型/方式 */
-		const char *devname, 	/* 应该是中断名字 */
-		void *dev_id)			/* 传给上/下半部的参数 */
-
-    
-void free_irq(unsigned int irq, void *dev_id)
-</code></pre>
-<h3 id="注意-2">注意</h3>
-<p>从前面可知，我们可以提供上半部函数，也可以不提供：</p>
-<ul>
-<li>
-<p>不提供</p>
-<p>内核会提供默认的上半部处理函数：irq_default_primary_handler，它是直接返回 IRQ_WAKE_THREAD。</p>
-</li>
-<li>
-<p>提供</p>
-<p>返回值<strong>必须是</strong>：IRQ_WAKE_THREAD。</p>
-</li>
-</ul>
-<h2 id="使用步骤-3">使用步骤</h2>
-<pre><code class="language-c">request_threaded_irq(
-	gpio_keys_100ask[i].irq, 
-	gpio_key_isr, 
-	gpio_key_thread_func, I
-	RQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-	&quot;100ask_gpio_key&quot;, 
-	&amp;gpio_keys_100ask[i]);
-
-static irqreturn_t gpio_key_isr(int irq, void *dev_id)
-{
-	struct gpio_key *gpio_key = dev_id;
-	//printk(&quot;gpio_key_isr key %d irq happened\n&quot;, gpio_key-&gt;gpio);
-	tasklet_schedule(&amp;gpio_key-&gt;tasklet);
-	mod_timer(&amp;gpio_key-&gt;key_timer, jiffies + HZ/50);
-	schedule_work(&amp;gpio_key-&gt;work);
-	return IRQ_WAKE_THREAD;	/* 只有返回这个才能唤醒中断线程 */
-}
-
-static irqreturn_t gpio_key_thread_func(int irq, void *data)
-{
-	struct gpio_key *gpio_key = data;
-	int val;
-
-	val = gpiod_get_value(gpio_key-&gt;gpiod);
-
-	printk(&quot;gpio_key_thread_func: the process is %s pid %d\n&quot;,current-&gt;comm, current-&gt;pid);	
-	printk(&quot;gpio_key_thread_func key %d %d\n&quot;, gpio_key-&gt;gpio, val);
-	
-	return IRQ_HANDLED;
-}
-
-/* 在remove中freeirq */
-free_irq(gpio_keys_100ask[i].irq, &amp;gpio_keys_100ask[i]);
-</code></pre>
-<h1 id="mmap">mmap</h1>
-<p>应用程序不能直接读写驱动程序中的 buffer，需要在用户态 buffer 和内核态 buffer 之间进行一次数据拷贝。这种方式在数据量比较小时没什么问题；但是数据量比较大时效率就太低了。比如更新 LCD 显示时，如果每次都让 APP 传递一帧数据给内核，假设 LCD 采用 1024<em>600</em>32bpp 的格式，一帧数据就有1024<em>600</em>32/8=2.3MB 左右，这无法忍受。改进的方法就是让程序可以直接读写驱动程序中的 buffer，这可以通过 mmap 实现(memory map)，把内核的 buffer <strong>映射到</strong>用户态，让 APP 在用户态直接读写。</p>
-<h2 id="大概过程">大概过程</h2>
-<p>应用程序调用mmap，然后会进入到<strong>系统调用</strong>，在系统调用中会构造一个<strong>虚拟地址区域</strong><code>struct vm_area_struct vma</code>变量，并传入到驱动中编写的对应的<code>mmap</code>函数。</p>
-<p>在驱动程序中的mmap中应该做的事情：</p>
-<ul>
-<li>获得内核中虚拟地址[<code>buf_kernel</code>]的物理地址<code>phy</code>，通过<code>virt_to_phys</code></li>
-<li>设置vma的一些属性，比如是否使用cache、buffer</li>
-<li>然后映射</li>
-</ul>
-<figure data-type="image" tabindex="15"><img src="https://cxx7ud.coding-pages.com//post-images/1602504757673.png" alt="" loading="lazy"></figure>
-<pre><code class="language-c">int main(int argc, char **argv)
-{
-	int fd;
-	char *buf;
-	int len;
-	char str[1024];
-	
-	
-	/* 1. 打开文件 */
-	fd = open(&quot;/dev/hello&quot;, O_RDWR);
-	if (fd == -1)
-	{
-		printf(&quot;can not open file /dev/hello\n&quot;);
-		return -1;
-	}
-
-	/* 2. mmap 
-	 * MAP_SHARED  : 多个APP都调用mmap映射同一块内存时, 对内存的修改大家都可以看到。就是说多个APP、驱动程序实际上访问的都是同一块内存
-	 * MAP_PRIVATE : 创建一个copy on write的私有映射。当APP对该内存进行修改时，其他程序是看不到这些修改的。就是当APP写内存时, 内核会先创建一个拷贝给这个APP, 这个拷贝是这个APP私有的, 其他APP、驱动无法访问。
-	 */
-	buf =  mmap(NULL, 1024*8, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-	if (buf == MAP_FAILED)
-	{
-		printf(&quot;can not mmap file /dev/hello\n&quot;);
-		return -1;
-	}
-	printf(&quot;mmap address = 0x%x\n&quot;, buf);
-	printf(&quot;buf origin data = %s\n&quot;, buf); /* old */
-
-	/* 3. write */
-	strcpy(buf, &quot;new&quot;);
-
-	/* 4. read &amp; compare */
-	/* 对于MAP_SHARED映射:  str = &quot;new&quot; 
-	 * 对于MAP_PRIVATE映射: str = &quot;old&quot; 
-	 */
-	read(fd, str, 1024);  
-	if (strcmp(buf, str) == 0)
-	{
-		/* 对于MAP_SHARED映射，APP写的数据驱动可见
-		 * APP和驱动访问的是同一个内存块
-		 */
-		printf(&quot;compare ok!\n&quot;);
-	}
-	else
-	{
-		/* 对于MAP_PRIVATE映射，APP写数据时, 是写入原来内存块的&quot;拷贝&quot;
-		 */
-		printf(&quot;compare err!\n&quot;);
-		printf(&quot;str = %s!\n&quot;, str);  /* old */
-		printf(&quot;buf = %s!\n&quot;, buf);  /* new */
-	}
-	while (1)
-	{
-		sleep(10);  /* cat /proc/pid/maps */
-	}
-	
-	munmap(buf, 1024*8);
-	close(fd);
-	
-	return 0;
-}
-</code></pre>
-<h2 id="说明">说明</h2>
-<p>应用程序调用mmap后，会通过驱动中的drv_mmap把buf_user映射到物理内存phy</p>
-<figure data-type="image" tabindex="16"><img src="https://cxx7ud.coding-pages.com//post-images/1602504743293.png" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
 </feed>

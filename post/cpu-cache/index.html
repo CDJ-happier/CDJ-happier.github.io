@@ -1,0 +1,356 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CPU Cache | CofCai&#39;s blog</title>
+<link rel="shortcut icon" href="https://cxx7ud.coding-pages.com//favicon.ico?v=1605426905396">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cxx7ud.coding-pages.com//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="CPU Cache | CofCai&#39;s blog - Atom Feed" href="https://cxx7ud.coding-pages.com//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="[toc]
+
+Author🚹:CofCai
+personal page🏠:https://cxx7ud.coding-pages.com/
+CSDN page🏠:https://blog.csdn.net/weixin_4436059..." />
+    <meta name="keywords" content="C语言,嵌入式" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://cxx7ud.coding-pages.com/">
+  <img class="avatar" src="https://cxx7ud.coding-pages.com//images/avatar.png?v=1605426905396" alt="">
+  </a>
+  <h1 class="site-title">
+    CofCai&#39;s blog
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              CPU Cache
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-11-15
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://cxx7ud.coding-pages.com/tag/-lWbWODrq/" class="post-tag">
+                  # C语言
+                </a>
+              
+                <a href="https://cxx7ud.coding-pages.com/tag/BqSYYs6a7/" class="post-tag">
+                  # 嵌入式
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://cxx7ud.coding-pages.com//post-images/cpu-cache.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>[toc]</p>
+<blockquote>
+<p>Author🚹:CofCai</p>
+<p>personal page🏠:https://cxx7ud.coding-pages.com/</p>
+<p>CSDN page🏠:https://blog.csdn.net/weixin_44360592?spm=1011.2124.3001.5113</p>
+<p>Email✉️:cai.dongjun@nexuslink.cn</p>
+</blockquote>
+<h1 id="references">References</h1>
+<p><a href="http://igoro.com/archive/gallery-of-processor-cache-effects/">gallery-of-processor-cache-effects</a></p>
+<p><a href="https://blog.csdn.net/jiary5201314/article/details/44676425?utm_medium=distribute.pc_relevant.none-task-blog-title-3&amp;spm=1001.2101.3001.4242">7个示例科普CPU Cache</a></p>
+<p><a href="https://mp.weixin.qq.com/s/_hZtklfMINCqYTlBwmz7pA">利用CPU Cache写出高性能代码</a></p>
+<p><a href="https://www.cnblogs.com/nycsde/p/13722270.html">LRU Cache的实现</a></p>
+<h1 id="程序局部性原理">程序局部性原理</h1>
+<p>程序局部性原理是CPU Cache的理论基础。</p>
+<h2 id="时间局部性">时间局部性</h2>
+<p>时间局部性是指被CPU访问的数据，<strong>短期内</strong>还要被继续访问，比如循环、递归、方法的反复调用等。</p>
+<h2 id="空间局部性">空间局部性</h2>
+<p>空间局部性是指被CPU访问的数据的<strong>相邻数据</strong>，CPU短期内还要被继续访问，比如顺序执行的代码、连续创建的两个对象、数组等。</p>
+<h1 id="一致性原理">一致性原理</h1>
+<h2 id="写入策略">写入策略</h2>
+<h3 id="直写模式writethrough">直写模式(WriteThrough)</h3>
+<p>在数据更新时，将数据同时写入内存和Cache，该策略操作简单，但是因为每次都要写入内存，速度较慢。</p>
+<h3 id="回写模式writeback">回写模式(WriteBack)</h3>
+<p>在数据更新时，只将数据写入到Cache中，只有在数据被替换出Cache时，被修改的数据才会被写入到内存中，该策略因为不需要写入到内存中，所以速度较快。但数据仅写在了Cache中，Cache数据和内存数据不一致，此时如果有其它CPU访问数据，就会读到脏数据，出现bug，所以这里需要用到Cache的一致性协议来保证CPU读到的是最新的数据。</p>
+<h2 id="一致性">一致性</h2>
+<p>多个CPU对某块内存同时读写，就会引起冲突的问题，被称为Cache一致性问题。通过MESI协议解决，当一个CPU1修改了Cache中的某字节数据时，那么其它的所有CPU都会收到通知，它们的相应Cache就会被置为无效状态，当其他的CPU需要访问此字节的数据时，发现自己的Cache相关数据已失效，这时CPU1会立刻把数据写到内存中，其它的CPU就会立刻从内存中读取该数据。</p>
+<p>MESI是通过四种状态的控制来解决Cache一致性问题的，四种状态分别是：</p>
+<ul>
+<li>M(Modified，已修改)</li>
+<li>E(Exclusive，独占)</li>
+<li>S(Shared，共享)</li>
+<li>I(Invalidated，已失效)</li>
+</ul>
+<h1 id="主存与cache的映射关系">主存与Cache的映射关系</h1>
+<h2 id="直接映射">直接映射</h2>
+<p>每个主存块只能映射Cache的一个特定块。直接映射是最简单的地址映射方式，它的硬件简单，成本低，地址转换速度快，但是这种方式不太灵活，Cache的存储空间得不到充分利用，每个主存块在Cache中只有一个固定位置可存放，容易产生冲突，使Cache效率下降，因此只适合大容量Cache采用。</p>
+<p>例如，如果一个程序需要重复引用主存中第0块与第16块，最好将主存第0块与第16块同时复制到Cache中，但由于它们都只能复制到Cache的第0块中去，即使Cache中别的存储空间空着也不能占用，因此这两个块会不断地交替装入Cache中，导致命中率降低。</p>
+<h2 id="全相连映射">全相连映射</h2>
+<p>主存中任何一块都可以映射到Cache中的任何一块位置上，但设计困难。</p>
+<h2 id="组相连映射">组相连映射</h2>
+<p>组相联映射实际上是直接映射和全相联映射的<strong>折中方案</strong>，主存和Cache都分组，主存中一个组内的块数与Cache中的分组数相同，组间采用直接映射，组内采用全相联映射。也就是说，将Cache分成u组，每组v块，主存块存放到哪个组是固定的，至于存到该组哪一块则是灵活的。例如，主存分为256组，每组8块，Cache分为8组，每组2块。</p>
+<h1 id="cache的替换策略">Cache的替换策略</h1>
+<p>LRU(Least Recently Use)策略，即最近最少使用。</p>
+<h1 id="代码分析">代码分析</h1>
+<pre><code class="language-c">/**
+ * author:		CofCai
+ * datatime:	2020-11-10 15:37:50
+ * file description:
+ *	 该文件用于验证CPU Cache的作用，主要是看到了一篇微信公众号
+ *	 的推送，然后读完这篇文章，发现我们的通信软件基础课上讲过类似
+ *	 的问题，所以在此记录一下。
+ *	 原文文章《利用CPU Cache写出高性能代码》：
+ *	 		https://mp.weixin.qq.com/s/_hZtklfMINCqYTlBwmz7pA
+ *	 		另附：http://igoro.com/archive/gallery-of-processor-cache-effects/
+ *	 一致性原理：cache中和内存中的数据可能不一样（不同步），直写模式和回写模式
+ *	 程序局部性原理（cache的理论基础）：时间局部性、空间局部性
+ *	 通过不停改变矩阵的大小，还能大致得出你电脑的CPU Cache的大小(搞懂矩阵在内存中的分布)。
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;time.h&gt;
+
+#define	row 	512
+#define col 	512
+#define count 	20		//调用traverse_by_row/col函数一次：遍历matrix矩阵count次
+
+int matrix[row][col] = {0};		//测试矩阵
+
+void traverse_by_row();
+void traverse_by_col();
+double test();				/* 调用traverse_by_row/col函数一次 */
+
+int main(int argc, char const *argv[])
+{
+	printf(&quot;test matrix is %d rows, %d cols!\n&quot;, row, col);
+	int t, times = 20;
+	double res[20] = {0};
+
+	FILE *pFile=fopen(&quot;./cache.csv&quot;,&quot;wt+&quot;);
+        if(pFile==NULL)
+        {
+            printf(&quot;cache.csv opened failed&quot;);
+            return -1;
+        }
+
+	for (t = 0; t &lt; times; t++)
+	{
+		res[t] = test();
+		fprintf(pFile,&quot;%f,&quot;,res[t]);
+	}
+
+	printf(&quot;test over\n&quot;);
+
+	return 0;
+}
+
+void traverse_by_row()
+{
+	int sum_row = 0;
+	for (int r = 0; r &lt; row; ++r)
+	{
+		for (int c = 0; c &lt; col; ++c)
+		{
+			sum_row += matrix[r][c];
+		}
+	}
+}
+
+void traverse_by_col()
+{
+	int sum_col = 0;
+	for (int c = 0; c &lt; col; ++c)
+	{
+		for (int r = 0; r &lt; row; ++r)
+		{
+			sum_col += matrix[r][c];
+		}
+	}
+}
+
+double test()
+{
+	clock_t start, finish;
+	double tot_time1, tot_time2;
+
+	/** 按行遍历，会快一些 */
+	start = clock();
+	for (int i = 0; i &lt; count; ++i)
+	{
+		traverse_by_row();
+	}
+	finish = clock();
+	tot_time1 = (double)(finish - start);
+	printf(&quot;traverse by row %d times, totally spend %.2f\n&quot;, count, tot_time1);
+
+
+	/** 按列遍历，会慢一些 */
+	start = clock();
+	for (int i = 0; i &lt; count; ++i)
+	{
+		traverse_by_col();
+	}
+	finish = clock();
+	tot_time2 = (double)(finish - start);
+	printf(&quot;traverse by col %d times, totally spend %.2f\n&quot;, count, tot_time2);
+
+	return (tot_time2 - tot_time1);
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#references">References</a></li>
+<li><a href="#%E7%A8%8B%E5%BA%8F%E5%B1%80%E9%83%A8%E6%80%A7%E5%8E%9F%E7%90%86">程序局部性原理</a>
+<ul>
+<li><a href="#%E6%97%B6%E9%97%B4%E5%B1%80%E9%83%A8%E6%80%A7">时间局部性</a></li>
+<li><a href="#%E7%A9%BA%E9%97%B4%E5%B1%80%E9%83%A8%E6%80%A7">空间局部性</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%80%E8%87%B4%E6%80%A7%E5%8E%9F%E7%90%86">一致性原理</a>
+<ul>
+<li><a href="#%E5%86%99%E5%85%A5%E7%AD%96%E7%95%A5">写入策略</a>
+<ul>
+<li><a href="#%E7%9B%B4%E5%86%99%E6%A8%A1%E5%BC%8Fwritethrough">直写模式(WriteThrough)</a></li>
+<li><a href="#%E5%9B%9E%E5%86%99%E6%A8%A1%E5%BC%8Fwriteback">回写模式(WriteBack)</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%80%E8%87%B4%E6%80%A7">一致性</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%BB%E5%AD%98%E4%B8%8Ecache%E7%9A%84%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB">主存与Cache的映射关系</a>
+<ul>
+<li><a href="#%E7%9B%B4%E6%8E%A5%E6%98%A0%E5%B0%84">直接映射</a></li>
+<li><a href="#%E5%85%A8%E7%9B%B8%E8%BF%9E%E6%98%A0%E5%B0%84">全相连映射</a></li>
+<li><a href="#%E7%BB%84%E7%9B%B8%E8%BF%9E%E6%98%A0%E5%B0%84">组相连映射</a></li>
+</ul>
+</li>
+<li><a href="#cache%E7%9A%84%E6%9B%BF%E6%8D%A2%E7%AD%96%E7%95%A5">Cache的替换策略</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90">代码分析</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://cxx7ud.coding-pages.com/post/DSP/">
+              <h3 class="post-title">
+                数字滤波器的设计
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://cxx7ud.coding-pages.com//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
