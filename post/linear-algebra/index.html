@@ -1,0 +1,322 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Linear Algebra | CofCai&#39;s blog</title>
+<link rel="shortcut icon" href="https://cxx7ud.coding-pages.com//favicon.ico?v=1611041556209">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cxx7ud.coding-pages.com//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Linear Algebra | CofCai&#39;s blog - Atom Feed" href="https://cxx7ud.coding-pages.com//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="序言
+Famous quotes
+
+
+本课程目的
+从几何空间直观理解线性代数
+如果一开始就告诉我们
+sin⁡x=x−x33!+x55!+...+(−1)nx2n+1(2n+1)!+...\sin{x}=x-\frac{x^3}{3!}+\f..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://cxx7ud.coding-pages.com/">
+  <img class="avatar" src="https://cxx7ud.coding-pages.com//images/avatar.png?v=1611041556209" alt="">
+  </a>
+  <h1 class="site-title">
+    CofCai&#39;s blog
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Linear Algebra
+            </h2>
+            <div class="post-info">
+              <span>
+                2021-01-19
+              </span>
+              <span>
+                8 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="序言">序言</h1>
+<p>Famous quotes</p>
+<figure data-type="image" tabindex="1"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/clipboard.png" alt="img" loading="lazy"></figure>
+<hr>
+<h2 id="本课程目的">本课程目的</h2>
+<p>从几何空间直观理解线性代数</p>
+<p>如果一开始就告诉我们</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>sin</mi><mo>⁡</mo><mi>x</mi><mo>=</mo><mi>x</mi><mo>−</mo><mfrac><msup><mi>x</mi><mn>3</mn></msup><mrow><mn>3</mn><mo>!</mo></mrow></mfrac><mo>+</mo><mfrac><msup><mi>x</mi><mn>5</mn></msup><mrow><mn>5</mn><mo>!</mo></mrow></mfrac><mo>+</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo>+</mo><mo>(</mo><mo>−</mo><mn>1</mn><msup><mo>)</mo><mi>n</mi></msup><mfrac><msup><mi>x</mi><mrow><mn>2</mn><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msup><mrow><mo>(</mo><mn>2</mn><mi>n</mi><mo>+</mo><mn>1</mn><mo>)</mo><mo>!</mo></mrow></mfrac><mo>+</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">\sin{x}=x-\frac{x^3}{3!}+\frac{x^5}{5!}+...+(-1)^n\frac{x^{2n+1}}{(2n+1)!}+...
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66786em;vertical-align:0em;"></span><span class="mop">sin</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">x</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:2.177108em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.491108em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">3</span><span class="mclose">!</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:2.177108em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.491108em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">5</span><span class="mclose">!</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:2.427108em;vertical-align:-0.936em;"></span><span class="mopen">(</span><span class="mord">−</span><span class="mord">1</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7143919999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span></span></span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.491108em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mopen">(</span><span class="mord">2</span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mclose">!</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="mord mathdefault mtight">n</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.10556em;vertical-align:0em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span></span></span></span></span></p>
+<p>并且让我们去计算<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mi>π</mi><mn>3</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac{\pi}{3}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.040392em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.695392em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">π</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>、<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mi>π</mi><mn>4</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac{\pi}{4}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.040392em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.695392em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">4</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">π</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>、<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mi>π</mi><mn>5</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac{\pi}{5}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.040392em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.695392em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">5</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">π</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>等的正弦值，那么我们会疯掉的。</p>
+<figure data-type="image" tabindex="2"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/1599140605525.png" alt="1599140605525" loading="lazy"></figure>
+<p>但是某一天你去参加物理讨论会，你发现所有人都能很快的说出准确答案或者大概范围（因为他们都知道正弦的物理意义，也即他们大脑中有对正弦的直观感受），你会觉得不可思议。</p>
+<p>对于线性代数也是一样的道理，我们最开始接受线性代数的方式是概念上、计算式的（做大量的题）、理性上的，没有从几何直观去理解，这导致我们对线性代数无趣，这次课程就是带领我们从几何直观可视化的方向重新认识线性代数。</p>
+<h1 id="向量究竟是什么">向量究竟是什么？</h1>
+<p>Famous quote</p>
+<figure data-type="image" tabindex="3"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/1599141309063.png" alt="1599141309063" loading="lazy"></figure>
+<hr>
+<p>线性代数中最基础、最根源的组成部分就是向量。</p>
+<h2 id="不同人眼中的向量">不同人眼中的向量</h2>
+<figure data-type="image" tabindex="4"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/1599387213435.png" alt="1599387213435" loading="lazy"></figure>
+<p>物理专业：有大小、有方向的箭头，且向量可以在空间中自由移动（而数学上，向量的起点一般规定在原点处）。<br>
+计算机专业：有序的数字列表<br>
+数学专业：数学家试图从上面两个方面概括，向量可以是任何东西，只要保证两个<strong>向量相加</strong>以及<strong>数字与向量相乘</strong>是有意义的（最后会讲到）。</p>
+<figure data-type="image" tabindex="5"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/1599388369259.png" alt="1599388369259" loading="lazy"></figure>
+<p>当你接受并理解了向量是空间中的一个箭头后，那么其实也就接受了向量是有序的数字列表这一观点。因为起点固定在原点，是不变的，那么这个向量就可以用终点坐标表示。终点可以用一组有序列表表示（说白了，就是坐标位置），有序列表中的每一个元素告诉你沿着对应的轴走多远，比如第一个元素告诉你沿着x轴走多远、第二个元素告诉你沿着y轴走多远、……。</p>
+<p>二维空间中向量的箭头表示法与有序列表表示法：<br>
+-2代表沿着x轴走-2的距离、3代表沿着y轴走3的距离。</p>
+<figure data-type="image" tabindex="6"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/1599388995648.png" alt="1599388995648" loading="lazy"></figure>
+<p>三维空间中向量的箭头表示法与有序列表表示法：</p>
+<figure data-type="image" tabindex="7"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/1599389167887.png" alt="1599389167887" loading="lazy"></figure>
+<h2 id="向量的加法与乘法有什么含义">向量的加法与乘法有什么含义</h2>
+<figure data-type="image" tabindex="8"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/1599389597169.png" alt="1599389597169" loading="lazy"></figure>
+<p>向量使大量数据可视化：</p>
+<figure data-type="image" tabindex="9"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/vector1-1599390002608.gif" alt="vector1" loading="lazy"></figure>
+<h1 id="线性组合-张成的空间与基">线性组合、张成的空间与基</h1>
+<p>famous quote</p>
+<figure data-type="image" tabindex="10"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/1599390593660.png" alt="1599390593660" loading="lazy"></figure>
+<hr>
+<h2 id="基向量">基向量</h2>
+<p>在x-y坐标系中，有两个特别的标量，i和j。前面我们说到了向量的乘法（缩放）和加法，那么其实就是将i和j分别缩放一定程度后再相加。i和j叫做基向量，这是在说当你把坐标看成标量时，<strong>基向量</strong>实际上就是这些标量缩放的对象。基有着更加严格的定义，但是我们后面再说这一点。</p>
+<figure data-type="image" tabindex="11"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/1599390855723.png" alt="1599390855723" loading="lazy"></figure>
+<h2 id="线性组合">线性组合</h2>
+<figure data-type="image" tabindex="12"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/1599391133721.png" alt="1599391133721" loading="lazy"></figure>
+<p>比如说，随便选一个指向右上方的向量，再随便选一个指向右下方的向量，即把这两个向量作为<strong>新基</strong>。想象一下，通过选择两个标量，分别用于缩放二者的其中一个，然后把它们相加，你能得到不同的结果。并且改变用于缩放的标量，我们就能得到所有的二维向量。</p>
+<figure data-type="image" tabindex="13"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/%E7%BA%BF%E6%80%A7%E7%BB%84%E5%90%88.gif" alt="线性组合" loading="lazy"></figure>
+<p>我们选取的<strong>新基</strong>同样允许我们在一对数和二维向量之间自由转化，但这种<strong>变换关系</strong>与之前用i和j的变换关系完全不同（后续会详细说明不同坐标系之间的确切关系）。但目前需要<strong>注意的是</strong>：每当我们用数字描述向量时，它都依赖于我们正在使用的基。</p>
+<p>两个数乘向量的和被称为这两个向量的<strong>线性组合</strong>，即<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><mi>v</mi><mo>⃗</mo></mover></mrow><annotation encoding="application/x-tex">\vec{v}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.714em;vertical-align:0em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.20772em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg width='0.471em' height='0.714em' style='width:0.471em' viewBox='0 0 471 714' preserveAspectRatio='xMinYMin'><path d='M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z'/></svg></span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mover accent="true"><mi>w</mi><mo>⃗</mo></mover></mrow><annotation encoding="application/x-tex">\vec{w}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.714em;vertical-align:0em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02691em;">w</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.15216em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg width='0.471em' height='0.714em' style='width:0.471em' viewBox='0 0 471 714' preserveAspectRatio='xMinYMin'><path d='M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z'/></svg></span></span></span></span></span></span></span></span></span></span>的线性组合为：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mo>+</mo><mi>b</mi><mover accent="true"><mi>w</mi><mo>⃗</mo></mover></mrow><annotation encoding="application/x-tex">a\vec{v}+b\vec{w}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.79733em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">a</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.20772em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg width='0.471em' height='0.714em' style='width:0.471em' viewBox='0 0 471 714' preserveAspectRatio='xMinYMin'><path d='M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z'/></svg></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.714em;vertical-align:0em;"></span><span class="mord mathdefault">b</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02691em;">w</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.15216em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg width='0.471em' height='0.714em' style='width:0.471em' viewBox='0 0 471 714' preserveAspectRatio='xMinYMin'><path d='M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z'/></svg></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>线性代表什么意思？<br>
+如果固定其中一个标量，让另一个标量自由变化，所产生的向量的终点会描出一条直线。如果让两个标量同时变化，考虑所有可能得到的向量，这里有3中情况：</p>
+<ol>
+<li>对于选取的大部分初始向量（即基），改变两个标量的大小最终都能到达平面的每一个点。</li>
+<li>有时很不幸，选取的初始向量（即基），无论怎么改变标量的大小最终都只能在过原点的一条直线上运动。</li>
+<li>更不幸的是，初始向量都是零向量。</li>
+</ol>
+<figure data-type="image" tabindex="14"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/%E7%BA%BF%E6%80%A7%E7%BB%84%E5%90%881.gif" alt="线性组合1" loading="lazy"></figure>
+<p>张成的空间：<br>
+所有可以表示为<strong>给定向量（即基）线性组合的向量</strong>的集合称为<strong>给定向量张成的空间</strong>。</p>
+<figure data-type="image" tabindex="15"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/%E5%BC%A0%E6%88%90.gif" alt="张成" loading="lazy"></figure>
+<p>二维空间中，改变两个标量能在一个平面内运动（当然可能只在一条直线上或在原定不动），即所有<strong>终点</strong>（后面向量都用其终点表示，即箭头的终点）落在这个平面上的向量的集合是<strong>这两个向量</strong>（标量被改变的向量）张成的空间。在前基础上，增加一个维度，即三维的线性组合：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mo>+</mo><mi>b</mi><mover accent="true"><mi>w</mi><mo>⃗</mo></mover><mo>+</mo><mi>c</mi><mover accent="true"><mi>u</mi><mo>⃗</mo></mover></mrow><annotation encoding="application/x-tex">a\vec{v}+b\vec{w}+c\vec{u}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.79733em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">a</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.20772em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg width='0.471em' height='0.714em' style='width:0.471em' viewBox='0 0 471 714' preserveAspectRatio='xMinYMin'><path d='M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z'/></svg></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.79733em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">b</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02691em;">w</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.15216em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg width='0.471em' height='0.714em' style='width:0.471em' viewBox='0 0 471 714' preserveAspectRatio='xMinYMin'><path d='M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z'/></svg></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.714em;vertical-align:0em;"></span><span class="mord mathdefault">c</span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault">u</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.20772em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg width='0.471em' height='0.714em' style='width:0.471em' viewBox='0 0 471 714' preserveAspectRatio='xMinYMin'><path d='M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z'/></svg></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>而这三个向量所有可能的线性组合构成了它们张成的空间。</p>
+<p>至于第三个向量已经落在前两个向量张成的空间当中，或者两个向量恰好共线的情况，我们需要一些术语来描述它们。即一组向量中至少有一个是多余的，没有对张成空间做出任何贡献，或你有多个向量，并且可以移除其中一个而不减小张成的空间，当这种情况发生时，我们称它们是“线性相关”的；另一种表述方法是其中一个向量可以表示为其它向量的线性组合，因为这个问量已经落在其它问量张成的空间之中。另一方面，如果所有向量都给张成的空间增添了新的维度，它们就被称为是“线性无关”的。</p>
+<p>严格定义：向量空间的一组基是张成该空间的一个线性无关向量集</p>
+<h2 id="我的理解">我的理解</h2>
+<p>一个向量时（即在一维时，也即基），通过对该向量进行不同程度的缩放，可以使其终点落在一维空间上的任意点。</p>
+<p>当增加一个向量时（即增加一个基），如果通过改变两个标量可以得到二维空间中的任意点时，那么这两个向量是线性无关的；如果还是在一维空间上落点，那么这两个向量是线性相关的（因为一个向量已经落在了另一个向量张成(span)的空间中了）。</p>
+<p>继续增加一个向量（再增加一个基，并且前两个基线性无关），如果改变三个标量可以得到三维空间中的任意点时，那么这三个向量是线性无关的；如果只能在二维甚至是一维空间上落点，那么是线性相关的。</p>
+<p>……</p>
+<p>即对于n个向量，如果通过改变n个标量可以得到n维空间中的任一点时，那么这n个向量就是线性无关的。</p>
+<h1 id="矩阵与线性变换">矩阵与线性变换</h1>
+<h1 id="矩阵乘法与复合线性变换">矩阵乘法与复合线性变换</h1>
+<h1 id="附注1-三维空间里的线性变换">附注1-三维空间里的线性变换</h1>
+<h1 id="行列式">行列式</h1>
+<h1 id="逆矩阵-列空间与零空间">逆矩阵、列空间与零空间</h1>
+<h1 id="附注2-非方阵">附注2-非方阵</h1>
+<h1 id="点积与对偶性">点积与对偶性</h1>
+<h1 id="叉积的标准介绍">叉积的标准介绍</h1>
+<h1 id="以线性变换的眼光看叉积">以线性变换的眼光看叉积</h1>
+<h1 id="基变换">基变换</h1>
+<h1 id="特征向量与特征值">特征向量与特征值</h1>
+<h1 id="抽象向量空间">抽象向量空间</h1>
+<h1 id="克拉姆法则-几何解释">克拉姆法则、几何解释</h1>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%BA%8F%E8%A8%80">序言</a>
+<ul>
+<li><a href="#%E6%9C%AC%E8%AF%BE%E7%A8%8B%E7%9B%AE%E7%9A%84">本课程目的</a></li>
+</ul>
+</li>
+<li><a href="#%E5%90%91%E9%87%8F%E7%A9%B6%E7%AB%9F%E6%98%AF%E4%BB%80%E4%B9%88">向量究竟是什么？</a>
+<ul>
+<li><a href="#%E4%B8%8D%E5%90%8C%E4%BA%BA%E7%9C%BC%E4%B8%AD%E7%9A%84%E5%90%91%E9%87%8F">不同人眼中的向量</a></li>
+<li><a href="#%E5%90%91%E9%87%8F%E7%9A%84%E5%8A%A0%E6%B3%95%E4%B8%8E%E4%B9%98%E6%B3%95%E6%9C%89%E4%BB%80%E4%B9%88%E5%90%AB%E4%B9%89">向量的加法与乘法有什么含义</a></li>
+</ul>
+</li>
+<li><a href="#%E7%BA%BF%E6%80%A7%E7%BB%84%E5%90%88-%E5%BC%A0%E6%88%90%E7%9A%84%E7%A9%BA%E9%97%B4%E4%B8%8E%E5%9F%BA">线性组合、张成的空间与基</a>
+<ul>
+<li><a href="#%E5%9F%BA%E5%90%91%E9%87%8F">基向量</a></li>
+<li><a href="#%E7%BA%BF%E6%80%A7%E7%BB%84%E5%90%88">线性组合</a></li>
+<li><a href="#%E6%88%91%E7%9A%84%E7%90%86%E8%A7%A3">我的理解</a></li>
+</ul>
+</li>
+<li><a href="#%E7%9F%A9%E9%98%B5%E4%B8%8E%E7%BA%BF%E6%80%A7%E5%8F%98%E6%8D%A2">矩阵与线性变换</a></li>
+<li><a href="#%E7%9F%A9%E9%98%B5%E4%B9%98%E6%B3%95%E4%B8%8E%E5%A4%8D%E5%90%88%E7%BA%BF%E6%80%A7%E5%8F%98%E6%8D%A2">矩阵乘法与复合线性变换</a></li>
+<li><a href="#%E9%99%84%E6%B3%A81-%E4%B8%89%E7%BB%B4%E7%A9%BA%E9%97%B4%E9%87%8C%E7%9A%84%E7%BA%BF%E6%80%A7%E5%8F%98%E6%8D%A2">附注1-三维空间里的线性变换</a></li>
+<li><a href="#%E8%A1%8C%E5%88%97%E5%BC%8F">行列式</a></li>
+<li><a href="#%E9%80%86%E7%9F%A9%E9%98%B5-%E5%88%97%E7%A9%BA%E9%97%B4%E4%B8%8E%E9%9B%B6%E7%A9%BA%E9%97%B4">逆矩阵、列空间与零空间</a></li>
+<li><a href="#%E9%99%84%E6%B3%A82-%E9%9D%9E%E6%96%B9%E9%98%B5">附注2-非方阵</a></li>
+<li><a href="#%E7%82%B9%E7%A7%AF%E4%B8%8E%E5%AF%B9%E5%81%B6%E6%80%A7">点积与对偶性</a></li>
+<li><a href="#%E5%8F%89%E7%A7%AF%E7%9A%84%E6%A0%87%E5%87%86%E4%BB%8B%E7%BB%8D">叉积的标准介绍</a></li>
+<li><a href="#%E4%BB%A5%E7%BA%BF%E6%80%A7%E5%8F%98%E6%8D%A2%E7%9A%84%E7%9C%BC%E5%85%89%E7%9C%8B%E5%8F%89%E7%A7%AF">以线性变换的眼光看叉积</a></li>
+<li><a href="#%E5%9F%BA%E5%8F%98%E6%8D%A2">基变换</a></li>
+<li><a href="#%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F%E4%B8%8E%E7%89%B9%E5%BE%81%E5%80%BC">特征向量与特征值</a></li>
+<li><a href="#%E6%8A%BD%E8%B1%A1%E5%90%91%E9%87%8F%E7%A9%BA%E9%97%B4">抽象向量空间</a></li>
+<li><a href="#%E5%85%8B%E6%8B%89%E5%A7%86%E6%B3%95%E5%88%99-%E5%87%A0%E4%BD%95%E8%A7%A3%E9%87%8A">克拉姆法则、几何解释</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://cxx7ud.coding-pages.com//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

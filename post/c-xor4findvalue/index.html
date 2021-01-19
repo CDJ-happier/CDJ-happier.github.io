@@ -1,0 +1,384 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>【C语言】【算法】利用异或找不同单一数据 | CofCai&#39;s blog</title>
+<link rel="shortcut icon" href="https://cxx7ud.coding-pages.com//favicon.ico?v=1611041556209">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cxx7ud.coding-pages.com//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="【C语言】【算法】利用异或找不同单一数据 | CofCai&#39;s blog - Atom Feed" href="https://cxx7ud.coding-pages.com//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="[toc]
+
+Author🚹:CofCai
+Email✉️:cai.dongjun@nexuslink.cn
+QQ😙:1664866311
+personal Page🏠
+CSDN Page🏠
+
+异或的性质
+
+a^a=0；
+a^0=a..." />
+    <meta name="keywords" content="C语言,嵌入式" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://cxx7ud.coding-pages.com/">
+  <img class="avatar" src="https://cxx7ud.coding-pages.com//images/avatar.png?v=1611041556209" alt="">
+  </a>
+  <h1 class="site-title">
+    CofCai&#39;s blog
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              【C语言】【算法】利用异或找不同单一数据
+            </h2>
+            <div class="post-info">
+              <span>
+                2021-01-19
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+                <a href="https://cxx7ud.coding-pages.com/tag/-lWbWODrq/" class="post-tag">
+                  # C语言
+                </a>
+              
+                <a href="https://cxx7ud.coding-pages.com/tag/BqSYYs6a7/" class="post-tag">
+                  # 嵌入式
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://cxx7ud.coding-pages.com//post-images/c-xor4findvalue.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>[toc]</p>
+<blockquote>
+<p>Author🚹:CofCai</p>
+<p>Email✉️:cai.dongjun@nexuslink.cn</p>
+<p>QQ😙:1664866311</p>
+<p><a href="https://cxx7ud.coding-pages.com/">personal Page</a>🏠</p>
+<p><a href="https://blog.csdn.net/weixin_44360592?spm=1011.2124.3001.5113">CSDN Page</a>🏠</p>
+</blockquote>
+<h3 id="异或的性质">异或的性质</h3>
+<ol>
+<li>a^a=0；</li>
+<li>a^0=a;</li>
+<li>a^b=b^a，即交换律；</li>
+</ol>
+<h3 id="入门问题">入门问题</h3>
+<h4 id="问题描述">问题描述</h4>
+<p>有一组数据，其中某些数据出现两次，只有一个数据出现过一次，请找出它。如：</p>
+<pre><code class="language-c">arr[] = {1, 4, 2, 2, 4};
+// 结果应为1
+</code></pre>
+<h4 id="解决方法">解决方法</h4>
+<p>由上面异或的性质，可以这样做：将所有元素进行异或，其结果就是出现一次的那个数。</p>
+<pre><code class="language-c">void find_number_v1()
+{
+	int arr[] = {3, 4, 5, 9, 3, 5, 4};
+	int i, target = 0;
+	for (i = 0; i &lt; sizeof(arr)/sizeof(int); ++i) {
+		target = target ^ arr[i];
+	}
+	printf(&quot;target = %d\n&quot;, target);
+	// 3出现4次，异或为0；4出现2次，异或为0；1出现3次，异或为1；
+	int arr2[] = {3, 3, 1, 4, 3, 4, 3, 1, 1};
+	target = 0;
+	for (i = 0; i &lt; sizeof(arr2)/sizeof(int); ++i) {
+		target = target ^ arr2[i];
+	}
+	printf(&quot;target = %d\n&quot;, target);
+}
+</code></pre>
+<h4 id="问题延伸">问题延伸</h4>
+<p>只要保证目标数据出现的次数是<strong>奇数次</strong>，其它数据出现的次数是<strong>偶数次</strong>都可以根据这种方法找出目标数据；</p>
+<h3 id="进阶问题">进阶问题</h3>
+<h4 id="问题描述-2">问题描述</h4>
+<p>还是一组数据，有些数据出现两次，有两个不同的数据只出现一次，请找出这两个数据（A和B）。</p>
+<h4 id="解决方法-2">解决方法</h4>
+<p>可以把数据分为两组，将A和B分到不同的组，然后再按第一种方法找出来给你个数据。可是如何将A，B分到不同的组中去呢？</p>
+<p>一般想法都是这样的：找到A和B之间的一个数C，然后大于C为一组，小于C为另一组，这样A和B就被分开。但是现在A和B都不知道啊？怎么办呢？<strong>只要找到一个A，B的不同点即可</strong>，这样就可以区分A和B。是否可以从<strong>两个数异或的结果C</strong>中找到标识这两个数不同的特点呢？答案是可以的。</p>
+<ol>
+<li>C是A和B异或的结果，为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>的地方说明两者的不同之处，我们只需要找到一个不同点即可；</li>
+<li>从右至左，找到C中第一位不为0的位置，记为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>，说明A和B在第<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>位不相同；</li>
+<li>截取从第0位到第<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>位，组成一个数D；</li>
+<li>用数D通过相与的方法就可以区分A和B了，一个结果比为0，一个结果为1。</li>
+</ol>
+<p>如：</p>
+<pre><code class="language-c"> // A = 5 =      1001
+ // B = 2 =       0010
+ // D = A^B = 1011
+ // E = 1
+ // A&amp;E = 1
+ // B&amp;E = 0
+// 这样就把A和B分开了，其它数据被分到那一组不重要，因为是成对的，最终可以被异或为0。
+</code></pre>
+<p>代码实现：</p>
+<pre><code class="language-c">void find_number_v2()
+{
+	// 目标数是8和2
+        int arr[] = {12, 3, 8, 3, 4, 9, 10, 9, 4, 10, 12, 2};
+	int pivot = 0;
+	unsigned int i = 0;
+	// 1. 得到整组数据的异或值
+	for (i = 0; i &lt; sizeof(arr)/sizeof(int); ++i) {
+		pivot = pivot ^ arr[i];
+	}
+	i = 0;
+	// 2. 找到pivot第一位不为0的位置
+	while(!(pivot &amp; (1 &lt;&lt; i))) {
+		i++;
+	}
+	// 3. 将第一位不为0的右边取出，作为pivot（此pivot可以区分A和B）
+	pivot = (1 &lt;&lt; i);
+	// 4. 将A和B分到两个不同的组，其它的数据都是成对的，无所谓
+	for (i = 0; i &lt; sizeof(arr)/sizeof(int); ++i) {
+		// pivot&amp;arr[i] &gt;= 1
+		if (pivot&amp;arr[i]) {
+			//left[] = arr[i];
+			printf(&quot;L:&gt;&gt;arr[%d]=%d\n&quot;, i, arr[i]);
+		} else {
+			//right[] = arr[i];
+			printf(&quot;\t\t\tR:&gt;&gt;arr[%d]=%d\n&quot;, i, arr[i]);
+		}
+	}
+
+	// 5. 然后再对left和right分别用异或即可得出两个不同的数字。
+}
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/%E5%BC%82%E6%88%96%E7%9A%84%E5%A6%99%E7%94%A8.jpg" alt="" loading="lazy"></figure>
+<p>再对两组数据的所有元素进行异或即可。</p>
+<h4 id="问题延伸-2">问题延伸</h4>
+<p>只要保证其它数据出现偶数次即可，那两个数出现奇数次即可。</p>
+<p>如果要有3个不同的数呢？</p>
+<h3 id="交换两数">交换两数</h3>
+<pre><code class="language-c">/**
+ *	 主要原理：
+ *	 	a = a ^ b;		//找到a和b不相同的bit，并且这些bit都是1
+ *	 	b = a ^ b;		//那么b就等于把a与b不同的位置取反
+ *	 	a = a ^ b;		//现在b等于a了，那么a就等于把b与a不同的位置取反
+ *	 	1. 把a和b都展开成bit的形式
+ *	 	2. 找到a和b的bit不同的位置，这些位置都被置为1
+ *	 	3. 把a与b不同的位置取反就是b，同理也是一样的
+ *	 	a = 4 = 0100;
+ *	 	b = 8 = 1000;
+ *
+ * 		a = a^b = 1100;		//a和b不同的就是bit2和bit3
+ * 		b = a^b = 0100;		//b就等于把a的bit2和bit3取反，由于bit2和bit3都为1，所以异或=取反
+ * 		a = a^b = 1000;		//同理
+ *
+ * 优点：速率快，不需要其它作为temp
+ * 缺点：只能用于整形，浮点型进行转换的话会有误差。
+ * @Author   CofCai
+ * @DateTime 2021-01-04T20:21:27+0800
+ */
+void swap_two_num()
+{
+	int a = 10, b = -151;
+	a = a^b;
+	b = a^b;
+	a = a^b;
+	printf(&quot;a = %d\tb = %d\n&quot;, a, b);
+
+	float x = 10.2, y = 203.23;
+	x = x*100;
+	y = y*100;
+	x = (int)(x)^(int)(y);
+	y = (int)(x)^(int)(y);
+	x = (int)(x)^(int)(y);
+	printf(&quot;x = %f\ty = %f\n&quot;, x/100, y/100);
+}
+</code></pre>
+<p>对于上面的缺点（只能转换整形数），其实是可以解决的。因为浮点数在计算机存储的还是二进制形式，而异或的对象就是二进制形式，所以原理上还是可以通过异或交换两个数。</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+// 如果传入的x、y是char类型，那么结果会有问题，因为char类型
+// 转为int类型，字节数增加，增加的字节的内容是未知的。
+// 所以，要保证x、y的字节数和int类型所占的字节数相等。
+// char类型的可以直接异或，即c = c1^c2是不会报错的。
+#define SWAP_NUM(x, y)	({				\
+	*(int*)(&amp;x) = *(int*)(&amp;x) ^ *(int*)(&amp;y);	\
+	*(int*)(&amp;y) = *(int*)(&amp;x) ^ *(int*)(&amp;y);	\
+	*(int*)(&amp;x) = *(int*)(&amp;x) ^ *(int*)(&amp;y);	\
+})
+
+int main(int argc, char const *argv[])
+{
+	char c1 = '2', c2 = 'a';
+	int a = 7455, b = 23;
+	float m = 2.32, n = -77.23;
+	c1 = c1^c2;
+	c2 = c1^c2;
+	c1 = c1^c2;
+	printf(&quot;c1 = %c, c2 = %c\n&quot;, c1, c2);
+
+	SWAP_NUM(a, b);
+	printf(&quot;a = %d, b = %d\n&quot;, a, b);
+
+	SWAP_NUM(m, n);
+	printf(&quot;m = %f, n = %f\n&quot;, m, n);
+
+	return 0;
+}
+
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/%E5%BC%82%E6%88%96%E7%9A%84%E5%A6%99%E7%94%A8-%E8%BF%9B%E9%98%B6.jpg" alt="" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%BC%82%E6%88%96%E7%9A%84%E6%80%A7%E8%B4%A8">异或的性质</a></li>
+<li><a href="#%E5%85%A5%E9%97%A8%E9%97%AE%E9%A2%98">入门问题</a>
+<ul>
+<li><a href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0">问题描述</a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95">解决方法</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98%E5%BB%B6%E4%BC%B8">问题延伸</a></li>
+</ul>
+</li>
+<li><a href="#%E8%BF%9B%E9%98%B6%E9%97%AE%E9%A2%98">进阶问题</a>
+<ul>
+<li><a href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-2">问题描述</a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95-2">解决方法</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98%E5%BB%B6%E4%BC%B8-2">问题延伸</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%A4%E6%8D%A2%E4%B8%A4%E6%95%B0">交换两数</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://cxx7ud.coding-pages.com/post/cpu-cache/">
+              <h3 class="post-title">
+                CPU Cache一探究竟
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://cxx7ud.coding-pages.com//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
