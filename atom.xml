@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://cxx7ud.coding-pages.com/</id>
     <title>CofCai&apos;s blog</title>
-    <updated>2021-01-19T07:32:47.573Z</updated>
+    <updated>2021-01-20T06:40:44.517Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://cxx7ud.coding-pages.com/"/>
     <link rel="self" href="https://cxx7ud.coding-pages.com/atom.xml"/>
@@ -10,6 +10,942 @@
     <logo>https://cxx7ud.coding-pages.com/images/avatar.png</logo>
     <icon>https://cxx7ud.coding-pages.com/favicon.ico</icon>
     <rights>All rights reserved 2021, CofCai&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[FFT之蝶形运算]]></title>
+        <id>https://cxx7ud.coding-pages.com/post/FFT-TIF/</id>
+        <link href="https://cxx7ud.coding-pages.com/post/FFT-TIF/">
+        </link>
+        <updated>2021-01-20T06:36:03.000Z</updated>
+        <content type="html"><![CDATA[<p>[toc]</p>
+<blockquote>
+<p>Author🚹:CofCai</p>
+<p>Email✉️:cai.dongjun@nexuslink.cn</p>
+<p>QQ😙:1664866311</p>
+<p><a href="https://cxx7ud.coding-pages.com/">personal Page</a>🏠</p>
+<p><a href="https://blog.csdn.net/weixin_44360592?spm=1011.2124.3001.5113">CSDN Page</a>🏠</p>
+</blockquote>
+<h2 id="前言">前言</h2>
+<p>写这篇博客时，是今天考完电信传输理论后的5个小时，没带计算器，没找别人借，一个人抗下了所有。</p>
+<p>用C语言实现FFT之时域抽取法的想法是在考数字信号处理前萌发的，在复习时看到书上有编程思想，然后自己又好久都没有敲代码了，手有点痒，然后就按照书上的编程思想进行coding。但是之间有许多错误，哎！用C语言这么久了，还是没有养成编写代码时注意数组越界的习惯。</p>
+<p>昨天下午考了数字信号处理，很意外，没有一点点防备，考点不对头，有些考纲上没写，比如考纲上网络结构只写了直接型、级联型以及并联型，没有提到频率采样、线性相位，但是它！它！它！考了，而且考的好偏（也许是自己太菜了）。另外，我在很久之前就在写数字信号处理的文章/博客，感觉对考试一点帮助也没有，我考前对窗函数设计FIR滤波器很熟悉，感觉很稳，结构它考了频率采样法，我又一次死了。</p>
+<p>考完了数字信号处理的晚上，闲的蛋痛，继续考前未完成的FFT算法，然后经过慢慢思考，发现书上也有错误，关于最内层循环的迭代方式不对，经过理解，然后修改，得出了正确结果（和MATLAB对比，当然我是用的在线octave进行计算的，我电脑打开MTALAB慢惨）。</p>
+<p>今天，此时此刻以及前一个小时，手又有点痒了，于时打开FFT代码，继续修改，优化（其实也没怎么优化），完成了从文件中读取数据，将FFT的结果写入到文件中。</p>
+<p>遂作感想如上，记录于此</p>
+<p>下面继续写blog，总结。</p>
+<h2 id="相关文件">相关文件</h2>
+<pre><code>fft.c
+fft_rawdata.txt
+fft_cookeddata.txt
+</code></pre>
+<p>从fft_rawdata.txt中读取要进行fft的数据，数据格式为：</p>
+<ol>
+<li>第一行一个数字，表示数据点数/长度；</li>
+<li>此后每行有两个数字，表示实部和虚部，用Table分割；</li>
+</ol>
+<p>如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/fft_rawdata.jpg" alt="" loading="lazy"></figure>
+<p>fft的结果会保存到fft_cookeddata.txt中去，如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/fft_cookeddata.jpg" alt="" loading="lazy"></figure>
+<p>在代码中我还计算了每个fft结果的幅度和相位，但是没有保存到文件中去，而是打印到标准输出，结果如下（结果中我是以<code>%.1f</code>输出的，所以只显示一位小数）：</p>
+<figure data-type="image" tabindex="3"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/fft_result.jpg" alt="" loading="lazy"></figure>
+<h2 id="实操">实操</h2>
+<h3 id="准备工作">准备工作</h3>
+<p>对于复数，直接用一个结构体即可，两个成员，分别表示实部和虚部，后面又定义了一个结构体，其实是一样的，只不过成员名称不一样了，用幅度和角度来表示一个复数。</p>
+<pre><code class="language-c">typedef struct {
+	float real;
+	float imag;
+}complex_t;
+
+// 另外一种复数的表达，幅度加角度/相位
+typedef struct {
+	float amp;
+	float pha;
+}complex_ap_t;
+
+</code></pre>
+<p>时域抽取法/蝶形运算的编程思想参考了数字信号处理书上的第四章。</p>
+<p>旋转因子的表示：</p>
+<p>刚开始不知道<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>W</mi><mi>N</mi><mi>p</mi></msubsup></mrow><annotation encoding="application/x-tex">W_N^p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.075831em;vertical-align:-0.293531em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7823em;"><span style="top:-2.4064690000000004em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.293531em;"><span></span></span></span></span></span></span></span></span></span>怎么表示，后面一想，它不就是一个复数嘛，用欧拉公式展开就可以得到实部和虚部。</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>W</mi><mi>N</mi><mi>p</mi></msubsup><mo>=</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>j</mi><mfrac><mrow><mn>2</mn><mi>π</mi></mrow><mi>N</mi></mfrac><mi>p</mi></mrow></msup><mo>=</mo><mi>cos</mi><mo>⁡</mo><mo>(</mo><mn>2</mn><mi>π</mi><mi>p</mi><mi mathvariant="normal">/</mi><mi>N</mi><mo>)</mo><mo>−</mo><mi>j</mi><mi>sin</mi><mo>⁡</mo><mo>(</mo><mn>2</mn><mi>π</mi><mi>p</mi><mi mathvariant="normal">/</mi><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">W_N^p = e^{-j\frac{2\pi}{N}p} = \cos(2{\pi}p/N)-j\sin(2{\pi}p/N)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.075831em;vertical-align:-0.293531em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7822999999999999em;"><span style="top:-2.4064690000000004em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.180908em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.293531em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.0040200000000001em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:1.0040200000000001em;"><span style="top:-3.4130000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8443142857142858em;"><span style="top:-2.656em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span style="top:-3.2255000000000003em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.049em;"></span></span><span style="top:-3.384em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">π</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.344em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size3 size6"></span></span><span class="mord mathdefault mtight">p</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">cos</span><span class="mopen">(</span><span class="mord">2</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span></span><span class="mord mathdefault">p</span><span class="mord">/</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">sin</span><span class="mopen">(</span><span class="mord">2</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span></span><span class="mord mathdefault">p</span><span class="mord">/</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></span></p>
+<p>因为旋转因子用的比较多，比较频繁，所以没有写成函数，而是用了一个宏定义，如下：</p>
+<pre><code class="language-c">#define pi 	(3.1415926535)
+// 旋转因子，{}语句块，其结果为最后一条语句的值
+#define	WNP(N,P)	({			\
+	complex_t temp;				\
+	temp.real = cos(2*pi*P/N);	\
+	temp.imag = -sin(2*pi*P/N);	\
+	temp; })
+</code></pre>
+<p>然后还需要实现复数的基本四则运算，加、减、乘，除（代码中没有实现），还有求一个复数的幅度和相位。</p>
+<h3 id="倒序算法">倒序算法</h3>
+<p>另外，蝶形运算的初始输入的数据需要倒叙，所以需要写一个函数进行输入数据的倒叙，<em>倒序的算法为</em>：对原始数据的序号的二进制进行反转，得到的结果就是其倒叙后的位置（假设总共有N个数据，那么只看<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>l</mi><mi>o</mi><msubsup><mi>g</mi><mn>2</mn><mi>N</mi></msubsup></mrow><annotation encoding="application/x-tex">log_2^N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0894389999999998em;vertical-align:-0.24810799999999997em;"></span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.4518920000000004em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span></span></span></span>个二进制位）。</p>
+<p>比如总共有8个数据，那么就值用看3个二进制位，第3个原始数据，经过倒叙后是第6个数据（从0开始，有第0个数据）。</p>
+<pre><code>3 = 011
+
+6 = 110
+</code></pre>
+<p>而C语言不能实现数据的二进制位倒相，所以又要写一个函数（此函数来源于网络）。</p>
+<pre><code class="language-c">//采用移位的方法使一个数的二进制位翻转后返回
+unsigned int reverse_bit(unsigned int num, const unsigned int N)
+{
+	unsigned int ret = 0;
+	int bit = 0;
+	int i = 0;
+	// log(8.0)/log(2.0) = 3.000,but (unsigned int)x = 2,why?
+	unsigned int M = (unsigned int)(log(N+0.00001)/log(2.0));
+	for (i = 0; i &lt; M; i++)
+	{
+		ret &lt;&lt;= 1;
+		bit = num &amp; 1;
+		ret = bit | ret;
+		num = num / 2;
+	}
+	//1000 0000 0000 0000 0000 0000 0000 0000
+	return ret;
+}
+</code></pre>
+<p>数据的倒序：</p>
+<pre><code class="language-c">/**
+ * 进行FFT前对数据进行倒叙以方便时域抽取法
+ * @Author   CofCai
+ * @DateTime 2020-12-27T20:48:41+0800
+ * @param    c_arr                    数据指针
+ * @param    N                        数据长度
+ * @return                            成功：1、失败：0
+ */
+int reverse_order(complex_t* c_arr, const unsigned int N)
+{
+	complex_t c_temp;
+	/** calloc: initial by zeros  */
+	char* bitmap = calloc(N, sizeof(char));
+	unsigned int i, j;
+	for (i = 0; i &lt; N; ++i) {
+		if (bitmap[i] == 0) {
+			// 先保存第i个数据
+			c_temp.real = c_arr[i].real;
+			c_temp.imag = c_arr[i].imag;
+			// 计算i对应的倒叙，和这个倒叙位置交换数据
+			j = reverse_bit(i, N);
+			c_arr[i].real = c_arr[j].real;
+			c_arr[i].imag = c_arr[j].imag;
+			c_arr[j].real = c_temp.real;
+			c_arr[j].imag = c_temp.imag;
+			// 防止后面j又和i进行倒叙交换
+			*(bitmap+i) = 1;
+			*(bitmap+j) = 1;
+		} else {
+			continue;
+		}
+	}
+	return 1;
+}
+</code></pre>
+<h3 id="编程思想">编程思想</h3>
+<p>蝶形运算要点：<br>
+在第L级中：</p>
+<ol>
+<li>
+<p>每个蝶形的输入数据相隔<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi><mo>=</mo><msup><mn>2</mn><mrow><mi>L</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">B=2^{L-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">L</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span>个点；</p>
+</li>
+<li>
+<p>每级有B个不同的旋转因子；</p>
+</li>
+<li>
+<p>相同旋转因子对应的每个蝶形的输出数据相隔<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mo>=</mo><msup><mn>2</mn><mi>L</mi></msup></mrow><annotation encoding="application/x-tex">D=2^L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">L</span></span></span></span></span></span></span></span></span></span></span>个点；</p>
+</li>
+<li>
+<p>同一旋转因子对应着间隔为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mo>=</mo><msup><mn>2</mn><mi>L</mi></msup></mrow><annotation encoding="application/x-tex">D=2^L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">L</span></span></span></span></span></span></span></span></span></span></span>点的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mrow><mi>M</mi><mo>−</mo><mi>L</mi></mrow></msup></mrow><annotation encoding="application/x-tex">2^{M-L}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">M</span><span class="mbin mtight">−</span><span class="mord mathdefault mtight">L</span></span></span></span></span></span></span></span></span></span></span></span>个蝶形；（此点包含了第3点，但多一个信息）。</p>
+</li>
+</ol>
+<p>也就是说：</p>
+<ol>
+<li>
+<p>第一层循环控制级数，共<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi><mo>=</mo><mi>l</mi><mi>o</mi><mi>g</mi><mi>N</mi></mrow><annotation encoding="application/x-tex">M=logN</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>级，从<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>M</mi></mrow><annotation encoding="application/x-tex">L=1,...,M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">L</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span></span></span></span>；</p>
+</li>
+<li>
+<p>第二层循环控制每层的旋转因子，每层有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi><mo>=</mo><msup><mn>2</mn><mrow><mi>L</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">B=2^{L-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">L</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span>个不同的旋转因子；</p>
+</li>
+<li>
+<p>第三层循环控制每个旋转因子对应的蝶形运算。</p>
+<ol>
+<li>
+<p>每个旋转因子会被使用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mrow><mi>M</mi><mo>−</mo><mi>L</mi></mrow></msup></mrow><annotation encoding="application/x-tex">2^{M-L}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">M</span><span class="mbin mtight">−</span><span class="mord mathdefault mtight">L</span></span></span></span></span></span></span></span></span></span></span></span>次；</p>
+</li>
+<li>
+<p>每个蝶形运算的两个输入数据相隔<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi><mo>=</mo><msup><mn>2</mn><mrow><mi>L</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">B=2^{L-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">L</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span>个点，输出也是相隔B个点（蝶形：交叉平行）；</p>
+</li>
+<li>
+<p>而同一旋转因子对应的两个相邻的蝶形运算相隔<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mo>=</mo><msup><mn>2</mn><mi>L</mi></msup></mrow><annotation encoding="application/x-tex">D=2^L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">L</span></span></span></span></span></span></span></span></span></span></span>个点；</p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="代码实现">代码实现</h3>
+<pre><code class="language-c">/**
+ * author:		CofCai
+ * datatime:	2020-12-27 21:00:24
+ * file description:
+ *	 根据数据信号处理书上第4四章FFT提到的时域抽取法编程思想，
+ *	 用C语言实现DIT-FFT算法。
+ *	 编写过程中遇到问题了：
+ *	 	旋转因子该怎么表示?
+ *	 	突然又解决了，用旋转因子不就是复数蛮，一样可以用复数表示
+ *	 	W_N^k = e^{-j2pik/N} = cos(2pik/N) - j*sin(2pik/N)
+ *
+ * 	 似乎结果有问题
+ * 	 考完了数字信号处理（老师给的考点一点也不靠谱，好多不会，awsl）
+ * 	 继续敲代码，做事情前先弄懂原理，刚开始跟着书上的抄，结果不对，
+ * 	 后面自己认真看书，理解蝶形运算的过程，然后发现第三层循环，也就
+ * 	 是最内循环的迭代方式不对，不应该是++，而应该按照D=2^L的方式迭代
+ * 	 
+ * 	 蝶形运算要点：
+ *	 	在第L级中：
+ * 			1. 每个蝶形的输入数据相隔B=2^{L-1}个点；
+ * 			2. 每级有B个不同的旋转因子；
+ * 			3. 相同旋转因子对应的每个蝶形的输出数据相隔D=2^L个点；
+ * 		 	4. 同一旋转因子对应着间隔为D=2^L点的2^{M-L}个蝶形；（此点包含了第3点，但多一个信息）。
+ * 		也就是说：
+ * 			1. 第一层循环控制级数，共M=logN级，从L=1,...,M；
+ * 			2. 第二层循环控制每层的旋转因子，每层有B=2^{L-1}个不同的旋转因子；
+ * 			3. 第三层循环控制每个旋转因子对应的蝶形运算
+ * 				1. 每个旋转因子会被使用2^{M-L}次；
+ * 				2. 每个蝶形运算的两个输入数据相隔B=2^{L-1}个点，输出也是相隔B个点（蝶形：交叉平行）；
+ * 				3. 而同一旋转因子对应的两个相邻的蝶形运算相隔D=2^L个点；
+ *
+ *
+ * 	该文件的使用：
+ * 		fft_rawdata.txt：此文件用于输入原始数据，
+ * 						 第一行是数据个数N，此后每一行表示一个数据，分为实部和虚部，
+ * 						 中间以table分割，以换行结束，如：
+ * 						 3
+ * 						 1.2\t2.3\n
+ * 						 2.3\t78.2\n
+ * 						 7.2\t12.3\n
+ * 		fft_cookeddata.txt:此文件用于保存结果
+ * 	
+ * 	另外需要注意：
+ * 		传入fft的是数据指针，因此是在原数据上直接保存结果，所以如果还需要用到原数据，那么请copy一份。
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;math.h&gt;
+
+typedef struct {
+	float real;
+	float imag;
+}complex_t;
+
+// 另外一种复数的表达，幅度加角度/相位
+typedef struct {
+	float amp;
+	float pha;
+}complex_ap_t;
+
+
+#define DBG_INFO 0
+#if DBG_INFO
+  	#define DBG_PRINTF(fmt, args...)  \
+	do\
+	{\
+	    printf(fmt, ##args);\
+	}while(0)
+#else
+  #define DBG_PRINTF(fmt, args...)   
+#endif
+
+#define pi 	(3.1415926535)
+// 旋转因子，{}语句块，其结果为最后一条语句的值
+#define	WNP(N,P)	({			\
+	complex_t temp;				\
+	temp.real = cos(2*pi*P/N);	\
+	temp.imag = -sin(2*pi*P/N);	\
+	temp; })
+
+#define R2C(R)		({			\
+	complex_t c;				\
+	c.real = R;					\
+	c.imag = 0;					\
+	c; })
+
+float cplx_amp(complex_t* c)
+{
+	return sqrt(pow(c-&gt;real, 2) + pow(c-&gt;imag, 2));
+}
+
+float cplx_angle(complex_t* c)
+{
+	return atan2(c-&gt;imag, c-&gt;real);
+}
+
+complex_ap_t cplx_amp_angle(complex_t* c)
+{
+	complex_ap_t c_ap;
+	c_ap.amp = cplx_amp(c);
+	c_ap.pha = cplx_angle(c);
+
+	return c_ap;
+}
+
+// 为了减小开销，还是传入指针吧
+complex_t cplx_add(complex_t* c1, complex_t* c2)
+{
+	complex_t temp;
+	temp.real = c1-&gt;real + c2-&gt;real;
+	temp.imag = c1-&gt;imag + c2-&gt;imag;
+	return temp;
+}
+
+complex_t cplx_sub(complex_t* c1, complex_t* c2)
+{
+	complex_t temp;
+	temp.real = c1-&gt;real - c2-&gt;real;
+	temp.imag = c1-&gt;imag - c2-&gt;imag;
+	return temp;
+}
+
+complex_t cplx_prod(complex_t* c1, complex_t* c2)
+{
+	complex_t temp;
+	// (a1+b1j)(a2+b2j) = (a1a2-b1b2) + (a1b2 + b1a2)
+	temp.real = (c1-&gt;real * c2-&gt;real) - (c1-&gt;imag * c2-&gt;imag);
+	temp.imag = (c1-&gt;real * c2-&gt;imag) + (c1-&gt;imag * c2-&gt;real);
+	return temp;
+}
+
+//采用移位的方法使一个数的二进制位翻转后返回
+unsigned int reverse_bit(unsigned int num, const unsigned int N)
+{
+	unsigned int ret = 0;
+	int bit = 0;
+	int i = 0;
+	// log(8.0)/log(2.0) = 3.000,but (unsigned int)x = 2,why?
+	unsigned int M = (unsigned int)(log(N+0.00001)/log(2.0));
+	for (i = 0; i &lt; M; i++)
+	{
+		ret &lt;&lt;= 1;
+		bit = num &amp; 1;
+		ret = bit | ret;
+		num = num / 2;
+	}
+	return ret;
+}
+
+/**
+ * 进行FFT前对数据进行倒叙以方便时域抽取法
+ * @Author   CofCai
+ * @DateTime 2020-12-27T20:48:41+0800
+ * @param    c_arr                    数据指针
+ * @param    N                        数据长度
+ * @return                            成功：1、失败：0
+ */
+int reverse_order(complex_t* c_arr, const unsigned int N)
+{
+	complex_t c_temp;
+	/** calloc: initial by zeros  */
+	char* bitmap = calloc(N, sizeof(char));
+	unsigned int i, j;
+	for (i = 0; i &lt; N; ++i) {
+		if (bitmap[i] == 0) {
+			// 先保存第i个数据
+			c_temp.real = c_arr[i].real;
+			c_temp.imag = c_arr[i].imag;
+			// 计算i对应的倒叙，和这个倒叙位置交换数据
+			j = reverse_bit(i, N);
+			c_arr[i].real = c_arr[j].real;
+			c_arr[i].imag = c_arr[j].imag;
+			c_arr[j].real = c_temp.real;
+			c_arr[j].imag = c_temp.imag;
+			// 防止后面j又和i进行倒叙交换
+			*(bitmap+i) = 1;
+			*(bitmap+j) = 1;
+		} else {
+			continue;
+		}
+	}
+	return 1;
+}
+
+/**
+ * FFT算法
+ * 在第L级中：
+ * 			1. 每个蝶形的输入数据相隔B=2^{L-1}个点；
+ * 			2. 每级有B个不同的旋转因子；
+ * 			3. 相同旋转因子对应的每个蝶形的输出数据相隔D=2^L个点；
+ * 		 	4. 同一旋转因子对应着间隔为D=2^L点的2^{M-L}个蝶形；（此点包含了第3点，但多一个信息）。
+ * @Author   CofCai
+ * @DateTime 2020-12-28T21:20:27+0800
+ * @param    c_arr                    输入序列，为指针
+ * @param    N                        序列长度
+ * @return                            无
+ */
+int fft(complex_t* c_arr, const unsigned int N)
+{
+	//log_a^b = log_c^b / log_c^a：换底公式
+	unsigned int M = (unsigned int)(log((float)N+0.00001)/log(2.0));
+	DBG_PRINTF(&quot;FFT related parameter:&quot;);
+	DBG_PRINTF(&quot;N = %u\tM = %d\n&quot;, N, M);
+	// L:层数，最大为M
+	unsigned int L, k;
+	// 蝶形运算中输入的两个数据相距B个点，J用于索引不同的旋转因子
+	unsigned int J, B, p;
+	// 相同旋转因子的输出结果之间的间隔为：D=2^L
+	unsigned int D;
+	complex_t c_temp, T, WNp;
+	// 倒叙
+	reverse_order(c_arr, N);
+	// 蝶形运算
+	// 第L层
+	for (L = 1; L &lt;= M; ++L) {
+		B = (unsigned int)pow(2, L-1);
+		DBG_PRINTF(&quot;第 L = %d层\tB = %d个不同的旋转因子\n&quot;, L, B);
+		// 第L层有B = 2^(L-1)个旋转因子，每个为W_{2^L}^J，J=0,1,...,B-1。
+		// 经过变换，可得旋转因子为：W_N^p,p=Jx2^{M-L}。
+		for (J = 0; J &lt;= B-1; ++J) {
+			// 第L层第J个旋转因子的指数
+			p = (unsigned int)(pow(2, M-L)*J);
+			DBG_PRINTF(&quot;J = %d对应的旋转因子的指数为P = %d\n&quot;, J, p);
+			// 前面说过每层共有2^(L-1)个旋转因子，而每个旋转因子在此层会被利用2^{M-L}次
+			WNp = WNP(N, p);
+			DBG_PRINTF(&quot;旋转因子WNp: (%u, %u)--&gt;(%1.f + %1.fj)\n&quot;, N, p, WNp.real, WNp.imag);
+			// D是同一旋转因子对应的蝶形的输出结果之间的距离，而B是输入碟形数据之间的距离
+			D = (unsigned int)pow(2, L);
+			// 下面的循环就是计算出WNp对应的蝶形运算的结果
+			for (k = J; k &lt;= N-1; k+=D) {
+				// A_{L}(J) = A_{L-1}(J) + A_{L-1}(J+B)W_N^p;
+				// A_{L}(J+B) = A_{L-1}(J) - A_{L-1}(J+B)W_N^p;
+				
+				c_temp = cplx_prod(c_arr+k+B, &amp;WNp);
+				// DBG_PRINTF(&quot;prod:(%1.f+%1.fj) * (%1.f+%1.fj)=(%1.f+%1.fj)\n&quot;, 
+				// 	(c_arr+k+B)-&gt;real, (c_arr+k+B)-&gt;imag, WNp.real, WNp.imag, c_temp.real, c_temp.imag);
+				
+				T = cplx_add(c_arr+k, &amp;c_temp);
+				DBG_PRINTF(&quot;AL(%u) = A(%u) + A(%u)WNp\n&quot;, k, k, k+B);
+				// DBG_PRINTF(&quot;add:(%1.f+%1.fj) + (%1.f+%1.fj)=(%1.f+%1.fj)\n&quot;,
+				// 	(c_arr+k)-&gt;real, (c_arr+k)-&gt;imag, c_temp.real, c_temp.imag, T.real, T.imag);
+				
+				*(c_arr+k+B) = cplx_sub(c_arr+k, &amp;c_temp);
+				DBG_PRINTF(&quot;AL(%u) = A(%u) - A(%u)WNp\n&quot;, k+B, k, k+B);
+				// DBG_PRINTF(&quot;sub:(%1.f+%1.fj) - (%1.f+%1.fj)=(%1.f+%1.fj)\n&quot;,
+				// 	(c_arr+k)-&gt;real, (c_arr+k)-&gt;imag, c_temp.real, c_temp.imag, (c_arr+k+B)-&gt;real, (c_arr+k+B)-&gt;imag);
+				
+				*(c_arr+k) = T;
+			}
+		}
+		putchar('\n');
+	}
+	DBG_PRINTF(&quot;FFT done!!!\n\n&quot;);
+	return 1;
+}
+
+void cplx_amp_angle_batch(complex_t* c, unsigned int N, complex_ap_t* c_ap)
+{
+	unsigned int i = 0;
+	for (i = 0; i &lt; N; ++i) {
+		*(c_ap+i) = cplx_amp_angle(c+i);
+	}
+}
+
+void fft_test()
+{
+	unsigned int i = 0, j;
+	unsigned int N = 8;
+	float angle = 0, abs = 0;
+	complex_t c_arr[8] = {
+		{1, 2},
+		{3, 0},
+		{5, 0},
+		{7, 0},
+		{1, 0},
+		{3, 0},
+		{5, 0},
+		{7, 0}
+	};
+	complex_t* c_cpy = (complex_t*)calloc(N, sizeof(complex_t));
+	memcpy(c_cpy, c_arr, N*sizeof(complex_t));
+
+	complex_ap_t* c_ap = (complex_ap_t*)calloc(N, sizeof(complex_ap_t));
+
+	fft(c_cpy, N);
+	cplx_amp_angle_batch(c_cpy, N, c_ap);
+
+	printf(&quot;i\torigin data\tfft data\tamp\tpha\n&quot;);
+	printf(&quot;-\t-----------\t--------\t---\t---\n&quot;);
+	for (i = 0; i &lt; N; ++i) {
+		printf(&quot;%d\t%.2f + %.2fj\t%.2f + %.2fj\t%.2f\t%.2f\n&quot;,
+			i, c_arr[i].real, c_arr[i].imag, 
+			(c_cpy+i)-&gt;real, (c_cpy+i)-&gt;imag,
+			(c_ap+i)-&gt;amp, (c_ap+i)-&gt;pha );
+	}
+}
+
+
+void fft_test_read_data_from_file()
+{
+	int i, N;
+	complex_t c;
+	char filename[] = &quot;fft_rawdata.txt&quot;;
+	FILE* fp = NULL;
+
+	fp = fopen(filename, &quot;r+&quot;);
+	if (fp == NULL) {
+		printf(&quot;open %s failure!\n&quot;, filename);
+		exit(0);
+	}
+	fscanf(fp, &quot;%d&quot;, &amp;N);
+	complex_t* c_arr = (complex_t*)calloc(N, sizeof(complex_t));
+	complex_ap_t* c_ap_arr = (complex_ap_t*)calloc(N, sizeof(complex_ap_t));
+
+	i = 0;
+	while(i &lt; N) {
+		fscanf(fp, &quot;%f\t%f&quot;, &amp;(c_arr+i)-&gt;real, &amp;(c_arr+i)-&gt;imag);
+		printf(&quot;%.1f + %.1fj\n&quot;, c_arr[i].real, c_arr[i].imag);
+		i++;
+	}
+	fclose(fp);
+
+	printf(&quot;FFT begin!\n&quot;);
+	fft(c_arr, N);
+	printf(&quot;FFT done!\n&quot;);
+	strcpy(filename, &quot;fft_cookeddata.txt&quot;);
+	fp = fopen(filename, &quot;w+&quot;);
+	if (fp == NULL) {
+		printf(&quot;open %s failure!\n&quot;, filename);
+		fclose(fp);
+		exit(0);
+	}
+	i = 0;
+	while(i &lt; N) {
+		c_ap_arr[i].amp = cplx_amp(c_arr+i);
+		c_ap_arr[i].pha = cplx_angle(c_arr+i);
+		printf(&quot;%.1f + %.1fj ---&gt; amp=%.1f, pha=%.1f\n&quot;, 
+			c_arr[i].real, c_arr[i].imag, c_ap_arr[i].amp, c_ap_arr[i].pha);
+		fprintf(fp, &quot;%f\t%f\n&quot;, c_arr[i].real, c_arr[i].imag);
+		i++;
+	}
+	fclose(fp);
+}
+
+int main(int argc, char const *argv[])
+{
+	fft_test();
+	// fft_test_read_data_from_file();
+
+	return 0;
+}
+</code></pre>
+<p><code>fft_test()</code>函数的执行结果：</p>
+<figure data-type="image" tabindex="4"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/fft_result_with_amp_pha.jpg" alt="" loading="lazy"></figure>
+<h2 id="总结">总结</h2>
+<p>fft函数传入的是数据指针，因此会修改原数据，如果还需要使用到原始数据，那么请copy一份。</p>
+<p>总结个锤子，后天考移动通信，cdj，你还这么浪，赶快滚去复习。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[CMake的使用及pcre2]]></title>
+        <id>https://cxx7ud.coding-pages.com/post/cmake-use-with-pcre2/</id>
+        <link href="https://cxx7ud.coding-pages.com/post/cmake-use-with-pcre2/">
+        </link>
+        <updated>2021-01-20T06:31:26.000Z</updated>
+        <content type="html"><![CDATA[<p>[toc]</p>
+<h3 id="使用cmake对pcre进行编译">使用CMake对pcre进行编译</h3>
+<p>在学习python中的正则表达式后，百度了一下看有没有C语言实现的正则表达式工具，还真有，就是<a href="http://www.pcre.org">Perl-compatibal regular expression</a>（即perl兼容的正则表达式，而且一般Linux发行版中的grep、awk等都是基于这个实现的）。然后把源码下载下来解压，目录如下（其中build和installl是我自己创建的，下面的文件夹是我使用cmake后的文件夹，所有有些改变）：</p>
+<figure data-type="image" tabindex="1"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/pcre%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%951.jpg" alt="" loading="lazy"></figure>
+<p>我先前就一直很疑惑从github上下载的源码怎么编译，我能想到的无非是makefile加编译器。但是具体的配置还是有点不会，其实还是有点不管自己动手的感觉。今天我就按着感觉，把这源码编译成功了，原来过程也不是很复杂。</p>
+<p>我看到文件夹中有CMakeLists.txt就知道这必定是需要CMake了，我电脑上又刚安装了这个软件。于是打开CMake，画面如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/pcre-CMake1.jpg" alt="" loading="lazy"></figure>
+<p>使用步骤：</p>
+<ol>
+<li>
+<p>选择源码所在目录，我刚开始选择了<code>pcre2-10.36-RC1</code>目录下的src了，然后<code>config</code>时报错误。其实源码目录就是<code>pcre2-10.36-RC1</code>，因为这个目录下有个CMakeLists.txt文件；</p>
+</li>
+<li>
+<p>选择<code>build</code>的目录（这个目录用于保存CMake生成的Makefile，以及后面使用make进行编译的中间文件），这个目录是我自己新建的；</p>
+</li>
+<li>
+<p>点击<code>Configure</code>，配置完后，上图中的中间那个窗口可以进行一些其它的配置，比如编译完后install到哪里去（由于源码目录下有了install文件，所以我新建了installl）；</p>
+</li>
+<li>
+<p>配置好后点击<code>Generate</code>，这一步产生Makefile，并保存到<code>build</code>目录下，build目录如下，可以看到有<code>Makefile</code>这个文件了。</p>
+<figure data-type="image" tabindex="3"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/pcre-build%E7%9B%AE%E5%BD%95.jpg" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>使用<code>make</code>进行编译，我使用了<code>git bash</code>进行编译，因为在这个环境中可以使用make命令，编译完成后就可以看到build目录下有一些其它文件，比如上图中的可执行文件；</p>
+<figure data-type="image" tabindex="4"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/pcre-make%E5%91%BD%E4%BB%A4.jpg" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>再使用<code>make install</code>进行安装；</p>
+<figure data-type="image" tabindex="5"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/pcre-make%20install%E5%91%BD%E4%BB%A4.jpg" alt="" loading="lazy"></figure>
+<p>install目录如下：<img src="https://gitee.com/CofCai/pic-bed/raw/master/img/pcre-instal%E7%9B%AE%E5%BD%95.jpg" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>使用时，将include中的头文件和lib中的库文件拷贝到工程文件夹中即可，man中是一些手册，share中是一些html的文件，也算是帮助信息。</p>
+</li>
+</ol>
+<p><strong>当然还有其它的编译方法：比如使用.config直接进行配置编译</strong>，主要三步：.config进行配置、make、make install。</p>
+<h3 id="如何在工程中使用">如何在工程中使用</h3>
+<p>编译后在<code>installl</code>文件夹中有两个文件夹很重要：一个是<code>include</code>，另一个是<code>lib</code>。</p>
+<p>在include中包含两个头文件：pcre2.h和pcre2posix.h，pcre2posix.h其实是为了方便移植的（符合POSIX接口），它就是对pcre2.h中的一些函数用宏定义取了一个别名，如下：</p>
+<pre><code class="language-c">/* The structure representing a compiled regular expression. It is also used
+for passing the pattern end pointer when REG_PEND is set. */
+
+typedef struct {
+  void *re_pcre2_code;
+  void *re_match_data;
+  const char *re_endp;
+  size_t re_nsub;
+  size_t re_erroffset;
+  int re_cflags;
+} regex_t;
+
+/* The structure in which a captured offset is returned. */
+
+typedef int regoff_t;
+
+typedef struct {
+  regoff_t rm_so;
+  regoff_t rm_eo;
+} regmatch_t;
+
+......
+
+PCRE2POSIX_EXP_DECL int pcre2_regcomp(regex_t *, const char *, int);
+PCRE2POSIX_EXP_DECL int pcre2_regexec(const regex_t *, const char *, size_t,
+                     regmatch_t *, int);
+PCRE2POSIX_EXP_DECL size_t pcre2_regerror(int, const regex_t *, char *, size_t);
+PCRE2POSIX_EXP_DECL void pcre2_regfree(regex_t *);
+
+// 就是一个宏定义
+#define regcomp  pcre2_regcomp
+#define regexec  pcre2_regexec
+#define regerror pcre2_regerror
+#define regfree  pcre2_regfree
+
+/* Debian had a patch that used different names. These are now here to save
+them having to maintain their own patch, but are not documented by PCRE2. */
+
+#define PCRE2regcomp  pcre2_regcomp
+#define PCRE2regexec  pcre2_regexec
+#define PCRE2regerror pcre2_regerror
+#define PCRE2regfree  pcre2_regfree
+</code></pre>
+<p>另外就是lib中的库文件（真正的实现），包含<code>libpcre2-8.a</code>和<code>libpcre2-posix.a</code>，分别对应面的pcre2.h和pcre2posix.h。</p>
+<p>如何使用呢？先看gcc的一些参数</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>比如</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-I</td>
+<td>添加头文件搜索路径</td>
+<td>-I /usr/include</td>
+</tr>
+<tr>
+<td>-L</td>
+<td>添加库文件路径</td>
+<td>-L /usr/lib</td>
+</tr>
+<tr>
+<td>-l（小写的l）</td>
+<td>指定要链接的库</td>
+<td>-lm,-lpthread</td>
+</tr>
+</tbody>
+</table>
+<p>注意：</p>
+<ol>
+<li>路径的写法，Windows和Linux下不一样；</li>
+<li>比如我有自己的一个库，名字是libmyfun.a，链接时只需<code>-lmyfun</code>。</li>
+</ol>
+<pre><code class="language-c">*
+*lib
+***libmyfunc.a
+***libpthread.a
+***libpcre2-8.a
+*include
+***pcre2.h
+***pcre2posix.h
+***myapi.h
+
+gcc mymain.c -I /home/include -L /home/lib -lmyfunc
+</code></pre>
+<p>**为了方便：**将include和lib文件夹下的文件拷贝到MinGW对应的文件夹中取（我将<code>libpcre2-8.a</code>重命名为了<code>libpcre2.a</code>）。</p>
+<h3 id="测试代码">测试代码</h3>
+<p>这个源自我最开始写的python代码：</p>
+<pre><code class="language-python"> # author:		CofCai
+ # datatime:	2021-01-07 15:40:49
+ # file description:
+ #  该文件是用于字符串处理的正则表达式的一些简单记录。
+ # 参考：
+ # 		python的RE教程：https://docs.python.org/zh-cn/3/library/re.html#regular-expression-syntax
+ # 		https://www.cnblogs.com/z-qinfeng/p/11999963.html
+ # 		经典实例（推荐）：https://www.jb51.net/article/31235.htm
+ # 		20个正则表达式：https://www.jb51.net/article/82835.htm
+ # 
+ 
+import re
+
+# 提取格式正确的电话
+digit_number = ['15730807595', '131 2829 8283', '192-2482-8921',
+				'157308075959', '238829', '127x8231x892e']
+# 开头是1，第二位必须是3、5、9，第三位限制为数字，第四位可以为空格、-、还可以没有
+# 后面紧跟着4个数字，然后又是空格、-、或者没有，最后又是4个数字，并且到此结束
+# 如果pattern最后一个改为*，则'157308075959这个也会被匹配'
+pattern_dig_num = re.compile(r'1[359]\d[- ]?\d{4}[- ]?\d{4}$')
+print('pattern_dig_num: ', pattern_dig_num)
+
+for i in digit_number:
+	result = re.match(pattern_dig_num, i)
+	# result = re.findall(pattern_dig_num, i)
+	print(result)
+
+print(&quot;anthor&quot;)
+test_string = 'cdj-Hello,wold-cdj'
+pattern_test_str = re.compile(r'^cdj(.*)cdj$')
+result = re.match(pattern_test_str, test_string)
+print(result.groups(0)
+</code></pre>
+<p>使用pcre实现如下：</p>
+<pre><code class="language-c">#define PCRE2_STATIC
+#define PCRE2_CODE_UNIT_WIDTH 8
+#include &lt;pcre2.h&gt;
+#include &quot;pcre2posix.h&quot;
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+
+using namespace std;
+ 
+int main(void)
+{
+    string pattern = &quot;1[359]\\d[- ]?\\d{4}[- ]?\\d{4}&quot;;
+    int error_code = 0;
+    PCRE2_SIZE error_offset = 0;
+    pcre2_code *code = pcre2_compile(reinterpret_cast&lt;PCRE2_SPTR&gt;(pattern.c_str()), 
+        PCRE2_ZERO_TERMINATED, 0, &amp;error_code, &amp;error_offset, NULL);
+    if (code == NULL)
+    {
+        return -1;
+    }
+ 
+    string subject = &quot;15730807595;131 2829 8283;192-2482-8921;127x8231x892e&quot;;
+    pcre2_match_data *match_data = pcre2_match_data_create_from_pattern(code, NULL);
+    int rc = 0;
+    int start_offset = 0;
+    unsigned int match_index = 0;
+    while ((rc = pcre2_match(code, 
+        reinterpret_cast&lt;PCRE2_SPTR&gt;(subject.c_str()), subject.length(), 
+        start_offset, 0, match_data, NULL)) &gt; 0)
+    {
+        PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(match_data);
+        int i = 0;
+        for (i = 0; i &lt; rc; i++)
+        {
+            std::cout &lt;&lt; &quot;match &quot; &lt;&lt; ++match_index &lt;&lt; &quot;: &quot;
+                &lt;&lt; std::string(subject.c_str() + ovector[2*i], ovector[2*i + 1] - ovector[2*i]) 
+                &lt;&lt; std::endl;
+        }
+        start_offset = ovector[2*(i-1) + 1];
+    }
+ 
+    return 0;
+}
+</code></pre>
+<pre><code>输出：
+$ ./a.exe
+match 1: 15730807595
+match 2: 131 2829 8283
+match 3: 192-2482-8921
+</code></pre>
+<h3 id="错误记录">错误记录</h3>
+<p>错误一：</p>
+<pre><code>E:/Embedded/C/pcre2-10.36-RC1/installl/include/pcre2.h:969:2: error: #error PCRE2_CODE_UNIT_WIDTH must be defined before including pcre2.h.
+
+说明要在pcre2.h前定义PCRE2_CODE_UNIT_WIDTH，这个表示一个字符的宽度，比如ASCII就是8，utf就是32。
+解决方法：
+#define PCRE2_CODE_UNIT_WIDTH 8
+#include &lt;pcre2.h&gt;
+#include &lt;pcre2posix.h&gt;
+
+</code></pre>
+<p>错误二：</p>
+<pre><code class="language-shell">$ g++ sk.cpp -I /e/Embedded/C/pcre2-10.36-RC1/installl/include -L /e/Embedded/C/pcre2-10.36-RC1/installl/lib -lpcre2-8 -lpcre2-posix
+C:\temp\ccwgopjN.o:sk.cpp:(.text+0xdb): undefined reference to `_imp__pcre2_compile_8'
+C:\temp\ccwgopjN.o:sk.cpp:(.text+0x144): undefined reference to `_imp__pcre2_match_data_create_from_pattern_8'
+C:\temp\ccwgopjN.o:sk.cpp:(.text+0x1d7): undefined reference to `_imp__pcre2_match_8'
+C:\temp\ccwgopjN.o:sk.cpp:(.text+0x1f6): undefined reference to `_imp__pcre2_get_ovector_pointer_8'
+D:/CDJ/CodeBlocks/CodeBlocks/MinGW/bin/../lib/gcc/mingw32/5.1.0/../../../../mingw32/bin/ld.exe: C:\temp\ccwgopjN.o: bad reloc address 0x30 in section `.rdata'
+D:/CDJ/CodeBlocks/CodeBlocks/MinGW/bin/../lib/gcc/mingw32/5.1.0/../../../../mingw32/bin/ld.exe: final link failed: Invalid operation
+collect2.exe: error: ld returned 1 exit status
+
+
+$ gcc sk.c -lpcre2 -lpcre2-posix
+D:/CDJ/CodeBlocks/CodeBlocks/MinGW/bin/../lib/gcc/mingw32/5.1.0/../../../libpcre2-posix.a(pcre2posix.c.obj):pcre2posix.c:(.text+0x12f): undefined reference to `pcre2_match_data_free_8'
+D:/CDJ/CodeBlocks/CodeBlocks/MinGW/bin/../lib/gcc/mingw32/5.1.0/../../../libpcre2-posix.a(pcre2posix.c.obj):pcre2posix.c:(.text+0x13c): undefined reference to `pcre2_code_free_8'
+D:/CDJ/CodeBlocks/CodeBlocks/MinGW/bin/../lib/gcc/mingw32/5.1.0/../../../libpcre2-posix.a(pcre2posix.c.obj):pcre2posix.c:(.text+0x243): undefined reference to `pcre2_compile_8'
+D:/CDJ/CodeBlocks/CodeBlocks/MinGW/bin/../lib/gcc/mingw32/5.1.0/../../../libpcre2-posix.a(pcre2posix.c.obj):pcre2posix.c:(.text+0x2e7): undefined reference to `pcre2_pattern_info_8'
+D:/CDJ/CodeBlocks/CodeBlocks/MinGW/bin/../lib/gcc/mingw32/5.1.0/../../../libpcre2-posix.a(pcre2posix.c.obj):pcre2posix.c:(.text+0x308): undefined reference to `pcre2_match_data_create_8'
+D:/CDJ/CodeBlocks/CodeBlocks/MinGW/bin/../lib/gcc/mingw32/5.1.0/../../../libpcre2-posix.a(pcre2posix.c.obj):pcre2posix.c:(.text+0x331): undefined reference to `pcre2_code_free_8'
+D:/CDJ/CodeBlocks/CodeBlocks/MinGW/bin/../lib/gcc/mingw32/5.1.0/../../../libpcre2-posix.a(pcre2posix.c.obj):pcre2posix.c:(.text+0x434): undefined reference to `pcre2_match_8'
+D:/CDJ/CodeBlocks/CodeBlocks/MinGW/bin/../lib/gcc/mingw32/5.1.0/../../../libpcre2-posix.a(pcre2posix.c.obj):pcre2posix.c:(.text+0x44c): undefined reference to `pcre2_get_ovector_pointer_8'
+D:/CDJ/CodeBlocks/CodeBlocks/MinGW/bin/../lib/gcc/mingw32/5.1.0/../../../../mingw32/bin/ld.exe: D:/CDJ/CodeBlocks/CodeBlocks/MinGW/bin/../lib/gcc/mingw32/5.1.0/../../../libpcre2-posix.a(pcre2posix.c.obj): bad reloc address 0x1c0 in section `.rdata'
+D:/CDJ/CodeBlocks/CodeBlocks/MinGW/bin/../lib/gcc/mingw32/5.1.0/../../../../mingw32/bin/ld.exe: final link failed: Invalid operation
+collect2.exe: error: ld returned 1 exit status
+
+</code></pre>
+<p>这种错误一般是没有实现对应的函数，但是在此处（pcre2）肯定不是，然后粘贴*undefined reference to <code>_imp__pcre2_compile_8'*这句话去百度，得到一些不相关的答案。**然后，前一段时间不是买了虫部落的搜索高手嘛！**我就思考了一下，就只搜索**_imp__pcre2_compile_8**，没有到真解决这个问题了，[解决方法](https://blog.csdn.net/proware/article/details/105895945)：定义一个宏：</code>#define PCRE2_STATIC`</p>
+<h3 id="附">附</h3>
+<p>可以参考pcre附带的例子：pcredemo.c</p>
+<h3 id="小记">小记</h3>
+<p>今天早上吸取了昨天的教训，昨天早上去西校门去早了，到那时才8点10不到，在寒风中等了20几分钟。于时，今天就晚去了一会，结果教练在四公里堵车，于是又在寒风中多等了一会。</p>
+<h3 id="补对jpeg开源库进行编译">补：对jpeg开源库进行编译</h3>
+<p><a href="https://www.jb51.net/LINUXjishu/363271.html">configure配置文件的参考</a></p>
+<p>由于此开源包中没有CMakeLists.txt，说明不能用CMake进行编译。但是要注意，用CMake的目的就是生成Makefile文件，jpeg中本来就有Makefile，所以CMake也就没有必要了。</p>
+<p>在Linux中进行编译的一般步骤为：</p>
+<ol>
+<li>./configure [OPTIONS] [VAR=VALUE]；</li>
+<li>make</li>
+<li>make install</li>
+</ol>
+<p>最重要的一步就是第一步的配置，可以使用过<code>./configure --help</code>查看具体帮助信息，jpeg的configure帮助信息如下：</p>
+<pre><code class="language-shell">`configure' configures libjpeg 9.4.0 to adapt to many kinds of systems.
+# 用法
+Usage: ./configure [OPTION]... [VAR=VALUE]...
+# 为了指定环境变量，请使用：变量名=变量值
+To assign environment variables (e.g., CC, CFLAGS...), specify them as
+VAR=VALUE.  See below for descriptions of some of the useful variables.
+
+Defaults for the options are specified in brackets.
+# 配置选项
+Configuration:
+  -h, --help              display this help and exit
+      --help=short        display options specific to this package
+      --help=recursive    display the short help of all the included packages
+  -V, --version           display version information and exit
+  -q, --quiet, --silent   do not print `checking ...' messages
+      --cache-file=FILE   cache test results in FILE [disabled]
+  -C, --config-cache      alias for `--cache-file=config.cache'
+  -n, --no-create         do not create output files
+      --srcdir=DIR        find the sources in DIR [configure dir or `..']
+# 安装目录的设置
+Installation directories:
+# 与体系结构无关的安装目录
+  --prefix=PREFIX         install architecture-independent files in PREFIX
+                          [/usr/local]
+# 与体系结构有关的安装目录
+  --exec-prefix=EPREFIX   install architecture-dependent files in EPREFIX
+                          [PREFIX]
+# make install默认安装在/usr/local/bin和/usr/local/lib中，你也可以指定用--prefix
+By default, `make install' will install all the files in
+`/usr/local/bin', `/usr/local/lib' etc.  You can specify
+an installation prefix other than `/usr/local' using `--prefix',
+for instance `--prefix=$HOME'.
+# 为了更好的控制，可使用以下选项
+For better control, use the options below.
+
+Fine tuning of the installation directories:
+  --bindir=DIR            user executables [EPREFIX/bin]
+  --sbindir=DIR           system admin executables [EPREFIX/sbin]
+  --libexecdir=DIR        program executables [EPREFIX/libexec]
+  --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
+  --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
+  --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --libdir=DIR            object code libraries [EPREFIX/lib]
+  --includedir=DIR        C header files [PREFIX/include]
+  --oldincludedir=DIR     C header files for non-gcc [/usr/include]
+  --datarootdir=DIR       read-only arch.-independent data root [PREFIX/share]
+  --datadir=DIR           read-only architecture-independent data [DATAROOTDIR]
+  --infodir=DIR           info documentation [DATAROOTDIR/info]
+  --localedir=DIR         locale-dependent data [DATAROOTDIR/locale]
+  --mandir=DIR            man documentation [DATAROOTDIR/man]
+  --docdir=DIR            documentation root [DATAROOTDIR/doc/libjpeg]
+  --htmldir=DIR           html documentation [DOCDIR]
+  --dvidir=DIR            dvi documentation [DOCDIR]
+  --pdfdir=DIR            pdf documentation [DOCDIR]
+  --psdir=DIR             ps documentation [DOCDIR]
+
+Program names:
+  --program-prefix=PREFIX            prepend PREFIX to installed program names
+  --program-suffix=SUFFIX            append SUFFIX to installed program names
+  --program-transform-name=PROGRAM   run sed PROGRAM on installed program names
+# 系统类型
+System types:
+  --build=BUILD     configure for building on BUILD [guessed]
+  --host=HOST       cross-compile to build programs to run on HOST [BUILD]
+  --target=TARGET   configure for building compilers for TARGET [HOST]
+# 可选的特性
+Optional Features:
+  --disable-option-checking  ignore unrecognized --enable/--with options
+  --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
+  --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --enable-silent-rules   less verbose build output (undo: &quot;make V=1&quot;)
+  --disable-silent-rules  verbose build output (undo: &quot;make V=0&quot;)
+  --enable-maintainer-mode
+                          enable make rules and dependencies not useful (and
+                          sometimes confusing) to the casual installer
+  --enable-dependency-tracking
+                          do not reject slow dependency extractors
+  --disable-dependency-tracking
+                          speeds up one-time build
+  --enable-ld-version-script
+                          enable linker version script (default is enabled
+                          when possible)
+  --enable-shared[=PKGS]  build shared libraries [default=yes]
+  --enable-static[=PKGS]  build static libraries [default=yes]
+  --enable-fast-install[=PKGS]
+                          optimize for fast installation [default=yes]
+  --disable-libtool-lock  avoid locking (might break parallel builds)
+  --enable-maxmem=N     enable use of temp files, set max mem usage to N MB
+
+Optional Packages:
+  --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
+  --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --with-pic[=PKGS]       try to use only PIC/non-PIC objects [default=use
+                          both]
+  --with-aix-soname=aix|svr4|both
+                          shared library versioning (aka &quot;SONAME&quot;) variant to
+                          provide on AIX, [default=aix].
+  --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
+  --with-sysroot[=DIR]    Search for dependent libraries within DIR (or the
+                          compiler's sysroot if not specified).
+
+Some influential environment variables:
+# 使用的编译器
+  CC          C compiler command
+  CFLAGS      C compiler flags
+  # 链接的标志，比如指定自定义库文件的搜索路径
+  LDFLAGS     linker flags, e.g. -L&lt;lib dir&gt; if you have libraries in a
+              nonstandard directory &lt;lib dir&gt;
+  # 编译时需要连接的库，如-lm、-lpthread
+  LIBS        libraries to pass to the linker, e.g. -l&lt;library&gt;
+  # 比如指定头文件的路径
+  CPPFLAGS    (Objective) C/C++ preprocessor flags, e.g. -I&lt;include dir&gt; if
+              you have headers in a nonstandard directory &lt;include dir&gt;
+  CPP         C preprocessor
+  LT_SYS_LIBRARY_PATH
+              User-defined run-time library search path.
+
+Use these variables to override the choices made by `configure' or to help
+it to find libraries and programs with nonstandard names/locations.
+
+Report bugs to the package provider.
+
+</code></pre>
+<p>上面比较重要的配置是：</p>
+<ol>
+<li><code>--prefix</code>；</li>
+<li><code>CC=gcc</code>；</li>
+<li><code>LIBS=-lm, -lpthread</code>；</li>
+<li><code>CPPFLAGS=-I /home/include</code></li>
+</ol>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[【C语言】【算法】利用异或找不同单一数据]]></title>
         <id>https://cxx7ud.coding-pages.com/post/c-xor4findvalue/</id>
@@ -2812,480 +3748,6 @@ saveenv //保存环境变量
 }
 </code></pre>
 <p>然后就可以更改软件自带的编译配置文件</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[AlphaLinux开发板使用]]></title>
-        <id>https://cxx7ud.coding-pages.com/post/alphaBoard-use/</id>
-        <link href="https://cxx7ud.coding-pages.com/post/alphaBoard-use/">
-        </link>
-        <updated>2020-10-12T12:02:45.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="开发板使用步骤">开发板使用步骤</h1>
-<p>交叉编译器</p>
-<h2 id="一-固化系统">一、固化系统</h2>
-<blockquote>
-<p>参考用户快速体验，也可参考“开发板与pc传输文件、单步更新固件xxxx”。</p>
-</blockquote>
-<p>可以只更新uboot、zImage、设备树或根文件系统中的一个，即单步更新。其实单步更新的原理就是改变emmc中的uboot、zImage等，因为Linux系统启动后就可以操作emmc了，就可以把最新的uboot、设备树这些放到emmc中对应的位置，然后重启即可（从emmc启动Linux内核）。<strong>详见3.单步更新</strong>。</p>
-<h3 id="1-使用mfgtool上位机固化系统otg方式">1. 使用mfgtool上位机固化系统（OTG方式）</h3>
-<p>所需材料：<br>
-把-&gt;开发板光盘-&gt;5、开发工具-&gt;4、正点原子 MFG_TOOL 出厂固件烧录工具-&gt;mfgtool 文件夹拷贝到 PC 机（电脑），启动方式选为<strong>USB启动</strong>。</p>
-<h4 id="11-固化到sd卡">1.1 固化到SD卡</h4>
-<ol>
-<li>
-<p>准备一张TF卡</p>
-</li>
-<li>
-<p>选择对应的vbs脚本<br>
-<img src="https://cxx7ud.coding-pages.com//post-images/1602504257657.png" alt="" loading="lazy"><br>
-<img src="https://cxx7ud.coding-pages.com//post-images/1602504279379.png" alt="" loading="lazy"><br>
-<img src="https://cxx7ud.coding-pages.com//post-images/1602504330198.png" alt="" loading="lazy"></p>
-</li>
-<li>
-<p>设置为从SD卡启动系统</p>
-</li>
-</ol>
-<h3 id="12-固化到emmc">1.2 固化到eMMC</h3>
-<figure data-type="image" tabindex="1"><img src="https://cxx7ud.coding-pages.com//post-images/1602504375920.png" alt="" loading="lazy"></figure>
-<p>通过mfgtool将uboot、zImga、dtb固化到eMMC后，通过emmc方式启动可以观察这些文件在emmc中的位置，如下：</p>
-<figure data-type="image" tabindex="2"><img src="https://cxx7ud.coding-pages.com//post-images/1602504395968.png" alt="" loading="lazy"></figure>
-<p>mmc的分区0存放的是uboot，分区1是zimage和设备树，分区2是根文件系统，这些都是通过mfgtoo烧录进去的。mmc分区2的根文件系统可以通过``ext4ls mmc 1:2`进行查看，因为其是ext4类型的文件系统，如下：</p>
-<figure data-type="image" tabindex="3"><img src="https://cxx7ud.coding-pages.com//post-images/1602504545483.png" alt="" loading="lazy"></figure>
-<p><code>ext4ls mmc 1:2 dir</code>可查看mmc1的分区2的dir文件夹下的内容：</p>
-<figure data-type="image" tabindex="4"><img src="https://cxx7ud.coding-pages.com//post-images/1602504530164.png" alt="" loading="lazy"></figure>
-<h4 id="121-续">1.2.1 续</h4>
-<p>上面说明了通过mfgtool将固件烧录到emmc后的一些情况，比如mmc1的part0是存放的uboot。在后面讲Linux内核启动方式的时候和这里有关，所以就先说明一下，加强记忆。启动方式有sd卡、emmc/nand、网络启动，相关的uboot环境变量和命令有bootargs、bootcmd、run。</p>
-<p>bootargs环境变量中的console值指定所使用的终端，一般为<code>console=ttymxc0,115200</code>，root值指定根文件系统所在位置，该值根据不同需求需设置不同的值，如下：</p>
-<pre><code class="language-shell"># 通过nfs挂载根文件系统，就需要告诉内核。即root设置如下值
-root=/dev/nfs nfsroot=169.254.30.41:/home/cdj/Linux/nfs/rootfs,proto=tcp rw ip=169.254.30.42:169.254.30.41:169.254.1.1:255.255.0.0::eth0:off
-# 告诉Linux内核根文件系统在emmc1的分区2，即使用mmc中的根文件系统
-root=/dev/mmcblkp2 rootwait rw
-
-# boot命令通过读取bootcmd环境变量的值进行启动Linux内核，boot delay倒计时结束后也会从bootcmd启动Linux内核。
-setenv bootcmd 'tftp 80800000 zImage;tftp 83000000 imx6ull_alientek_emmc.dtb;bootz 80800000 - 83000000'
-
-
-# run命令可以运行用户自己设置的环境变量
-# 1.设置用于从mmc启动的环境变量的命令，镜像和设备树的名称可根据fatls mmc 1:1 查看。mmc 1:2 保存的是根文件系统
-setenv mybootmmc 'fatload mmc 1:1 80800000 zimage;fatload mmc 1:1 83000000 imx6ull-14x14-emmc-4.3-800x480-c.dtb;bootz 80800000 - 83000000'
-# 2.设置用于从网络启动的环境变量的命令
-setenv mybootnet 'tftp 80800000 zImage;tftp 83000000 imx6ull_alientek_emmc.dtb;bootz 80800000 - 83000000'
-saveenv
-
-# 通过上面的设定，boot和run mybootnet的效果是一样的（都是从网络启动），run mybootmmc是从mmc启动。
-</code></pre>
-<h3 id="2-使用脚本固化系统">2. 使用脚本固化系统</h3>
-<p>省略</p>
-<h3 id="3-单步更新">3. 单步更新</h3>
-<h4 id="31-单步更新uboot到emmc">3.1 单步更新uboot到emmc</h4>
-<ol>
-<li>将最新的uboot拷贝到开发板的/home/root中去</li>
-<li>使用命令<code>echo 0 &gt; /sys/block/mmcblk1boot0/force_ro</code>使能emmc启动分区，这样才能烧写。</li>
-<li>使用命令开始烧写<code>dd if=u-boot-imx6ull-14x14-ddr512-emmc.imx of=mmcblk1boot0 bs=1024 seek=1 conv=fsync</code>。</li>
-<li>烧写完后，关闭烧写的启动分区，即<code>echo 1 &gt;/sys/block/mmcblk1boot0/force_ro</code></li>
-</ol>
-<h4 id="32-单步更新设备树到emmc中">3.2 单步更新设备树到emmc中</h4>
-<ol>
-<li>
-<p>用<code>ls /run/media/mmcblk1p1</code>查看mmc1的分区1有那些设备树</p>
-<figure data-type="image" tabindex="5"><img src="https://cxx7ud.coding-pages.com//post-images/1602504562705.png" alt="" loading="lazy"></figure>
-</li>
-<li>
-<p>将对应的设备树拷贝到/run/media/mmcblk1p1 目录下，也可以把全部设备树拷贝。</p>
-</li>
-</ol>
-<h4 id="33-单步更新内核到emmc">3.3 单步更新内核到emmc</h4>
-<ol>
-<li>同更新设备树一样，直接将zImage拷贝到/run/media/mmcblk1p1 目录下即可。</li>
-<li>将<strong>内核模块</strong>拷贝到开发板，然后解压到/lib/modules目录下即可，即<code>tar xf modules.tar.bz2 -C /lib/modules/</code>。</li>
-</ol>
-<h4 id="34-单步更新根文件系统到emmc">3.4  单步更新根文件系统到emmc</h4>
-<p>**注意：**不能用 eMMC 启动来更新 eMMC 分区里的文件系统，应要使用 <strong>SD 卡启动</strong>（即根文件系统在SD卡中，启动时直接从SD卡搬移到SRAM中去）来更新 eMMC的文件系统！<strong>正在运行的一个系统不能把自己给格式化</strong>。<strong>还需要注意的是</strong>内核模块是在 eMMC 的第二个分区（rootfs 分区）里的，更新文件系统时会把这个分区里的东西全部删除，请更新文件系统后，重新更新内核模块。</p>
-<ol>
-<li>拷贝根文件系统到开发板，如/home/root下。</li>
-<li>删除emmc的第二个分区（rootfs分区），即<code>rm -rf /run/media/mmcblk1p2/*</code>。</li>
-<li>解压根文件系统到emmc的文件系统分区，即<code>tar vxf fsl-image-qt5-v1.3.tar.bz2 -C /run/media/mmcblk1p2/</code>，然后sync一下。</li>
-</ol>
-<p><strong>单步更新到SD卡道理一样，就是将上面的东西复制到SD卡相应的区域</strong></p>
-<h2 id="二-usb-wifi-测试">二、USB WIFI 测试</h2>
-<p>所需材料：E:\Embedded\Alpha Linux\阿尔法Linux开发板光盘资料（A盘）\9、测试文件\shell\wifi\alientek_usb_wifi_setup.sh</p>
-<blockquote>
-<p>source命令通常用于重新执行刚修改的初始化文件，使之立即生效，而不必注销并重新登录。</p>
-</blockquote>
-<p>ping -I 192.168.1.126  www.baidu.com。-I 是指定执行 ping 操作的网卡 IP 地址，我们要使用 wlan0 去 ping 百度网站，因此要通过 “-I”指定 wlan0 的 IP 地址。</p>
-<h3 id="1-station上网模式">1. Station（上网）模式</h3>
-<p>即usbwifi作为station，连接其它热点。</p>
-<ol>
-<li>
-<p>插入usb wif</p>
-</li>
-<li>
-<p><code>wpa_cli -i wlan0 scan_result</code> 或 <code>iwlist wlan0 scan</code>扫描周围的热点</p>
-</li>
-<li>
-<p><code>source ./alientek_usb_wifi_setup.sh -m station -i 'vivo Y93' -p CDJxxxxx -d wlan0</code>:用wlan0（即usbwifi）这个设备连接vivo Y93这个热点。</p>
-<pre><code class="language-shell">参数解释：
--m station ：设置成 station 模式
--i vivo Y93 ：无线网络名称(ssid)
--p CDJ**** ：无线网络密码(psk)
--d wlan0 ：USB WIFI 节点
-</code></pre>
-<p>若未能正常获取 ip，等待 <code>RTL871X: set group key camid:5</code>这句话出现后输入 <code>udhcpc -i wlan0</code> 指令重新获取 ip。</p>
-</li>
-</ol>
-<h3 id="2-softap热点模式">2. SoftAP（热点）模式</h3>
-<p>即usbwifi开启热点，供其它设备连接，如手机。</p>
-<p><code>source ./alientek_usb_wifi_setup.sh -m softap -d wlan0</code></p>
-<h3 id="3-bridge桥接模式">3. Bridge（桥接）模式</h3>
-<p>测试 USB WIFI 开启热点，并桥接到有线网络，让手机连接到热点并上网。</p>
-<ol>
-<li>开发板的网口插上网线，并保证能上网。</li>
-<li>用 ifconfig 查看有线网络 eth0 或者 eth1 能否获取 ip，并测试 eth0 是否能上网。</li>
-<li><code>source ./alientek_usb_wifi_setup.sh -m bridge -d wlan0 -e eth0</code></li>
-</ol>
-<h2 id="3-uboot相关环境变量">3. uboot相关环境变量</h2>
-<h3 id="1-自启动时间-bootdelay">1. 自启动时间-bootdelay</h3>
-<pre><code class="language-shell">setenv bootdelay 10  # 设置uboot自启动延时时间
-saveenv
-</code></pre>
-<h3 id="2-启动linux内核的参数-bootargs">2. 启动Linux内核的参数-bootargs</h3>
-<p>bootargs 保存着传递给Linux kernel 的参数。如果Linux内核启动时，没有指定根文件系统，那么启动会失败。</p>
-<blockquote>
-<p>启动时通过nfs挂载Ubuntu中的根文件系统，启动后可以再挂载一个文系统，命令如下：mount -t nfs -o nfsvers=3 169.254.30.41:/home/cdj/Linux/nfs/rootfs ./nfs_mnt</p>
-</blockquote>
-<pre><code>setenv bootargs 'console=ttymxc0,115200 root=/dev/mmcblk1p2 rootwait rw'
-saveenv 
-</code></pre>
-<p>bootargs变量的<strong>console</strong>值表示所用的终端，<strong>root</strong>值代表根文件系统在哪里（上面表示的是根文件系统在emmc的块1分区2）。</p>
-<figure data-type="image" tabindex="6"><img src="https://cxx7ud.coding-pages.com//post-images/1602504585316.png" alt="" loading="lazy"></figure>
-<p>根据上面的格式 bootargs 环境变量的 <strong>root 值</strong>（告诉Linux内核根文件系统在Ubuntu主机中，即用nfs挂载根文件系统）如下：<a href="https://www.cnblogs.com/Mike2019/p/12890930.html">参见</a></p>
-<pre><code class="language-shell">root=/dev/nfs nfsroot=169.254.30.41:/home/cdj/Linux/nfs/rootfs,proto=tcp rw ip=169.254.30.42:169.254.30.41:169.254.1.1:255.255.0.0::eth0:off # 告诉内核根文件系统用nfs挂载，位置是xxx处的Ubuntu主机
-root=/dev/mmcblkp2 rootwait rw  # 告诉内核根文件系统在mmc1的分区2
-</code></pre>
-<p>“proto=tcp”表示使用 TCP 协议，“rw”表示 nfs 挂载的根文件系统为可读可写。启动开发板，进入 uboot 命令行模式，然后重新设置 bootargs 环境变量，命令如下：</p>
-<pre><code class="language-shell">setenv bootargs 'console=ttymxc0,115200 root=/dev/nfs nfsroot=169.254.30.41:/home/cdj/Linux/nfs/rootfs,proto=tcp rw ip=169.254.30.42:169.254.30.41:169.254.1.1:255.255.0.0::eth0:off' //设置 bootargs
-saveenv //保存环境变量
-</code></pre>
-<p>设置好以后使用“boot”命令启动 Linux 内核。</p>
-<h3 id="3-网络操作">3. 网络操作</h3>
-<h4 id="31-设置开发板ip">3.1 设置开发板ip</h4>
-<pre><code class="language-shell">setenv ipaddr 169.254.30.42
-setenv ethaddr 00:04:9f:04:d2:35
-setenv gatewayip 169.254.1.1
-setenv netmask 255.255.0.0
-setenv serverip 169.254.30.41  # Ubuntu主机ip
-saveenv
-</code></pre>
-<h4 id="32-nfs命令">3.2 nfs命令</h4>
-<p>我们一般使用 uboot 中的 nfs 命令将 Ubuntu 中的文件<strong>下载到开发板的 DRAM 中</strong>，在使用 之前需要开启 Ubuntu 主机的 NFS 服务，并且要新建一个 NFS 使用的目录，以后所有要通过 NFS 访问的文件都需要放到这个 NFS 目录中。</p>
-<pre><code class="language-shell">nfs [loadAddress] [[hostIPaddr:]bootfilename]
-loadAddress 是要保存的 DRAM 地址，[[hostIPaddr:]bootfilename]是要下载的文件地址。
-nfs 80800000 192.168.1.250:/home/zuozhongkai/linux/nfs/zImage
-</code></pre>
-<p>这 里我们将正点原子官方编译出来的 Linux 镜像文件 zImage 下载到开发板 DRAM 的 0x80800000 这个地址处。</p>
-<h4 id="33-tftp命令">3.3 tftp命令</h4>
-<p>先搭建好、配置好tftp服务器（即Ubuntu）。tftp 命令 不需要输入文件在 Ubuntu 中的完整路径，只需要输入文件名即可，如<code>tftp 80800000 zImage</code>（<strong>也是下载到开发板的DRAM中去</strong>，而不是EMMC）。</p>
-<h4 id="33-scp拷贝命令">3.3 scp拷贝命令</h4>
-<p>参考：开发板与pc传输文件、单步更新固件参考手册V1.0.pdf</p>
-<p>开发板通过网线与Ubuntu直连或在同一路由器下，配置好ip后，使用命令：</p>
-<pre><code class="language-shell">scp ubuntu中的文件 开发板用户名@开发板ip:拷贝到那去
-scp file1 root@169.254.30.42:/home/root
-
-# 如：
-scp CReadme.md root@169.254.30.42:/home/root
-</code></pre>
-<figure data-type="image" tabindex="7"><img src="https://cxx7ud.coding-pages.com//post-images/1602504605088.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="8"><img src="https://cxx7ud.coding-pages.com//post-images/1602504619052.png" alt="" loading="lazy"></figure>
-<h3 id="4-启动linux内核命令">4. 启动Linux内核命令</h3>
-<h4 id="41-bootz">4.1 bootz</h4>
-<p>bootz [addr [initrd[:size]] [fdt]] 命令 bootz 有三个参数，addr 是 Linux 镜像文件在 DRAM 中的位置，initrd 是 initrd 文件在 DRAM 中的地址，如果不使用 initrd 的话使用‘-’代替即可，fdt 就是设备树文件在 DRAM 中 的地址。</p>
-<pre><code>tftp 80800000 zImage
-tftp 83000000 imx6ull-alientek-emmc.dtb
-bootz 80800000 – 83000000
-</code></pre>
-<h4 id="41-boot">4.1 boot</h4>
-<p>boot 命令也是用来启动 Linux 系统的，只是 boot 会读取环境变量 bootcmd 来启动 Linux 系统，bootcmd 是一个很重要的环境变量！</p>
-<h5 id="411-比如我们想使用tftp命令从网络启动linux">4.1.1 比如我们想使用tftp命令从网络启动Linux</h5>
-<pre><code class="language-shell">setenv bootcmd 'tftp 80800000 zImage; tftp 83000000 imx6ull-alientek-emmc.dtb; bootz 80800000 - 83000000'
-saveenv
-boot
-</code></pre>
-<h5 id="412-想从emmc启动">4.1.2 想从emmc启动</h5>
-<pre><code class="language-shell">setenv bootcmd 'fatload mmc 1:1 80800000 zImage;fatload mmc 1:1 83000000 imx6ull_alientek_emmc.dtb;bootz 80800000 - 83000000'
-savenev
-boot
-</code></pre>
-<h5 id="5-uboot中的run命令">5. uboot中的run命令</h5>
-<p>run 命令用于运行环境变量中定义的命令，比如可以通过“run bootcmd”来运行 bootcmd 中的启动命令，但是 run 命令最大的作用在于运行我们自定义的环境变量。因为bootcmd只能用一次，如果我既想通过网络启动，又想通过emmc启动的话就需要对bootcmd重新赋值。但是通过run命令，就能不用重新赋值。</p>
-<pre><code class="language-shell"># 设置mybootnet环境变量用于从网络启动
-setenv mybootnet 'tftp 80800000 zImage;tftp 83000000 imx6ull_alientek_emmc.dtb;bootz 80800000 - 83000000'
-# 设置mybootmmc环境变量用于从emmc启动
-setenv mybootmmc 'fatload mmc 1:1 80800000 zImage;fatload mmc 1:1 83000000 imx6ull_alientek_emmc.dtb;bootz 80800000 - 83000000'
-saveenv
-
-run mybootnet
-rum mybootmmc
-</code></pre>
-<h2 id="三-uboot移植">三、uboot移植</h2>
-<h2 id="四-linux内核移植">四、Linux内核移植</h2>
-<h2 id="五-根文件系统构建">五、根文件系统构建</h2>
-<h2 id="六-模块驱动">六、模块驱动</h2>
-<p>Linux三巨头移植好后，开发板就能启动了，然后就是<strong>驱动</strong>的开发编写了。</p>
-<p>驱动有两种被加载的方式：一是编译进内核（Linux内核启动时驱动模块也会被启动）、二是编译成模块，动态加载进内核。下面重点讲编译成模块，动态加载进内核。</p>
-<ol>
-<li>
-<p>编写驱动程序（设备树、platform、等）</p>
-</li>
-<li>
-<p>编译成ko文件</p>
-</li>
-<li>
-<p>把ko文件放到/lib/modules/‘uname -r’下去</p>
-<p><code>uname -r</code>代表Linux的版本，我的是4.1.15。<a href="https://www.cnblogs.com/danmiao/p/10024271.html">uname参考</a></p>
-<figure data-type="image" tabindex="9"><img src="imgassets/1600226320551.png" alt="1600226320551" loading="lazy"></figure>
-</li>
-<li>
-<p>depmod，modprobe xxx</p>
-<p>注意，加载模块时不要写后缀名，不然会报“找不到文件的错误”。</p>
-<figure data-type="image" tabindex="10"><img src="imgassets/1600226412346.png" alt="1600226412346" loading="lazy"></figure>
-</li>
-<li>
-<p>使用驱动。</p>
-</li>
-</ol>
-<p>下面以正点原子提供的usbwifi进行说明。</p>
-<ol>
-<li>
-<p>编写驱动（正点原子已提供源码，只需编译成模块即可/也可直接编译进内核，详见第七十章第一节）。</p>
-</li>
-<li>
-<p>加载驱动（/lib/modules/‘uname -r’/路径下）。</p>
-<pre><code>depmod //第一次加载驱动的时候需要运行此命令
-modprobe 8188eu.ko //RTL8188EUS 模块加载 8188eu.ko 模块
-</code></pre>
-<figure data-type="image" tabindex="11"><img src="imgassets/1600245361026.png" alt="1600245361026" loading="lazy"></figure>
-<p>使用<code>ifconfig -a</code>查看usbWiFi是否加载成功.</p>
-</li>
-<li>
-<p>剩下的就是用应用程序使用加载进内核的驱动程序了，使用usbwifi的后续如下：</p>
-<ol>
-<li>
-<p>在开发板根文件系统的/etc 目录下创建一个名为“wpa_supplicant.conf”的配置文件，此文件用于配置要连接的 WIFI 热点以及 WIFI 秘密，比如我要连接到“ZZK”这个热点上，因此 wpa_supplicant.conf 文件内容如下所示：</p>
-<pre><code class="language-shell">ctrl_interface=/var/run/wpa_supplicant
-ap_scan=1
-network={
-ssid=&quot;vivo Y93&quot;
-psk=&quot;XXXXXXXX&quot;
-}
-# 注意=前后不要有空格，不要用tab键进行缩进。
-</code></pre>
-</li>
-<li>
-<p>在 开 发 板 根 文 件 系 统 下 创 建 一 个“/var/run/wpa_supplicant”目录，wpa_supplicant 工具要用到此目录！</p>
-</li>
-<li>
-<p>连接热点，当 RTL8188 连接到 WIFI 热点上以后会输出<code>“wlan0: CTRL-EVENT-CONNECTED”</code>字样。</p>
-<pre><code class="language-shell">wpa_supplicant -D wext -c /etc/wpa_supplicant.conf -i wlan0 &amp;
-</code></pre>
-</li>
-<li>
-<p>设置wlan0的IP地址，使用<code>udhcpc</code>从路由器（热点）申请，即<code>udhcpc -i wlan0</code>。</p>
-</li>
-<li>
-<p>ping -I wlan0 www.baidu.com</p>
-</li>
-<li>
-<pre><code> wpa_supplicant -D wext -c /etc/wpa_supplicant.conf -i wlan0 &amp;
-</code></pre>
-</li>
-</ol>
-</li>
-</ol>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[嵌入式Linux驱动开发相关结构体]]></title>
-        <id>https://cxx7ud.coding-pages.com/post/eblinux-relaStruct/</id>
-        <link href="https://cxx7ud.coding-pages.com/post/eblinux-relaStruct/">
-        </link>
-        <updated>2020-10-12T11:56:15.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="struct-platform_device">struct platform_device</h2>
-<blockquote>
-<p>参考：include/platform_device.h</p>
-</blockquote>
-<p>对struct device的封装（其中包含struct device）</p>
-<pre><code class="language-c">struct platform_device {
-	const char	*name;
-	int		id;
-	bool		id_auto;
-	struct device	dev;	/* struct device */
-	u32		num_resources;
-	struct resource	*resource;
-
-	const struct platform_device_id	*id_entry;
-	char *driver_override; /* Driver name to force a match */
-
-	/* MFD cell pointer */
-	struct mfd_cell *mfd_cell;
-
-	/* arch specific additions */
-	struct pdev_archdata	archdata;
-};
-</code></pre>
-<h2 id="struct-device">struct device</h2>
-<blockquote>
-<p>参考：include/device.h，在第600多行。</p>
-</blockquote>
-<p>对struct device_node的封装（其中包含struct device_node）</p>
-<pre><code class="language-c">/**
- * struct device -基本设备结构体
- * @parent:设备的父设备，设备之间是联系到一起的。大部分情况下，父设备会是一个总线或者主机控制器，如果父设备是空，此设备就是顶端设备，通常情况下这是你不想要的情况
- * @p:存储了关于设备的驱动核心部分的私有数据，详细内容可查看device_private
- * @kobj: 一种最高等级的抽象类，用于派生其他类别
- * @init_name:	设备初始化的名称
- * @type:	设备类型，它定义了设备类型并且传递了典型特有信息
- * @mutex:	用于同步驱动用的自旋锁
- * @bus:	设备所在总线类型
- * @driver:	哪种设备分配给它了
- * @platform_data: 针对设备的平台数据；例如：对于定制板上面的设备，像典型的嵌入式和SOC硬件，linux惊颤使用platform_data去指定特定的扳级数据结构去描述设备和连线方式。那样可以包含什么端口可用，芯片的变量，哪个GPIO引脚工作于复用功能，等等。这样就减少了BSP并且最小化使用关于特定板级的驱动的 #ifdefs
- * @power: 用于设备电压管理，更多信息查看Documentation/power/devices.txt
- * @pm_domain:	系统挂起，休眠，重启期间，提供执行的回调函数。
- * @numa_node:	NUMA node this device is close to.
- * @dma_mask:	Dma mask (if dma'ble device).
- * @dma_mask:	DMA屏蔽码
- * @coherent_dma_mask: 像dma_mask，但是开辟像在64位地址连续分配不是所有硬件都支持这是利用它开辟连续内存
- * @dma_parms:	一个低等级的驱动可以用它去告诉IO内存管理模块关于段的限制
- * @dma_pools:	DMA池
- * @dma_mem:	内部连续内存覆盖
- * @archdata:	用于特定架构
- * @of_node:	连接设备树节点
- * @devt:	用于创建sysfs的dev目录
- * @id:		设备实例
- * @devres_lock: 用于保护设备资源的自旋锁
- * @devres_head: 设备的资源链表
- * @knode_class: 这个节点用于添加设备到类链表
- * @class:	设备类
- * @groups:	可选的属性群
- * @release: 用于回调释放设备。它必须被相应的设备分配器调用（例如，发现设备的总线驱动）
- * LINUX 系统中的人设设备都被设备结构体实例画，设备结构体包换设备模块的信息，在子系统中，情况有所不同。一个设备被裸设备结构体代表的情况是非常少见的。由此，像kobject这种结构体，经常嵌入到更高等级的能代表设备的结构体。
- */
-struct device {
-	struct device		*parent;
-	struct device_private	*p;
-	struct kobject kobj;
-    /* initial name of the device */
-	const char		*init_name; 
-	const struct device_type *type;
- 
-	struct mutex mutex;	/* mutex to synchronize calls to
-					 * its driver.
-					 */
- 
-	struct bus_type	*bus; /* type of bus device is on */
-	struct device_driver *driver;	/* which driver has allocated this device */
-	void	*platform_data;	/* Platform specific data, device core doesn't touch it */
-	struct dev_pm_info	power;
-	struct dev_pm_domain	*pm_domain;
- 
-#ifdef CONFIG_NUMA
-	int	numa_node;/* NUMA node this device is close to */
-#endif
-	u64	*dma_mask;	/* dma mask (if dma'able device) */
-	u64		coherent_dma_mask;/* Like dma_mask, but for
-					     alloc_coherent mappings as
-					     not all hardware supports
-					     64 bit addresses for consistent
-					     allocations such descriptors. */
- 
-	struct device_dma_parameters *dma_parms;
- 
-	struct list_head	dma_pools;	/* dma pools (if dma'ble) */
- 
-	struct dma_coherent_mem	*dma_mem; /* internal for coherent mem override */
-#ifdef CONFIG_CMA
-	struct cma *cma_area;		/* contiguous memory area for dma allocations */
-#endif
-	/* arch specific additions */
-	struct dev_archdata	archdata;
- 
-	struct device_node	*of_node; /* associated device tree node */
- 
-	dev_t			devt;	/* dev_t, creates the sysfs &quot;dev&quot; */
-	u32			id;	/* device instance */
- 
-	spinlock_t		devres_lock;
-	struct list_head	devres_head;
- 
-	struct klist_node	knode_class;
-	struct class		*class;
-	const struct attribute_group **groups;	/* optional groups */
- 
-	void	(*release)(struct device *dev);
-};
-</code></pre>
-<h2 id="struct-device_node">struct device_node</h2>
-<p>在include/linux/of.h中</p>
-<pre><code class="language-c">struct device_node {
-	const char *name;
-	const char *type;
-	phandle phandle;
-	const char *full_name;
-	struct fwnode_handle fwnode;
-
-	struct	property *properties;
-	struct	property *deadprops; /* removed properties */
-	struct	device_node *parent;
-	struct	device_node *child;
-	struct	device_node *sibling;
-	struct	kobject kobj;
-	unsigned long _flags;
-	void	*data;
-#if defined(CONFIG_SPARC)
-	const char *path_component_name;
-	unsigned int unique_id;
-	struct of_irq_controller *irq_trans;
-#endif
-};
-</code></pre>
-<h2 id="struct-platform_driver">struct platform_driver</h2>
-<h2 id="struct-property">struct property</h2>
-<p>在include/linux/of.h中</p>
-<pre><code class="language-c">struct property {
-	char	*name;
-	int	length;
-	void	*value;
-	struct property *next;
-	unsigned long _flags;
-	unsigned int unique_id;
-	struct bin_attribute attr;
-};
-</code></pre>
-<h2 id="struct-inodestruct-file">struct inode/struct file</h2>
-<blockquote>
-<p>定义：include/linux/fs.h</p>
-</blockquote>
-<p><strong>应用---&gt;系统调用---&gt;驱动，struct file就是在系统调用这一层被创建</strong>。这也说明了有时候我们没有在驱动程序中编写应用程序对应的函数（比如drv_open）也不会报错，因为有sys_open（此函数中可能会做一些处理）。</p>
-<p><a href="https://www.cnblogs.com/chen-farsight/p/6177870.html">两者关系-图解</a><br>
-<img src="https://cxx7ud.coding-pages.com//post-images/1602503886302.png" alt="" loading="lazy"></p>
-<p>用户空间使用open()系统调用函数打开一个字符设备时<code>（ int fd = open(&quot;dev/demo&quot;, O_RDWR) ）</code>大致有以下过程：</p>
-<ol>
-<li>在虚拟文件系统VFS中的查找对应与字符设备对应 **<u>struct inode</u>**节点</li>
-<li>遍历字符设备列表（chardevs数组），根据inod节点中的 cdev_t设备号<strong>找到cdev对象</strong></li>
-<li><strong><u>创建struct file对象</u></strong>（系统采用一个数组来管理一个进程中的多个被打开的设备，每个文件描述符作为数组下标标识了一个设备对象）</li>
-<li>初始化struct file对象，将 struct file对象中的 file_operations成员<strong>指向 struct cdev对象中的 file_operations成员</strong>（file-&gt;fops =  cdev-&gt;fops）</li>
-<li>回调file-&gt;fops-&gt;open函数</li>
-</ol>
-<h3 id="inode结构体">inode结构体</h3>
-<p><strong>VFS inode</strong> 包含文件访问权限、属主、组、大小、生成时间、访问时间、最后修改时间等信息。它是Linux 管理文件系统的最基本单位，也是文件系统连接任何子目录、文件的桥梁。</p>
-<p><strong>内核使用inode结构体在内核内部表示一个文件</strong>。因此，它与表示一个已经打开的文件描述符的结构体(即file 文件结构)是不同的，我们可以使用多个file 文件结构表示同一个文件的多个文件描述符，但此时，所有的这些file文件结构全部都<u><strong>必须只能指向一个inode结构体</strong></u>。</p>
-<p>inode结构体包含了一大堆文件相关的信息，但是就针对驱动代码来说，我们只要关心其中的两个域即可：</p>
-<ol>
-<li><strong>dev_t i_rdev;</strong>   表示设备文件的结点，这个域实际上包含了设备号。</li>
-<li><strong>struct cdev *i_cdev;</strong>　　struct cdev是内核的一个内部结构，它是用来表示字符设备的，当inode结点指向一个字符设备文件时，此域为一个指向inode结构的指针。</li>
-</ol>
-<h3 id="file文件结构体">file文件结构体</h3>
-<p>在设备驱动中，这也是个非常重要的数据结构，必须要注意一点，这里的file与用户空间程序中的FILE指针是不同的，用户空间FILE是定义在C库中，从来不会出现在内核中。<strong>而struct file，却是内核当中的数据结构</strong>，因此，它也不会出现在用户层程序中。</p>
-<p>file结构体指示一个<strong>已经打开的文件</strong>（设备对应于设备文件），其实系统中的每个打开的文件在内核空间<strong>都有一个相应的struct file结构体</strong>，它由内核在打开文件时创建，并传递给在文件上进行操作的任何函数，直至文件被关闭。如果文件被关闭，内核就会释放相应的数据结构。</p>
 ]]></content>
     </entry>
 </feed>

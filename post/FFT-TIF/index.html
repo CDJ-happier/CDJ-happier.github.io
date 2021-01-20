@@ -1,0 +1,721 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FFT之蝶形运算 | CofCai&#39;s blog</title>
+<link rel="shortcut icon" href="https://cxx7ud.coding-pages.com//favicon.ico?v=1611124757723">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cxx7ud.coding-pages.com//styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="FFT之蝶形运算 | CofCai&#39;s blog - Atom Feed" href="https://cxx7ud.coding-pages.com//atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="[toc]
+
+Author🚹:CofCai
+Email✉️:cai.dongjun@nexuslink.cn
+QQ😙:1664866311
+personal Page🏠
+CSDN Page🏠
+
+前言
+写这篇博客时，是今天考完电信传输..." />
+    <meta name="keywords" content="DSP" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://cxx7ud.coding-pages.com/">
+  <img class="avatar" src="https://cxx7ud.coding-pages.com//images/avatar.png?v=1611124757723" alt="">
+  </a>
+  <h1 class="site-title">
+    CofCai&#39;s blog
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://cxx7ud.coding-pages.com/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              FFT之蝶形运算
+            </h2>
+            <div class="post-info">
+              <span>
+                2021-01-20
+              </span>
+              <span>
+                19 min read
+              </span>
+              
+                <a href="https://cxx7ud.coding-pages.com/tag/TrRIqGItK/" class="post-tag">
+                  # DSP
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://cxx7ud.coding-pages.com//post-images/FFT-TIF.jpg" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>[toc]</p>
+<blockquote>
+<p>Author🚹:CofCai</p>
+<p>Email✉️:cai.dongjun@nexuslink.cn</p>
+<p>QQ😙:1664866311</p>
+<p><a href="https://cxx7ud.coding-pages.com/">personal Page</a>🏠</p>
+<p><a href="https://blog.csdn.net/weixin_44360592?spm=1011.2124.3001.5113">CSDN Page</a>🏠</p>
+</blockquote>
+<h2 id="前言">前言</h2>
+<p>写这篇博客时，是今天考完电信传输理论后的5个小时，没带计算器，没找别人借，一个人抗下了所有。</p>
+<p>用C语言实现FFT之时域抽取法的想法是在考数字信号处理前萌发的，在复习时看到书上有编程思想，然后自己又好久都没有敲代码了，手有点痒，然后就按照书上的编程思想进行coding。但是之间有许多错误，哎！用C语言这么久了，还是没有养成编写代码时注意数组越界的习惯。</p>
+<p>昨天下午考了数字信号处理，很意外，没有一点点防备，考点不对头，有些考纲上没写，比如考纲上网络结构只写了直接型、级联型以及并联型，没有提到频率采样、线性相位，但是它！它！它！考了，而且考的好偏（也许是自己太菜了）。另外，我在很久之前就在写数字信号处理的文章/博客，感觉对考试一点帮助也没有，我考前对窗函数设计FIR滤波器很熟悉，感觉很稳，结构它考了频率采样法，我又一次死了。</p>
+<p>考完了数字信号处理的晚上，闲的蛋痛，继续考前未完成的FFT算法，然后经过慢慢思考，发现书上也有错误，关于最内层循环的迭代方式不对，经过理解，然后修改，得出了正确结果（和MATLAB对比，当然我是用的在线octave进行计算的，我电脑打开MTALAB慢惨）。</p>
+<p>今天，此时此刻以及前一个小时，手又有点痒了，于时打开FFT代码，继续修改，优化（其实也没怎么优化），完成了从文件中读取数据，将FFT的结果写入到文件中。</p>
+<p>遂作感想如上，记录于此</p>
+<p>下面继续写blog，总结。</p>
+<h2 id="相关文件">相关文件</h2>
+<pre><code>fft.c
+fft_rawdata.txt
+fft_cookeddata.txt
+</code></pre>
+<p>从fft_rawdata.txt中读取要进行fft的数据，数据格式为：</p>
+<ol>
+<li>第一行一个数字，表示数据点数/长度；</li>
+<li>此后每行有两个数字，表示实部和虚部，用Table分割；</li>
+</ol>
+<p>如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/fft_rawdata.jpg" alt="" loading="lazy"></figure>
+<p>fft的结果会保存到fft_cookeddata.txt中去，如下：</p>
+<figure data-type="image" tabindex="2"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/fft_cookeddata.jpg" alt="" loading="lazy"></figure>
+<p>在代码中我还计算了每个fft结果的幅度和相位，但是没有保存到文件中去，而是打印到标准输出，结果如下（结果中我是以<code>%.1f</code>输出的，所以只显示一位小数）：</p>
+<figure data-type="image" tabindex="3"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/fft_result.jpg" alt="" loading="lazy"></figure>
+<h2 id="实操">实操</h2>
+<h3 id="准备工作">准备工作</h3>
+<p>对于复数，直接用一个结构体即可，两个成员，分别表示实部和虚部，后面又定义了一个结构体，其实是一样的，只不过成员名称不一样了，用幅度和角度来表示一个复数。</p>
+<pre><code class="language-c">typedef struct {
+	float real;
+	float imag;
+}complex_t;
+
+// 另外一种复数的表达，幅度加角度/相位
+typedef struct {
+	float amp;
+	float pha;
+}complex_ap_t;
+
+</code></pre>
+<p>时域抽取法/蝶形运算的编程思想参考了数字信号处理书上的第四章。</p>
+<p>旋转因子的表示：</p>
+<p>刚开始不知道<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>W</mi><mi>N</mi><mi>p</mi></msubsup></mrow><annotation encoding="application/x-tex">W_N^p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.075831em;vertical-align:-0.293531em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7823em;"><span style="top:-2.4064690000000004em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.293531em;"><span></span></span></span></span></span></span></span></span></span>怎么表示，后面一想，它不就是一个复数嘛，用欧拉公式展开就可以得到实部和虚部。</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>W</mi><mi>N</mi><mi>p</mi></msubsup><mo>=</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>j</mi><mfrac><mrow><mn>2</mn><mi>π</mi></mrow><mi>N</mi></mfrac><mi>p</mi></mrow></msup><mo>=</mo><mi>cos</mi><mo>⁡</mo><mo>(</mo><mn>2</mn><mi>π</mi><mi>p</mi><mi mathvariant="normal">/</mi><mi>N</mi><mo>)</mo><mo>−</mo><mi>j</mi><mi>sin</mi><mo>⁡</mo><mo>(</mo><mn>2</mn><mi>π</mi><mi>p</mi><mi mathvariant="normal">/</mi><mi>N</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">W_N^p = e^{-j\frac{2\pi}{N}p} = \cos(2{\pi}p/N)-j\sin(2{\pi}p/N)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.075831em;vertical-align:-0.293531em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7822999999999999em;"><span style="top:-2.4064690000000004em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.180908em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">p</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.293531em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.0040200000000001em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:1.0040200000000001em;"><span style="top:-3.4130000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8443142857142858em;"><span style="top:-2.656em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span style="top:-3.2255000000000003em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.049em;"></span></span><span style="top:-3.384em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">π</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.344em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size3 size6"></span></span><span class="mord mathdefault mtight">p</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">cos</span><span class="mopen">(</span><span class="mord">2</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span></span><span class="mord mathdefault">p</span><span class="mord">/</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">sin</span><span class="mopen">(</span><span class="mord">2</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span></span><span class="mord mathdefault">p</span><span class="mord">/</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></span></p>
+<p>因为旋转因子用的比较多，比较频繁，所以没有写成函数，而是用了一个宏定义，如下：</p>
+<pre><code class="language-c">#define pi 	(3.1415926535)
+// 旋转因子，{}语句块，其结果为最后一条语句的值
+#define	WNP(N,P)	({			\
+	complex_t temp;				\
+	temp.real = cos(2*pi*P/N);	\
+	temp.imag = -sin(2*pi*P/N);	\
+	temp; })
+</code></pre>
+<p>然后还需要实现复数的基本四则运算，加、减、乘，除（代码中没有实现），还有求一个复数的幅度和相位。</p>
+<h3 id="倒序算法">倒序算法</h3>
+<p>另外，蝶形运算的初始输入的数据需要倒叙，所以需要写一个函数进行输入数据的倒叙，<em>倒序的算法为</em>：对原始数据的序号的二进制进行反转，得到的结果就是其倒叙后的位置（假设总共有N个数据，那么只看<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>l</mi><mi>o</mi><msubsup><mi>g</mi><mn>2</mn><mi>N</mi></msubsup></mrow><annotation encoding="application/x-tex">log_2^N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0894389999999998em;vertical-align:-0.24810799999999997em;"></span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-2.4518920000000004em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24810799999999997em;"><span></span></span></span></span></span></span></span></span></span>个二进制位）。</p>
+<p>比如总共有8个数据，那么就值用看3个二进制位，第3个原始数据，经过倒叙后是第6个数据（从0开始，有第0个数据）。</p>
+<pre><code>3 = 011
+
+6 = 110
+</code></pre>
+<p>而C语言不能实现数据的二进制位倒相，所以又要写一个函数（此函数来源于网络）。</p>
+<pre><code class="language-c">//采用移位的方法使一个数的二进制位翻转后返回
+unsigned int reverse_bit(unsigned int num, const unsigned int N)
+{
+	unsigned int ret = 0;
+	int bit = 0;
+	int i = 0;
+	// log(8.0)/log(2.0) = 3.000,but (unsigned int)x = 2,why?
+	unsigned int M = (unsigned int)(log(N+0.00001)/log(2.0));
+	for (i = 0; i &lt; M; i++)
+	{
+		ret &lt;&lt;= 1;
+		bit = num &amp; 1;
+		ret = bit | ret;
+		num = num / 2;
+	}
+	//1000 0000 0000 0000 0000 0000 0000 0000
+	return ret;
+}
+</code></pre>
+<p>数据的倒序：</p>
+<pre><code class="language-c">/**
+ * 进行FFT前对数据进行倒叙以方便时域抽取法
+ * @Author   CofCai
+ * @DateTime 2020-12-27T20:48:41+0800
+ * @param    c_arr                    数据指针
+ * @param    N                        数据长度
+ * @return                            成功：1、失败：0
+ */
+int reverse_order(complex_t* c_arr, const unsigned int N)
+{
+	complex_t c_temp;
+	/** calloc: initial by zeros  */
+	char* bitmap = calloc(N, sizeof(char));
+	unsigned int i, j;
+	for (i = 0; i &lt; N; ++i) {
+		if (bitmap[i] == 0) {
+			// 先保存第i个数据
+			c_temp.real = c_arr[i].real;
+			c_temp.imag = c_arr[i].imag;
+			// 计算i对应的倒叙，和这个倒叙位置交换数据
+			j = reverse_bit(i, N);
+			c_arr[i].real = c_arr[j].real;
+			c_arr[i].imag = c_arr[j].imag;
+			c_arr[j].real = c_temp.real;
+			c_arr[j].imag = c_temp.imag;
+			// 防止后面j又和i进行倒叙交换
+			*(bitmap+i) = 1;
+			*(bitmap+j) = 1;
+		} else {
+			continue;
+		}
+	}
+	return 1;
+}
+</code></pre>
+<h3 id="编程思想">编程思想</h3>
+<p>蝶形运算要点：<br>
+在第L级中：</p>
+<ol>
+<li>
+<p>每个蝶形的输入数据相隔<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi><mo>=</mo><msup><mn>2</mn><mrow><mi>L</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">B=2^{L-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">L</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span>个点；</p>
+</li>
+<li>
+<p>每级有B个不同的旋转因子；</p>
+</li>
+<li>
+<p>相同旋转因子对应的每个蝶形的输出数据相隔<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mo>=</mo><msup><mn>2</mn><mi>L</mi></msup></mrow><annotation encoding="application/x-tex">D=2^L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">L</span></span></span></span></span></span></span></span></span></span></span>个点；</p>
+</li>
+<li>
+<p>同一旋转因子对应着间隔为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mo>=</mo><msup><mn>2</mn><mi>L</mi></msup></mrow><annotation encoding="application/x-tex">D=2^L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">L</span></span></span></span></span></span></span></span></span></span></span>点的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mrow><mi>M</mi><mo>−</mo><mi>L</mi></mrow></msup></mrow><annotation encoding="application/x-tex">2^{M-L}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">M</span><span class="mbin mtight">−</span><span class="mord mathdefault mtight">L</span></span></span></span></span></span></span></span></span></span></span></span>个蝶形；（此点包含了第3点，但多一个信息）。</p>
+</li>
+</ol>
+<p>也就是说：</p>
+<ol>
+<li>
+<p>第一层循环控制级数，共<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>M</mi><mo>=</mo><mi>l</mi><mi>o</mi><mi>g</mi><mi>N</mi></mrow><annotation encoding="application/x-tex">M=logN</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span></span>级，从<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>M</mi></mrow><annotation encoding="application/x-tex">L=1,...,M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault">L</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span></span></span></span>；</p>
+</li>
+<li>
+<p>第二层循环控制每层的旋转因子，每层有<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi><mo>=</mo><msup><mn>2</mn><mrow><mi>L</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">B=2^{L-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">L</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span>个不同的旋转因子；</p>
+</li>
+<li>
+<p>第三层循环控制每个旋转因子对应的蝶形运算。</p>
+<ol>
+<li>
+<p>每个旋转因子会被使用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mrow><mi>M</mi><mo>−</mo><mi>L</mi></mrow></msup></mrow><annotation encoding="application/x-tex">2^{M-L}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">M</span><span class="mbin mtight">−</span><span class="mord mathdefault mtight">L</span></span></span></span></span></span></span></span></span></span></span></span>次；</p>
+</li>
+<li>
+<p>每个蝶形运算的两个输入数据相隔<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>B</mi><mo>=</mo><msup><mn>2</mn><mrow><mi>L</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">B=2^{L-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05017em;">B</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">L</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span>个点，输出也是相隔B个点（蝶形：交叉平行）；</p>
+</li>
+<li>
+<p>而同一旋转因子对应的两个相邻的蝶形运算相隔<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>D</mi><mo>=</mo><msup><mn>2</mn><mi>L</mi></msup></mrow><annotation encoding="application/x-tex">D=2^L</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">L</span></span></span></span></span></span></span></span></span></span></span>个点；</p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="代码实现">代码实现</h3>
+<pre><code class="language-c">/**
+ * author:		CofCai
+ * datatime:	2020-12-27 21:00:24
+ * file description:
+ *	 根据数据信号处理书上第4四章FFT提到的时域抽取法编程思想，
+ *	 用C语言实现DIT-FFT算法。
+ *	 编写过程中遇到问题了：
+ *	 	旋转因子该怎么表示?
+ *	 	突然又解决了，用旋转因子不就是复数蛮，一样可以用复数表示
+ *	 	W_N^k = e^{-j2pik/N} = cos(2pik/N) - j*sin(2pik/N)
+ *
+ * 	 似乎结果有问题
+ * 	 考完了数字信号处理（老师给的考点一点也不靠谱，好多不会，awsl）
+ * 	 继续敲代码，做事情前先弄懂原理，刚开始跟着书上的抄，结果不对，
+ * 	 后面自己认真看书，理解蝶形运算的过程，然后发现第三层循环，也就
+ * 	 是最内循环的迭代方式不对，不应该是++，而应该按照D=2^L的方式迭代
+ * 	 
+ * 	 蝶形运算要点：
+ *	 	在第L级中：
+ * 			1. 每个蝶形的输入数据相隔B=2^{L-1}个点；
+ * 			2. 每级有B个不同的旋转因子；
+ * 			3. 相同旋转因子对应的每个蝶形的输出数据相隔D=2^L个点；
+ * 		 	4. 同一旋转因子对应着间隔为D=2^L点的2^{M-L}个蝶形；（此点包含了第3点，但多一个信息）。
+ * 		也就是说：
+ * 			1. 第一层循环控制级数，共M=logN级，从L=1,...,M；
+ * 			2. 第二层循环控制每层的旋转因子，每层有B=2^{L-1}个不同的旋转因子；
+ * 			3. 第三层循环控制每个旋转因子对应的蝶形运算
+ * 				1. 每个旋转因子会被使用2^{M-L}次；
+ * 				2. 每个蝶形运算的两个输入数据相隔B=2^{L-1}个点，输出也是相隔B个点（蝶形：交叉平行）；
+ * 				3. 而同一旋转因子对应的两个相邻的蝶形运算相隔D=2^L个点；
+ *
+ *
+ * 	该文件的使用：
+ * 		fft_rawdata.txt：此文件用于输入原始数据，
+ * 						 第一行是数据个数N，此后每一行表示一个数据，分为实部和虚部，
+ * 						 中间以table分割，以换行结束，如：
+ * 						 3
+ * 						 1.2\t2.3\n
+ * 						 2.3\t78.2\n
+ * 						 7.2\t12.3\n
+ * 		fft_cookeddata.txt:此文件用于保存结果
+ * 	
+ * 	另外需要注意：
+ * 		传入fft的是数据指针，因此是在原数据上直接保存结果，所以如果还需要用到原数据，那么请copy一份。
+ */
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;math.h&gt;
+
+typedef struct {
+	float real;
+	float imag;
+}complex_t;
+
+// 另外一种复数的表达，幅度加角度/相位
+typedef struct {
+	float amp;
+	float pha;
+}complex_ap_t;
+
+
+#define DBG_INFO 0
+#if DBG_INFO
+  	#define DBG_PRINTF(fmt, args...)  \
+	do\
+	{\
+	    printf(fmt, ##args);\
+	}while(0)
+#else
+  #define DBG_PRINTF(fmt, args...)   
+#endif
+
+#define pi 	(3.1415926535)
+// 旋转因子，{}语句块，其结果为最后一条语句的值
+#define	WNP(N,P)	({			\
+	complex_t temp;				\
+	temp.real = cos(2*pi*P/N);	\
+	temp.imag = -sin(2*pi*P/N);	\
+	temp; })
+
+#define R2C(R)		({			\
+	complex_t c;				\
+	c.real = R;					\
+	c.imag = 0;					\
+	c; })
+
+float cplx_amp(complex_t* c)
+{
+	return sqrt(pow(c-&gt;real, 2) + pow(c-&gt;imag, 2));
+}
+
+float cplx_angle(complex_t* c)
+{
+	return atan2(c-&gt;imag, c-&gt;real);
+}
+
+complex_ap_t cplx_amp_angle(complex_t* c)
+{
+	complex_ap_t c_ap;
+	c_ap.amp = cplx_amp(c);
+	c_ap.pha = cplx_angle(c);
+
+	return c_ap;
+}
+
+// 为了减小开销，还是传入指针吧
+complex_t cplx_add(complex_t* c1, complex_t* c2)
+{
+	complex_t temp;
+	temp.real = c1-&gt;real + c2-&gt;real;
+	temp.imag = c1-&gt;imag + c2-&gt;imag;
+	return temp;
+}
+
+complex_t cplx_sub(complex_t* c1, complex_t* c2)
+{
+	complex_t temp;
+	temp.real = c1-&gt;real - c2-&gt;real;
+	temp.imag = c1-&gt;imag - c2-&gt;imag;
+	return temp;
+}
+
+complex_t cplx_prod(complex_t* c1, complex_t* c2)
+{
+	complex_t temp;
+	// (a1+b1j)(a2+b2j) = (a1a2-b1b2) + (a1b2 + b1a2)
+	temp.real = (c1-&gt;real * c2-&gt;real) - (c1-&gt;imag * c2-&gt;imag);
+	temp.imag = (c1-&gt;real * c2-&gt;imag) + (c1-&gt;imag * c2-&gt;real);
+	return temp;
+}
+
+//采用移位的方法使一个数的二进制位翻转后返回
+unsigned int reverse_bit(unsigned int num, const unsigned int N)
+{
+	unsigned int ret = 0;
+	int bit = 0;
+	int i = 0;
+	// log(8.0)/log(2.0) = 3.000,but (unsigned int)x = 2,why?
+	unsigned int M = (unsigned int)(log(N+0.00001)/log(2.0));
+	for (i = 0; i &lt; M; i++)
+	{
+		ret &lt;&lt;= 1;
+		bit = num &amp; 1;
+		ret = bit | ret;
+		num = num / 2;
+	}
+	return ret;
+}
+
+/**
+ * 进行FFT前对数据进行倒叙以方便时域抽取法
+ * @Author   CofCai
+ * @DateTime 2020-12-27T20:48:41+0800
+ * @param    c_arr                    数据指针
+ * @param    N                        数据长度
+ * @return                            成功：1、失败：0
+ */
+int reverse_order(complex_t* c_arr, const unsigned int N)
+{
+	complex_t c_temp;
+	/** calloc: initial by zeros  */
+	char* bitmap = calloc(N, sizeof(char));
+	unsigned int i, j;
+	for (i = 0; i &lt; N; ++i) {
+		if (bitmap[i] == 0) {
+			// 先保存第i个数据
+			c_temp.real = c_arr[i].real;
+			c_temp.imag = c_arr[i].imag;
+			// 计算i对应的倒叙，和这个倒叙位置交换数据
+			j = reverse_bit(i, N);
+			c_arr[i].real = c_arr[j].real;
+			c_arr[i].imag = c_arr[j].imag;
+			c_arr[j].real = c_temp.real;
+			c_arr[j].imag = c_temp.imag;
+			// 防止后面j又和i进行倒叙交换
+			*(bitmap+i) = 1;
+			*(bitmap+j) = 1;
+		} else {
+			continue;
+		}
+	}
+	return 1;
+}
+
+/**
+ * FFT算法
+ * 在第L级中：
+ * 			1. 每个蝶形的输入数据相隔B=2^{L-1}个点；
+ * 			2. 每级有B个不同的旋转因子；
+ * 			3. 相同旋转因子对应的每个蝶形的输出数据相隔D=2^L个点；
+ * 		 	4. 同一旋转因子对应着间隔为D=2^L点的2^{M-L}个蝶形；（此点包含了第3点，但多一个信息）。
+ * @Author   CofCai
+ * @DateTime 2020-12-28T21:20:27+0800
+ * @param    c_arr                    输入序列，为指针
+ * @param    N                        序列长度
+ * @return                            无
+ */
+int fft(complex_t* c_arr, const unsigned int N)
+{
+	//log_a^b = log_c^b / log_c^a：换底公式
+	unsigned int M = (unsigned int)(log((float)N+0.00001)/log(2.0));
+	DBG_PRINTF(&quot;FFT related parameter:&quot;);
+	DBG_PRINTF(&quot;N = %u\tM = %d\n&quot;, N, M);
+	// L:层数，最大为M
+	unsigned int L, k;
+	// 蝶形运算中输入的两个数据相距B个点，J用于索引不同的旋转因子
+	unsigned int J, B, p;
+	// 相同旋转因子的输出结果之间的间隔为：D=2^L
+	unsigned int D;
+	complex_t c_temp, T, WNp;
+	// 倒叙
+	reverse_order(c_arr, N);
+	// 蝶形运算
+	// 第L层
+	for (L = 1; L &lt;= M; ++L) {
+		B = (unsigned int)pow(2, L-1);
+		DBG_PRINTF(&quot;第 L = %d层\tB = %d个不同的旋转因子\n&quot;, L, B);
+		// 第L层有B = 2^(L-1)个旋转因子，每个为W_{2^L}^J，J=0,1,...,B-1。
+		// 经过变换，可得旋转因子为：W_N^p,p=Jx2^{M-L}。
+		for (J = 0; J &lt;= B-1; ++J) {
+			// 第L层第J个旋转因子的指数
+			p = (unsigned int)(pow(2, M-L)*J);
+			DBG_PRINTF(&quot;J = %d对应的旋转因子的指数为P = %d\n&quot;, J, p);
+			// 前面说过每层共有2^(L-1)个旋转因子，而每个旋转因子在此层会被利用2^{M-L}次
+			WNp = WNP(N, p);
+			DBG_PRINTF(&quot;旋转因子WNp: (%u, %u)--&gt;(%1.f + %1.fj)\n&quot;, N, p, WNp.real, WNp.imag);
+			// D是同一旋转因子对应的蝶形的输出结果之间的距离，而B是输入碟形数据之间的距离
+			D = (unsigned int)pow(2, L);
+			// 下面的循环就是计算出WNp对应的蝶形运算的结果
+			for (k = J; k &lt;= N-1; k+=D) {
+				// A_{L}(J) = A_{L-1}(J) + A_{L-1}(J+B)W_N^p;
+				// A_{L}(J+B) = A_{L-1}(J) - A_{L-1}(J+B)W_N^p;
+				
+				c_temp = cplx_prod(c_arr+k+B, &amp;WNp);
+				// DBG_PRINTF(&quot;prod:(%1.f+%1.fj) * (%1.f+%1.fj)=(%1.f+%1.fj)\n&quot;, 
+				// 	(c_arr+k+B)-&gt;real, (c_arr+k+B)-&gt;imag, WNp.real, WNp.imag, c_temp.real, c_temp.imag);
+				
+				T = cplx_add(c_arr+k, &amp;c_temp);
+				DBG_PRINTF(&quot;AL(%u) = A(%u) + A(%u)WNp\n&quot;, k, k, k+B);
+				// DBG_PRINTF(&quot;add:(%1.f+%1.fj) + (%1.f+%1.fj)=(%1.f+%1.fj)\n&quot;,
+				// 	(c_arr+k)-&gt;real, (c_arr+k)-&gt;imag, c_temp.real, c_temp.imag, T.real, T.imag);
+				
+				*(c_arr+k+B) = cplx_sub(c_arr+k, &amp;c_temp);
+				DBG_PRINTF(&quot;AL(%u) = A(%u) - A(%u)WNp\n&quot;, k+B, k, k+B);
+				// DBG_PRINTF(&quot;sub:(%1.f+%1.fj) - (%1.f+%1.fj)=(%1.f+%1.fj)\n&quot;,
+				// 	(c_arr+k)-&gt;real, (c_arr+k)-&gt;imag, c_temp.real, c_temp.imag, (c_arr+k+B)-&gt;real, (c_arr+k+B)-&gt;imag);
+				
+				*(c_arr+k) = T;
+			}
+		}
+		putchar('\n');
+	}
+	DBG_PRINTF(&quot;FFT done!!!\n\n&quot;);
+	return 1;
+}
+
+void cplx_amp_angle_batch(complex_t* c, unsigned int N, complex_ap_t* c_ap)
+{
+	unsigned int i = 0;
+	for (i = 0; i &lt; N; ++i) {
+		*(c_ap+i) = cplx_amp_angle(c+i);
+	}
+}
+
+void fft_test()
+{
+	unsigned int i = 0, j;
+	unsigned int N = 8;
+	float angle = 0, abs = 0;
+	complex_t c_arr[8] = {
+		{1, 2},
+		{3, 0},
+		{5, 0},
+		{7, 0},
+		{1, 0},
+		{3, 0},
+		{5, 0},
+		{7, 0}
+	};
+	complex_t* c_cpy = (complex_t*)calloc(N, sizeof(complex_t));
+	memcpy(c_cpy, c_arr, N*sizeof(complex_t));
+
+	complex_ap_t* c_ap = (complex_ap_t*)calloc(N, sizeof(complex_ap_t));
+
+	fft(c_cpy, N);
+	cplx_amp_angle_batch(c_cpy, N, c_ap);
+
+	printf(&quot;i\torigin data\tfft data\tamp\tpha\n&quot;);
+	printf(&quot;-\t-----------\t--------\t---\t---\n&quot;);
+	for (i = 0; i &lt; N; ++i) {
+		printf(&quot;%d\t%.2f + %.2fj\t%.2f + %.2fj\t%.2f\t%.2f\n&quot;,
+			i, c_arr[i].real, c_arr[i].imag, 
+			(c_cpy+i)-&gt;real, (c_cpy+i)-&gt;imag,
+			(c_ap+i)-&gt;amp, (c_ap+i)-&gt;pha );
+	}
+}
+
+
+void fft_test_read_data_from_file()
+{
+	int i, N;
+	complex_t c;
+	char filename[] = &quot;fft_rawdata.txt&quot;;
+	FILE* fp = NULL;
+
+	fp = fopen(filename, &quot;r+&quot;);
+	if (fp == NULL) {
+		printf(&quot;open %s failure!\n&quot;, filename);
+		exit(0);
+	}
+	fscanf(fp, &quot;%d&quot;, &amp;N);
+	complex_t* c_arr = (complex_t*)calloc(N, sizeof(complex_t));
+	complex_ap_t* c_ap_arr = (complex_ap_t*)calloc(N, sizeof(complex_ap_t));
+
+	i = 0;
+	while(i &lt; N) {
+		fscanf(fp, &quot;%f\t%f&quot;, &amp;(c_arr+i)-&gt;real, &amp;(c_arr+i)-&gt;imag);
+		printf(&quot;%.1f + %.1fj\n&quot;, c_arr[i].real, c_arr[i].imag);
+		i++;
+	}
+	fclose(fp);
+
+	printf(&quot;FFT begin!\n&quot;);
+	fft(c_arr, N);
+	printf(&quot;FFT done!\n&quot;);
+	strcpy(filename, &quot;fft_cookeddata.txt&quot;);
+	fp = fopen(filename, &quot;w+&quot;);
+	if (fp == NULL) {
+		printf(&quot;open %s failure!\n&quot;, filename);
+		fclose(fp);
+		exit(0);
+	}
+	i = 0;
+	while(i &lt; N) {
+		c_ap_arr[i].amp = cplx_amp(c_arr+i);
+		c_ap_arr[i].pha = cplx_angle(c_arr+i);
+		printf(&quot;%.1f + %.1fj ---&gt; amp=%.1f, pha=%.1f\n&quot;, 
+			c_arr[i].real, c_arr[i].imag, c_ap_arr[i].amp, c_ap_arr[i].pha);
+		fprintf(fp, &quot;%f\t%f\n&quot;, c_arr[i].real, c_arr[i].imag);
+		i++;
+	}
+	fclose(fp);
+}
+
+int main(int argc, char const *argv[])
+{
+	fft_test();
+	// fft_test_read_data_from_file();
+
+	return 0;
+}
+</code></pre>
+<p><code>fft_test()</code>函数的执行结果：</p>
+<figure data-type="image" tabindex="4"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/fft_result_with_amp_pha.jpg" alt="" loading="lazy"></figure>
+<h2 id="总结">总结</h2>
+<p>fft函数传入的是数据指针，因此会修改原数据，如果还需要使用到原始数据，那么请copy一份。</p>
+<p>总结个锤子，后天考移动通信，cdj，你还这么浪，赶快滚去复习。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6">相关文件</a></li>
+<li><a href="#%E5%AE%9E%E6%93%8D">实操</a>
+<ul>
+<li><a href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">准备工作</a></li>
+<li><a href="#%E5%80%92%E5%BA%8F%E7%AE%97%E6%B3%95">倒序算法</a></li>
+<li><a href="#%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3">编程思想</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0">代码实现</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://cxx7ud.coding-pages.com/post/cmake-use-with-pcre2/">
+              <h3 class="post-title">
+                CMake的使用及pcre2
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://cxx7ud.coding-pages.com//atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
