@@ -1,0 +1,295 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>C语言标准库的快排和二分查找 | DJCai</title>
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="C语言标准库的快排和二分查找 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+抽时间再详细把C语言标准头文件（库文件）梳理一下。
+
+对于快速排序和二分查找，其实在C语言中有相应的实现，在头文件&lt;stdlib.h&gt;中，重点是实现cmp函数，以及理解它内部如何运作的。下面贴出代码：
+/**
+ * autho..." />
+    <meta name="keywords" content="Tools,C语言" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
+  </a>
+  <h1 class="site-title">
+    DJCai
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="http://localhost:4000" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              C语言标准库的快排和二分查找
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-12-02
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="http://localhost:4000/tag/3RgVl6bYZ/" class="post-tag">
+                  # Tools
+                </a>
+              
+                <a href="http://localhost:4000/tag/-lWbWODrq/" class="post-tag">
+                  # C语言
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <blockquote>
+<p>抽时间再详细把C语言标准头文件（库文件）梳理一下。</p>
+</blockquote>
+<p>对于快速排序和二分查找，其实在C语言中有相应的实现，在头文件&lt;stdlib.h&gt;中，重点是实现<code>cmp</code>函数，以及理解它内部如何运作的。下面贴出代码：</p>
+<pre><code class="language-c">/**
+ * author:		CofCai
+ * datatime:	2020-12-02 11:20:25
+ * file description:
+ *	 该文件是在搜索C语言标准头文件时，发现在&lt;stdlib.h&gt;中有
+ *	 二分查找和快速排序的函数，所以遂研究以下。
+ *	 二分查找：
+ *	 void *bsearch(const void *key, const void *base, size_t n, size_t size, int (*cmp)(const void *keyval, const void *datum));
+ *	 快速排序：
+ *	 void qsort(void *base, size_t n, size_t size, int (*cmp)(const void *, const void *));
+ *	 重点是实现cmp函数，n是base的个数，size是base中每个元素的大小，cmp是对base元素进行操作的函数指针。
+ */
+
+
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+void SortAndSearchStringEg();
+void SortAndSearchNumEg();
+
+int main(int argc, char const *argv[])
+{
+	SortAndSearchStringEg();
+	SortAndSearchNumEg();
+	return 0;
+}
+
+
+#define TYPE float
+
+int cmp4num(const void* x, const void* y)
+{
+	TYPE a, b;
+	a = *(TYPE*)x;
+	b = *(TYPE*)y;
+	if (a &gt; b)			return 1;
+	else if (a == b)	return 0;
+	else				return -1;
+}
+
+void SortAndSearchNumEg()
+{
+	TYPE data[] = {10, 18, 2, 83, 82, 892, 23};
+	TYPE target = 23;
+	TYPE* get;
+	printf(&quot;before quick sort:\n&quot;);
+	for (int i = 0; i &lt; sizeof(data)/sizeof(TYPE); ++i)
+	{
+		printf(&quot;%.f\n&quot;, data[i]);
+	}
+	qsort((void*)data, sizeof(data)/sizeof(TYPE), sizeof(TYPE), cmp4num);
+	printf(&quot;after quick sort:\n&quot;);
+	for (int i = 0; i &lt; sizeof(data)/sizeof(TYPE); ++i)
+	{
+		printf(&quot;%.f\n&quot;, data[i]);
+	}
+	get = (TYPE*)bsearch((void*)&amp;target, (void*)data, sizeof(data)/sizeof(TYPE), sizeof(TYPE), cmp4num);
+	if (get != NULL) {
+		printf(&quot;find value %f\n&quot;, *get);
+	} else {
+		printf(&quot;can't find value %f\n&quot;, target);
+	}
+}
+
+
+int cmp4str(const void* x, const void* y)
+{
+	char* str1, *str2;
+	str1 = (char*)x;
+	str2 = (char*)y;
+	return strncmp(str1, str2, sizeof(str1));	//升序
+	// return -strncmp(str1, str2, sizeof(str1));	//降序
+}
+
+#define M 6
+#define N 10
+
+void SortAndSearchStringEg()
+{
+	char str[M][N] = {
+		&quot;hello&quot;,
+		&quot;name&quot;,
+		&quot;cofcai&quot;,
+		&quot;jackChen&quot;,
+		&quot;bruceLi&quot;,
+		&quot;shaby&quot;
+	};
+	char* strtarget = &quot;hh&quot;;
+	char* strfind;
+	printf(&quot;before sort:\n&quot;);
+	for (int i = 0; i &lt; M; ++i)
+	{
+		printf(&quot;str[%d] is: %s\n&quot;, i, str[i]);
+	}
+	/** 快速排序 */
+	qsort(str, sizeof(str)/(sizeof(char)*N), sizeof(char)*N, cmp4str);
+	printf(&quot;after sort:\n&quot;);
+	for (int i = 0; i &lt; M; ++i)
+	{
+		printf(&quot;str[%d] is: %s\n&quot;, i, str[i]);
+	}
+	/** 二分查找 */
+	strfind = (char*)bsearch((const void*)strtarget, str, sizeof(str)/(sizeof(char)*N), sizeof(char)*N, cmp4str);
+	if (strfind != NULL) {
+		printf(&quot;find str: %s\n&quot;, strfind);
+	} else {
+		printf(&quot;don't find target str: %s\n&quot;, strtarget);
+	}
+}
+
+</code></pre>
+<p>结果如下：<br>
+<img src="https://img-blog.csdnimg.cn/2020120217213421.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NDM2MDU5Mg==,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="http://localhost:4000/post/tong-xin-yuan-li-shu-zi-ji-dai-chuan-shu/">
+              <h3 class="post-title">
+                通信原理-数字基带传输
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,382 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>求职笔试题-软件开发类 | DJCai</title>
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="求职笔试题-软件开发类 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="v***在线笔试
+时间：2-7 15：00
+工具：牛客网
+题型：7到单选、3道多选、3道编程，90min
+编程1：拿手机的方案（类似于上楼梯），一次可以拿1、2、3、4部手机，问仓库里n台手机有多少种方案进行拿取？
+int total_co..." />
+    <meta name="keywords" content="数据结构与算法,C语言" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
+  </a>
+  <h1 class="site-title">
+    DJCai
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="http://localhost:4000" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              求职笔试题-软件开发类
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-03-09
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="http://localhost:4000/tag/oicMci2ki/" class="post-tag">
+                  # 数据结构与算法
+                </a>
+              
+                <a href="http://localhost:4000/tag/-lWbWODrq/" class="post-tag">
+                  # C语言
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="v在线笔试">v***在线笔试</h2>
+<p>时间：2-7 15：00<br>
+工具：牛客网<br>
+题型：7到单选、3道多选、3道编程，90min<br>
+<strong>编程1</strong>：拿手机的方案（类似于上楼梯），一次可以拿1、2、3、4部手机，问仓库里n台手机有多少种方案进行拿取？</p>
+<pre><code class="language-cpp">int total_count(int n) {
+	if (n &lt;= 0) {
+		return 0;
+	} else if (n == 1) {
+		return 1;
+	} else if (n == 2) {
+		return 3;
+	} else if (n ==3 ) {
+		return 4;
+	} else if (n == 4) {
+		return 8;
+	} else {
+		std::vector&lt;int&gt; dp(n, 0);
+		dp[1] = 2, dp[2] = 3, dp[3] = 4, dp[4] = 8;
+		for (int i = 5; i &lt;= n; i++) {
+			dp[i] = dp[i-1] + dp[i-2] + dp[i-3] + dp[i-4];
+		}
+		return dp[n];
+	}
+}
+</code></pre>
+<p><strong>编程2：</strong><br>
+有一个数组nums，每个元素代表着对应的图片被查看的次数。以后每查看一张图片，则对应的位置加1。输入一个数n，表示可以查看的总次数，问查看n此后nums中元素出现的最大频次是多少？<br>
+举例：3 [3,4,5]	说明：有3张图片（nums有3个元素），图片分别已经被查看3、4、5次，还可以查看3次<br>
+输出：4	说明：查看图片0两次、图片1一次，则nums变为[5,5,5]，所以最大频数是3。<br>
+解决思路：先对nums排序，再从后遍历，</p>
+<pre><code class="language-cpp">int getMaxFreq(int n, std::vector&lt;int&gt;&amp; nums) {
+	int len = nums.size();
+	sort(nums.begin(), nums.end());
+	int max_count = 0;
+	for (int i = len - 1; i &gt; 0; --i) {
+		int max_count_tmp = 1;
+		int gap = 0;
+		int n_copy = n;
+		int j = 1;
+		while(n_copy &amp;&amp; (i-j) &gt;= 0) {
+			gap = nums[i] - nums[i-j];
+			if(gap &gt; n_copy) {
+				break;
+			} else {
+				n_copy -= gap;
+				max_count_tmp++;
+			}
+			j++;
+		}
+
+		max_count = max_count_tmp &gt; max_count ? max_count_tmp:max_count;
+	}
+	return max_count;
+}
+</code></pre>
+<p><strong>编程3：动态规划-多重背包</strong><br>
+分房：有n个员工，k种房间、每种房间可容纳的人为p1,p2,...,pk，费用为c1,c2,...,ck，数量为r1,r2,...,rk。<br>
+如何分房，花费最小<br>
+分析：背包容量就是n，有k种物品、每种有rk个、代价是pk、费用是ck（代价其实就是重量、或者体积，此处体积更好）<br>
+还是有点不一样，没想出来</p>
+<pre><code class="language-cpp">int minCost(int n, std::vector&lt;int&gt;&amp; p, std::vector&lt;int&gt;&amp; c, std:vector&lt;int&gt;&amp; r) {
+	int bagV = n;
+	int objNum = p.size();
+	std::vector&lt;int&gt; dp(bagV + 1, 0);
+	for (int i = 1; i &lt;= objNum; ++i) {
+		for (int j = bagV; j &gt; 0; j--) {
+			if (j &lt; p[i]) {
+				dp[j] = dp[j];
+			} else {
+				for (int k = 0; k &lt;= j / p[i] &amp;&amp; k &lt;= r[i]; k++) {
+					dp[j] = min(dp[j], dp[j - k * p[i]] + k * c[i]);
+				}
+			}
+		}
+	}
+
+	return dp[bagV];
+}
+
+</code></pre>
+<h2 id="o在线笔试">o***在线笔试</h2>
+<p>单选、多选、两道编程题，90min<br>
+<strong>编程题1：</strong><br>
+输出倒叙数<br>
+<strong>编程题2：</strong></p>
+<pre><code class="language-cpp">/**
+ * author:        CofCai
+ * datatime:    2022-03-04 11:59:12
+ * file description:
+ *     OPPO在线笔试第2道编程题
+ *     一个单链表，如1-2-3-4-5
+ *     返回1-5-2-4-3，即最前和最后两两对应。需自己处理输入，然后构造链表
+ *     输入样例：head = [1,2,3,4,5]
+ *     输出样例：[1,5,2,4,3]
+ *     思路：1.处理输入，构造链表head
+ *           2. 将链表从中间断开，形成2个链表，即head1、head2
+ *           3. 将head2反转
+ *           4. 依次取head1、head2的元素进行连接
+ */
+using namespace std;
+
+void display_value(string str, struct List* const head);
+
+struct List
+{
+    int val;
+    struct List* next;
+};
+
+int main()
+{
+    // 处理输入：head = [1,2,3,4,5]
+    string input;
+    cin &gt;&gt; input &gt;&gt; input &gt;&gt; input;
+    // cout &lt;&lt; input &lt;&lt; endl;
+    struct List* head = (struct List*)malloc(sizeof(struct List));
+    struct List* cur = head;
+    int len_str = input.size();
+    int len = 0;
+    for (int i = 1; i &lt; len_str; i += 2)
+    {
+        len++;
+        cur-&gt;val = input[i] - 0x30;
+        if(i + 2 &gt;= len_str) {
+            cur-&gt;next = nullptr;
+        } else {
+            cur-&gt;next = (struct List*)malloc(sizeof(struct List));
+            cur = cur-&gt;next;
+        }
+        // cout &lt;&lt; cur-&gt;next-&gt;val &lt;&lt; endl;
+    }
+    
+    // 处理逻辑
+    // 1. 将链表平均分为两段、即head1、head2
+    cur = head;
+    for (int i = 0; i &lt; len/2 - 1; ++i) {
+        cur = cur-&gt;next;
+    }
+    struct List* tmp = cur-&gt;next;
+    cur-&gt;next = nullptr;
+    struct List* head2 = tmp;
+
+    struct List* head1 = head;
+    // display_value(&quot;head1: &quot;, head1);
+    // display_value(&quot;head2: &quot;, head2);
+
+    // 2. 反转head2
+    cur = head2;
+    struct List* pre = nullptr;
+    tmp = cur;
+    while(cur) {    /// cur-&gt;next
+        tmp = cur-&gt;next;
+        cur-&gt;next = pre;
+        pre = cur;
+        cur = tmp;
+    }
+    head2 = pre;    /// head2 = cur   为何改为这两句就不行了？？？？
+    // display_value(&quot;head1: &quot;, head1);
+    // display_value(&quot;head2: &quot;, head2);
+
+    // 3. 顺序拼接head和head2
+    struct List* cur1 = head1;
+    struct List* cur2 = head2;
+    struct List* tmp1 = nullptr;
+    struct List* tmp2 = nullptr;
+    while(cur1) {
+        tmp1 = cur1-&gt;next;
+        tmp2 = cur2-&gt;next;
+
+        cur1-&gt;next = cur2;
+        if(tmp1 == nullptr &amp;&amp; tmp2 != nullptr) {
+            cur2-&gt;next = tmp2;
+        }else {
+            cur2-&gt;next = tmp1;
+        }
+
+        // 更新
+        cur1 = tmp1;
+        cur2 = tmp2;
+    }
+    display_value(&quot;&quot;, head1);
+    return 0;
+}
+
+
+void display_value(string str, struct List* const head){
+    if(str.size())
+        cout &lt;&lt; str;
+    struct List* cur = head;
+    while(cur) {
+        cout &lt;&lt; cur-&gt;val &lt;&lt; &quot; &quot;;
+        cur = cur-&gt;next;
+    }
+    cout &lt;&lt; endl;
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#v%E5%9C%A8%E7%BA%BF%E7%AC%94%E8%AF%95">v***在线笔试</a></li>
+<li><a href="#o%E5%9C%A8%E7%BA%BF%E7%AC%94%E8%AF%95">o***在线笔试</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="http://localhost:4000/post/pandasda-shu-ju-chu-li/">
+              <h3 class="post-title">
+                Pandas：大数据处理
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

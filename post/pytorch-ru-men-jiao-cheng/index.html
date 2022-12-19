@@ -1,0 +1,598 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>pytorch入门教程 | DJCai</title>
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="pytorch入门教程 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+pytorch极简教程
+
+使用pytorch进行深度学习的一般步骤
+
+模型的构建
+数据的准备及预处理
+
+Dataset
+DataLoader
+transforms
+
+
+模型的训练
+
+损失函数-loss
+优化器-optimizer
+
+
+模型..." />
+    <meta name="keywords" content="深度学习,Tools" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
+  </a>
+  <h1 class="site-title">
+    DJCai
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="http://localhost:4000" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              pytorch入门教程
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-06-15
+              </span>
+              <span>
+                11 min read
+              </span>
+              
+                <a href="http://localhost:4000/tag/5XKbW1UrC/" class="post-tag">
+                  # 深度学习
+                </a>
+              
+                <a href="http://localhost:4000/tag/3RgVl6bYZ/" class="post-tag">
+                  # Tools
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://pica.zhimg.com/v2-c47227853472f031a6a60d94bb582c48_720w.jpg?source=172ae18b" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p><ul class="markdownIt-TOC">
+<li><a href="#pytorch%E6%9E%81%E7%AE%80%E6%95%99%E7%A8%8B">pytorch极简教程</a>
+<ul>
+<li><a href="#%E4%BD%BF%E7%94%A8pytorch%E8%BF%9B%E8%A1%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E4%B8%80%E8%88%AC%E6%AD%A5%E9%AA%A4">使用pytorch进行深度学习的一般步骤</a>
+<ul>
+<li><a href="#%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%9E%84%E5%BB%BA">模型的构建</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%86%E5%A4%87%E5%8F%8A%E9%A2%84%E5%A4%84%E7%90%86">数据的准备及预处理</a>
+<ul>
+<li><a href="#dataset">Dataset</a></li>
+<li><a href="#dataloader">DataLoader</a></li>
+<li><a href="#transforms">transforms</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AE%AD%E7%BB%83">模型的训练</a>
+<ul>
+<li><a href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0-loss">损失函数-loss</a></li>
+<li><a href="#%E4%BC%98%E5%8C%96%E5%99%A8-optimizer">优化器-optimizer</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BF%9D%E5%AD%98%E4%B8%8E%E6%81%A2%E5%A4%8D">模型的保存与恢复</a>
+<ul>
+<li><a href="#%E6%96%B9%E6%B3%95%E4%B8%80%E5%8F%AA%E6%81%A2%E5%A4%8D%E5%92%8C%E4%BF%9D%E5%AD%98%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%8F%82%E6%95%B0">方法一：只恢复和保存模型的参数</a></li>
+<li><a href="#%E6%96%B9%E6%B3%95%E4%BA%8C%E6%81%A2%E5%A4%8D%E5%92%8C%E4%BF%9D%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8F%8A%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84">方法二：恢复和保存模型参数及网络结构</a></li>
+<li><a href="#%E6%8F%90%E5%8F%96%E5%92%8C%E5%8A%A0%E8%BD%BD%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0-%E6%A8%A1%E5%9E%8B%E7%9A%84state_dict%E5%B1%9E%E6%80%A7">提取和加载模型参数-模型的state_dict属性</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E8%80%8C%E5%AE%8C%E6%95%B4%E7%9A%84%E4%BE%8B%E5%AD%90">一个简单而完整的例子</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%B6%E5%AE%83">其它</a>
+<ul>
+<li><a href="#pythonpytorch%E7%9A%84%E4%B8%A4%E5%A4%A7%E5%AD%A6%E4%B9%A0%E6%B3%95%E5%AE%9D">python/pytorch的两大学习法宝</a></li>
+<li><a href="#%E5%88%A9%E7%94%A8gpu">利用GPU</a></li>
+<li><a href="#%E5%8F%AF%E8%A7%86%E5%8C%96">可视化</a>
+<ul>
+<li><a href="#summarywriter">SummaryWriter</a></li>
+<li><a href="#tqdm">tqdm</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9B%B4%E5%BF%AB%E7%9A%84%E6%9E%84%E5%BB%BA%E9%A1%BA%E5%BA%8F%E7%BD%91%E7%BB%9C-sequential">更快的构建顺序网络-Sequential</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<p><a href="https://www.bilibili.com/video/BV1hE411t7RN?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click">B站视频教程-PyTorch深度学习快速入门教程</a></p>
+<h1 id="pytorch极简教程">pytorch极简教程</h1>
+<h2 id="使用pytorch进行深度学习的一般步骤">使用pytorch进行深度学习的一般步骤</h2>
+<h3 id="模型的构建">模型的构建</h3>
+<p>构建自己的模型，必须继承自<code>nn.Module</code>，且必须实现两个方法：<code>__init()__(self)</code>，<code>forward()</code>。</p>
+<p>一般单独一个文件来构建模型，如<code>Models.py</code>：</p>
+<pre><code class="language-python">import torch
+from torch import nn
+import torch.nn.functional as F    # 提供一些函数
+class Mnist_CNN(nn.Module):
+    # 构建网络结构
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=5, stride=1, padding=2)
+        self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
+        self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5, stride=1, padding=2)
+        self.pool2 = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
+        self.fc1 = nn.Linear(7*7*64, 512)
+        self.fc2 = nn.Linear(512, 10)
+	# 前向传播
+    def forward(self, inputs):
+        # -1表示根据后面3个参数自动计算第一个维度
+        tensor = inputs.view(-1, 1, 28, 28)
+        tensor = F.relu(self.conv1(tensor))
+        tensor = self.pool1(tensor)
+        tensor = F.relu(self.conv2(tensor))
+        tensor = self.pool2(tensor)
+        tensor = tensor.view(-1, 7*7*64)
+        tensor = F.relu(self.fc1(tensor))
+        tensor = self.fc2(tensor)
+        return tensor
+
+</code></pre>
+<h3 id="数据的准备及预处理">数据的准备及预处理</h3>
+<p>训练模型一般都是先处理<strong>数据的输入问题</strong>和<strong>预处理问题</strong>。Pytorch提供了几个有用的工具：<code>torch.utils.data.Dataset</code>和<code>torch.utils.data.DataLoader</code>类 。</p>
+<p>流程是先把原始数据转变成<code>torch.utils.data.Dataset</code>类随后再把得到的<code>torch.utils.data.Dataset</code>类当作一个参数传递给<code>torch.utils.data.DataLoader</code>类，得到一个数据加载器，这个数据加载器每次可以返回一个 Batch 的数据供模型训练使用。</p>
+<h4 id="dataset">Dataset</h4>
+<p><a href="https://blog.csdn.net/leviopku/article/details/99958182">Dataset1参考</a>，<a href="https://www.jianshu.com/p/4818a1a4b5bd">Dataset参考2</a></p>
+<p>对数据集的抽象，必须继承自<code>Dataset</code>，且必须实现两个方法：<code>__getitem(self, index)__</code>及<code>__len(self)__</code>，当然还包括<code>__init(self)__</code>。一般<code>__init__</code>负责加载全部原始数据，初始化之类的。<code>__getitem__</code>负责按索引取出某个数据，并对该数据做预处理。但是对于如何加载原始数据以及如何预处理数据完全是由自己定义的，包括我们用 <code>dataset[index]</code> 取出的数据的组织形式都是完全自行定义的。一般结构如下：</p>
+<pre><code class="language-python">from torch.utils.data import Dataset
+class MyDataSet(Dataset):
+    def __init__(self):
+        self.sample_list = ...
+
+    def __getitem__(self, index):
+        x= f1(index)
+        y= f2(index)
+        return x, y
+ 
+    def __len__(self):
+        return len(self.sample_list)
+</code></pre>
+<p>也可以通过<code>TensorDataset</code>直接封装成<code>Dataset</code>，如下：</p>
+<pre><code class="language-python">from torch.utils.data import Dataset, DataLoader, TensorDataset
+ 
+src = torch.sin(torch.arange(1, 1000, 0.1))
+trg = torch.cos(torch.arange(1, 1000, 0.1))
+ 
+data = TensorDataset(src, trg)
+data_loader = DataLoader(data, batch_size=5, shuffle=False)
+</code></pre>
+<h4 id="dataloader">DataLoader</h4>
+<p><a href="https://blog.csdn.net/weixin_42468475/article/details/108714940">pytorch-DataLoader数据迭代器</a></p>
+<pre><code class="language-python">from torch.utils.data import DataLoader
+dataset = Mydata() # Dataset类
+dataloader = DataLoader(dataset, batch_size = 10, shuffle=True)
+</code></pre>
+<h4 id="transforms">transforms</h4>
+<p>一般作为<code>DataLoader</code>的参数，对数据进行预处理，也可单独使用。</p>
+<pre><code class="language-python">from torch.vision import transforms
+test_data = torchvision.datasets.CIFAR10(&quot;./dataset&quot;, train=False, transform=transforms.ToTensor())
+# 也可如下单独对数据使用
+train_transformer = transforms.Compose([
+    transforms.ToPILImage(),
+    transforms.Resize(256),
+    transforms.RandomResizedCrop(224,scale=(0.5,1.0)),
+    transforms.RandomHorizontalFlip(),
+    transforms.ToTensor(),    # 比较重要的api
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+# numpy.ndarray
+img = cv2.imread(img_path)  # 读取图像
+img1 = train_transformer(img)
+</code></pre>
+<h3 id="模型的训练">模型的训练</h3>
+<p>训练什么（训练哪些参数）？怎么训练（优化器）</p>
+<h4 id="损失函数-loss">损失函数-loss</h4>
+<p>先定义损失函数，再给数据。</p>
+<pre><code class="language-python">from torch import nn
+
+inputs = torch.tensor([1, 2, 3], dtype=torch.float32)
+targets = torch.tensor([1, 2, 5], dtype=torch.float32)
+inputs = torch.reshape(inputs, (1, 1, 1, 3))
+targets = torch.reshape(targets, (1, 1, 1, 3))
+loss_mse = nn.MSELoss()    # 定义损失函数
+result_mse = loss_mse(inputs, targets)    # 喂数据
+# 结果为1.333
+
+# 如何应用到模型中去
+loss = nn.CrossEntropyLoss()    # 定义损失函数
+model = MyModel()
+for data in dataloader:
+    imgs, targets = data
+    outputs = model(imgs)
+    result_loss = loss(outputs, targets)    # 喂数据
+</code></pre>
+<h4 id="优化器-optimizer">优化器-optimizer</h4>
+<p>先把优化器中的梯度清零<code>optimizer.zero_grad()</code>、再反向传播<code>result_loss.backward()</code>、最后优化<code>optimizer.step()</code>。</p>
+<pre><code class="language-python">model = MyModel()
+loss = nn.CrossEntropyLoss()
+optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
+for epoch in range(20):
+    running_loss = 0.0
+    for data in dataloader:
+        imgs, targets = data
+        outputs = model(imgs)
+        result_loss = loss(outputs, targets)
+        optimizer.zero_grad()    # 一定要清零!!!!!
+        result_loss.backward()
+        optimizer.step()
+        running_loss = running_loss + result_loss
+    print(running_loss)
+</code></pre>
+<h3 id="模型的保存与恢复">模型的保存与恢复</h3>
+<p><a href="https://blog.csdn.net/sll71/article/details/95856952">参考</a></p>
+<h4 id="方法一只恢复和保存模型的参数">方法一：只恢复和保存模型的参数</h4>
+<pre><code class="language-python"># 保存
+torch.save(the_model.state_dict(), PATH)
+# 恢复
+the_model = TheModelClass(*args, **kwargs)
+the_model.load_state_dict(torch.load(PATH))
+</code></pre>
+<h4 id="方法二恢复和保存模型参数及网络结构">方法二：恢复和保存模型参数及网络结构</h4>
+<pre><code class="language-python"># 保存
+torch.save(the_model, PATH)
+# 恢复
+the_model = torch.load(PATH)
+</code></pre>
+<p>该方法保存的数据绑定着特定的 classes 和所用的确切目录结构。因此，再加载后经过许多重构后，可能会被打乱。</p>
+<h4 id="提取和加载模型参数-模型的state_dict属性">提取和加载模型参数-模型的state_dict属性</h4>
+<p><a href="https://zhuanlan.zhihu.com/p/419931089">【PyTorch技巧1】详解pytorch中的state_dict</a></p>
+<pre><code class="language-python">global_parameters = {}
+for key, var in net.state_dict().items():
+    global_parameters[key] = var.clone()
+</code></pre>
+<h3 id="一个简单而完整的例子">一个简单而完整的例子</h3>
+<pre><code class="language-python">import torch, torchvision
+from torch import nn
+from torch.utils.tensorboard import SummaryWriter
+from torch.utils.data import Dataset, DataLoader
+from torchvision import transforms
+
+import torch.nn.functional as F
+
+from tqdm import tqdm
+# 1. 使用cpu或gpu
+dev = torch.device(&quot;cuda&quot;) if torch.cuda.is_available() else torch.device(&quot;cpu&quot;)
+print('dev is: ', dev)
+# 2. 可视化
+writer = SummaryWriter(log_dir='./logs', comment='fashion_mnist')
+# 3.1 数据的准备Dataset
+train_data = torchvision.datasets.FashionMNIST(root='./data', train=True, download=True, transform=transforms.ToTensor())
+test_data = torchvision.datasets.FashionMNIST(root='./data', train=False, download=True, transform=transforms.ToTensor())
+# 3.2 数据的准备DataLoader
+train_dataloader = DataLoader(dataset=train_data, batch_size=64, shuffle=True)
+test_dataloader = DataLoader(dataset=test_data, batch_size=64, shuffle=False)
+# 3.3 也可自定义Dataset
+class MyDataset(Dataset):
+	&quot;&quot;&quot;docstring for MyDataset&quot;&quot;&quot;
+	def __init__(self, arg):
+		super(MyDataset, self).__init__()
+		self.arg = arg
+		
+	def __getitem__(self, index):
+		pass
+
+	def __len__(self):
+		pass
+
+# 4. 模型的构建
+class MyModel(nn.Module):
+	&quot;&quot;&quot;docstring for MyModel&quot;&quot;&quot;
+	def __init__(self):
+		super(MyModel, self).__init__()
+		# input = (?, 1, 28, 28), after by two conv2d, it becomes (?, 1, 7, 7)
+		self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=5, stride=1, padding=2)
+		self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
+		self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=5, stride=1, padding=2)
+		self.pool2 = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
+		self.fc1 = nn.Linear(in_features=7*7*64, out_features=512, bias=True)
+		self.fc2 = nn.Linear(in_features=512, out_features=10, bias=True)
+
+	def forward(self, inputs):
+		# -1表示根据后面3个参数自动计算第一个维度
+		tensor = inputs.view(-1, 1, 28, 28)
+		tensor = F.relu(self.conv1(tensor))
+		tensor = self.pool1(tensor)
+		tensor = F.relu(self.conv2(tensor))
+		tensor = self.pool2(tensor)
+		tensor = tensor.view(-1, 7 * 7 * 64)
+		tensor = F.relu(self.fc1(tensor))
+		tensor = self.fc2(tensor)
+		return tensor
+
+
+net = MyModel()
+net = net.to(dev)
+# 5. 损失函数的定义
+loss_fun = F.cross_entropy
+# 6. 优化器的定义
+optimizer = torch.optim.SGD(net.parameters(), lr=0.001)
+
+epoch = 2
+for i in tqdm(range(epoch)):
+	total_loss = 0
+	for img, label in test_dataloader:
+		writer.add_images('imgs', img_tensor=img, dataformats='NCHW')
+		img, label = img.to(dev), label.to(dev)
+		pred = net(img)    # pred is (64, 10)
+		# the position of pred and label can't exchange
+		loss_res = loss_fun(input=pred, target=label)    # label is (64, 1)
+		optimizer.zero_grad()
+		loss_res.backward()
+		optimizer.step()
+		total_loss = total_loss + loss_res
+
+	print('total loss is: ', total_loss)
+
+writer.close()
+
+</code></pre>
+<h2 id="其它">其它</h2>
+<h3 id="pythonpytorch的两大学习法宝">python/pytorch的两大学习法宝</h3>
+<p>在python Console使用</p>
+<p><code>dir()</code>：用来查看有那些工具，是层级架构</p>
+<pre><code class="language-pytho">dir(torch)
+['AVG', ..., cuda, 'Code', ...,'DictType']
+dir(torch.cuda)
+['BFloat16Storage', ..., 'is_available', 'is_initialized', ...,'warnings']
+dir(torch.cuda.is_available())
+['__abs__', '__add__', '__and__', '__bool__', '__ceil__', ...]
+</code></pre>
+<p><code>help()</code>：用来查看工具的具体属性，即最末一级的内容</p>
+<pre><code class="language-python">Help on bool object:
+class bool(int)
+ |  bool(x) -&gt; bool
+ |  
+ |  Returns True when the argument x is true, False otherwise.
+ |  The builtins True and False are the only two instances of the class bool.
+ |  The class bool is a subclass of the class int, and cannot be subclassed.
+ |  
+ |  Method resolution order:
+ |      bool
+ |      int
+ |      object
+ |  
+ |  Methods defined here:
+ |  
+ |  __and__(self, value, /)
+ |      Return self&amp;value.
+ |  
+ |  __or__(self, value, /)
+ |      Return self|value.
+ ...
+</code></pre>
+<h3 id="利用gpu">利用GPU</h3>
+<pre><code class="language-python">dev = torch.device(&quot;cuda&quot;) if torch.cuda.is_available() else torch.device(&quot;cpu&quot;)
+# 让model在dev上运行
+model = model.to(dev)
+
+for data, label in testDataLoader:
+    data, label = data.to(dev), label.to(dev)
+    preds = net(data)
+</code></pre>
+<h3 id="可视化">可视化</h3>
+<h4 id="summarywriter">SummaryWriter</h4>
+<pre><code class="language-python">from torch.utils.tensorboard import SummaryWriter
+
+writer = SummaryWriter(&quot;logs&quot;)
+image_path = &quot;data/train/digit0.jpg&quot;
+img_PIL = Image.open(image_path)
+img_array = np.array(img_PIL)
+# 添加一张图片
+writer.add_image(&quot;train&quot;, img_array, 1, dataformats='HWC')
+# 添加标量：y = 2x
+for i in range(100):
+    writer.add_scalar(&quot;y=2x&quot;, 3*i, i)
+
+writer.close()
+</code></pre>
+<h4 id="tqdm">tqdm</h4>
+<p>封装可迭代对象</p>
+<pre><code class="language-python">from tqdm import tqdm
+for i in tqdm(range(10000)):
+    ...
+</code></pre>
+<h3 id="更快的构建顺序网络-sequential">更快的构建顺序网络-Sequential</h3>
+<pre><code class="language-python">from torch.nn import Conv2d, MaxPool2d, Flatten, Linear, Sequential
+class Tudui(nn.Module):
+    def __init__(self):
+        super(Tudui, self).__init__()
+        # 利用Sequential快速构建顺序网络
+        self.model1 = Sequential(
+            Conv2d(3, 32, 5, padding=2),
+            MaxPool2d(2),
+            Conv2d(32, 32, 5, padding=2),
+            MaxPool2d(2),
+            Conv2d(32, 64, 5, padding=2),
+            MaxPool2d(2),
+            Flatten(),
+            Linear(1024, 64),
+            Linear(64, 10)
+        )
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#pytorch%E6%9E%81%E7%AE%80%E6%95%99%E7%A8%8B">pytorch极简教程</a>
+<ul>
+<li><a href="#%E4%BD%BF%E7%94%A8pytorch%E8%BF%9B%E8%A1%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E4%B8%80%E8%88%AC%E6%AD%A5%E9%AA%A4">使用pytorch进行深度学习的一般步骤</a>
+<ul>
+<li><a href="#%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%9E%84%E5%BB%BA">模型的构建</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E5%87%86%E5%A4%87%E5%8F%8A%E9%A2%84%E5%A4%84%E7%90%86">数据的准备及预处理</a>
+<ul>
+<li><a href="#dataset">Dataset</a></li>
+<li><a href="#dataloader">DataLoader</a></li>
+<li><a href="#transforms">transforms</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AE%AD%E7%BB%83">模型的训练</a>
+<ul>
+<li><a href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0-loss">损失函数-loss</a></li>
+<li><a href="#%E4%BC%98%E5%8C%96%E5%99%A8-optimizer">优化器-optimizer</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BF%9D%E5%AD%98%E4%B8%8E%E6%81%A2%E5%A4%8D">模型的保存与恢复</a>
+<ul>
+<li><a href="#%E6%96%B9%E6%B3%95%E4%B8%80%E5%8F%AA%E6%81%A2%E5%A4%8D%E5%92%8C%E4%BF%9D%E5%AD%98%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%8F%82%E6%95%B0">方法一：只恢复和保存模型的参数</a></li>
+<li><a href="#%E6%96%B9%E6%B3%95%E4%BA%8C%E6%81%A2%E5%A4%8D%E5%92%8C%E4%BF%9D%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8F%8A%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84">方法二：恢复和保存模型参数及网络结构</a></li>
+<li><a href="#%E6%8F%90%E5%8F%96%E5%92%8C%E5%8A%A0%E8%BD%BD%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0-%E6%A8%A1%E5%9E%8B%E7%9A%84state_dict%E5%B1%9E%E6%80%A7">提取和加载模型参数-模型的state_dict属性</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E8%80%8C%E5%AE%8C%E6%95%B4%E7%9A%84%E4%BE%8B%E5%AD%90">一个简单而完整的例子</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%B6%E5%AE%83">其它</a>
+<ul>
+<li><a href="#pythonpytorch%E7%9A%84%E4%B8%A4%E5%A4%A7%E5%AD%A6%E4%B9%A0%E6%B3%95%E5%AE%9D">python/pytorch的两大学习法宝</a></li>
+<li><a href="#%E5%88%A9%E7%94%A8gpu">利用GPU</a></li>
+<li><a href="#%E5%8F%AF%E8%A7%86%E5%8C%96">可视化</a>
+<ul>
+<li><a href="#summarywriter">SummaryWriter</a></li>
+<li><a href="#tqdm">tqdm</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9B%B4%E5%BF%AB%E7%9A%84%E6%9E%84%E5%BB%BA%E9%A1%BA%E5%BA%8F%E7%BD%91%E7%BB%9C-sequential">更快的构建顺序网络-Sequential</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="http://localhost:4000/post/jpeg-zhi-shi-ji-tinyjpegh-xue-xi/">
+              <h3 class="post-title">
+                JPEG知识及tinyjpeg.h学习
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

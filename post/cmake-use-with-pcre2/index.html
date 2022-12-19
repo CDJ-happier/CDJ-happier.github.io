@@ -2,18 +2,35 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CMake的使用及pcre2 | CofCai&#39;s blog</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671417629542">
+<title>CMake的使用及pcre2 | DJCai</title>
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="CMake的使用及pcre2 | CofCai&#39;s blog - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="CMake的使用及pcre2 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="[toc]
+    <meta name="description" content="
+
+
+
+
 使用CMake对pcre进行编译
-在学习python中的正则表达式后，百度了一下看有没有C语言实现的正则表达式工具，还真有，就是Perl-compatibal regular expression（即perl兼容的正则表达式，而..." />
+如何在工程中使用
+测试代码
+错误记录
+附
+小记
+补：对jpeg开源库进行编译
+
+
+
+
+
+
+使用CMake对pcre进行编译
+在学习python中的正则表达式后，百度了一下看有没有C语言实现的正则表..." />
     <meta name="keywords" content="Tools,嵌入式" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -22,11 +39,11 @@
     <div class="main">
       <div class="main-content">
         <div class="site-header">
-  <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671417629542" alt="">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
   </a>
   <h1 class="site-title">
-    CofCai&#39;s blog
+    DJCai
   </h1>
   <p class="site-description">
     more disciplined, more free
@@ -34,25 +51,25 @@
   <div class="menu-container">
     
       
-        <a href="https://CDJ-happier.github.io" class="menu">
+        <a href="http://localhost:4000" class="menu">
           首页
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/archives" class="menu">
+        <a href="http://localhost:4000/archives" class="menu">
           归档
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/tags" class="menu">
+        <a href="http://localhost:4000/tags" class="menu">
           标签
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+        <a href="http://localhost:4000/post/about" class="menu">
           关于
         </a>
       
@@ -86,21 +103,38 @@
                 17 min read
               </span>
               
-                <a href="https://CDJ-happier.github.io/tag/3RgVl6bYZ/" class="post-tag">
+                <a href="http://localhost:4000/tag/3RgVl6bYZ/" class="post-tag">
                   # Tools
                 </a>
               
-                <a href="https://CDJ-happier.github.io/tag/BqSYYs6a7/" class="post-tag">
+                <a href="http://localhost:4000/tag/BqSYYs6a7/" class="post-tag">
                   # 嵌入式
                 </a>
               
             </div>
             
-              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/cmake-use-with-pcre2.png" alt="">
+              <img class="post-feature-image" src="http://localhost:4000/post-images/cmake-use-with-pcre2.png" alt="">
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>[toc]</p>
+                <p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E4%BD%BF%E7%94%A8cmake%E5%AF%B9pcre%E8%BF%9B%E8%A1%8C%E7%BC%96%E8%AF%91">使用CMake对pcre进行编译</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%9C%A8%E5%B7%A5%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8">如何在工程中使用</a></li>
+<li><a href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81">测试代码</a></li>
+<li><a href="#%E9%94%99%E8%AF%AF%E8%AE%B0%E5%BD%95">错误记录</a></li>
+<li><a href="#%E9%99%84">附</a></li>
+<li><a href="#%E5%B0%8F%E8%AE%B0">小记</a></li>
+<li><a href="#%E8%A1%A5%E5%AF%B9jpeg%E5%BC%80%E6%BA%90%E5%BA%93%E8%BF%9B%E8%A1%8C%E7%BC%96%E8%AF%91">补：对jpeg开源库进行编译</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
 <h3 id="使用cmake对pcre进行编译">使用CMake对pcre进行编译</h3>
 <p>在学习python中的正则表达式后，百度了一下看有没有C语言实现的正则表达式工具，还真有，就是<a href="http://www.pcre.org">Perl-compatibal regular expression</a>（即perl兼容的正则表达式，而且一般Linux发行版中的grep、awk等都是基于这个实现的）。然后把源码下载下来解压，目录如下（其中build和installl是我自己创建的，下面的文件夹是我使用cmake后的文件夹，所有有些改变）：</p>
 <figure data-type="image" tabindex="1"><img src="https://gitee.com/CofCai/pic-bed/raw/master/img/pcre%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%951.jpg" alt="" loading="lazy"></figure>
@@ -524,7 +558,7 @@ Report bugs to the package provider.
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://CDJ-happier.github.io/post/c-xor4findvalue/">
+            <a href="http://localhost:4000/post/c-xor4findvalue/">
               <h3 class="post-title">
                 【C语言】【算法】利用异或找不同单一数据
               </h3>
@@ -536,7 +570,7 @@ Report bugs to the package provider.
 
         <div class="site-footer">
   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

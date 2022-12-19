@@ -2,25 +2,35 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>数字信号处理-基础一 | CofCai&#39;s blog</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671417629542">
+<title>数字信号处理-基础一 | DJCai</title>
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="数字信号处理-基础一 | CofCai&#39;s blog - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="数字信号处理-基础一 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="[toc]
-
-Author🚹：CofCai
-Email✉️：cai.dongjun@nexuslink.cn
-QQ🔭：1664866311
-personal page🏠
-CSDN page🏠
-
+    <meta name="description" content="
 数字频率与模拟频率的关系与特点
-lin..." />
+
+数字频率与模拟频率的定义
+为什么模拟角频率和数字角频率不一样
+
+
+时域离散信号和时域离散系统
+
+时域离散信号
+
+常用的典型序列
+序列的运算
+
+
+时域离散系统
+
+线性系统
+时不变系统
+线性时不变系统及其输入..." />
     <meta name="keywords" content="DSP" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -29,11 +39,11 @@ lin..." />
     <div class="main">
       <div class="main-content">
         <div class="site-header">
-  <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671417629542" alt="">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
   </a>
   <h1 class="site-title">
-    CofCai&#39;s blog
+    DJCai
   </h1>
   <p class="site-description">
     more disciplined, more free
@@ -41,25 +51,25 @@ lin..." />
   <div class="menu-container">
     
       
-        <a href="https://CDJ-happier.github.io" class="menu">
+        <a href="http://localhost:4000" class="menu">
           首页
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/archives" class="menu">
+        <a href="http://localhost:4000/archives" class="menu">
           归档
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/tags" class="menu">
+        <a href="http://localhost:4000/tags" class="menu">
           标签
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+        <a href="http://localhost:4000/post/about" class="menu">
           关于
         </a>
       
@@ -90,27 +100,135 @@ lin..." />
                 2020-10-19
               </span>
               <span>
-                45 min read
+                47 min read
               </span>
               
-                <a href="https://CDJ-happier.github.io/tag/TrRIqGItK/" class="post-tag">
+                <a href="http://localhost:4000/tag/TrRIqGItK/" class="post-tag">
                   # DSP
                 </a>
               
             </div>
             
-              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/DSP-base1.png" alt="">
+              <img class="post-feature-image" src="http://localhost:4000/post-images/DSP-base1.png" alt="">
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>[toc]</p>
-<blockquote>
-<p>Author🚹：CofCai<br>
-Email✉️：cai.dongjun@nexuslink.cn<br>
-QQ🔭：1664866311<br>
-<a href="https://cxx7ud.coding-pages.com/">personal page</a>🏠<br>
-<a href="https://blog.csdn.net/weixin_44360592?spm=1011.2124.3001.5113">CSDN page</a>🏠</p>
-</blockquote>
+                <p><ul class="markdownIt-TOC">
+<li><a href="#%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E4%B8%8E%E6%A8%A1%E6%8B%9F%E9%A2%91%E7%8E%87%E7%9A%84%E5%85%B3%E7%B3%BB%E4%B8%8E%E7%89%B9%E7%82%B9">数字频率与模拟频率的关系与特点</a>
+<ul>
+<li><a href="#%E6%95%B0%E5%AD%97%E9%A2%91%E7%8E%87%E4%B8%8E%E6%A8%A1%E6%8B%9F%E9%A2%91%E7%8E%87%E7%9A%84%E5%AE%9A%E4%B9%89">数字频率与模拟频率的定义</a></li>
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%A8%A1%E6%8B%9F%E8%A7%92%E9%A2%91%E7%8E%87%E5%92%8C%E6%95%B0%E5%AD%97%E8%A7%92%E9%A2%91%E7%8E%87%E4%B8%8D%E4%B8%80%E6%A0%B7">为什么模拟角频率和数字角频率不一样</a></li>
+</ul>
+</li>
+<li><a href="#%E6%97%B6%E5%9F%9F%E7%A6%BB%E6%95%A3%E4%BF%A1%E5%8F%B7%E5%92%8C%E6%97%B6%E5%9F%9F%E7%A6%BB%E6%95%A3%E7%B3%BB%E7%BB%9F">时域离散信号和时域离散系统</a>
+<ul>
+<li><a href="#%E6%97%B6%E5%9F%9F%E7%A6%BB%E6%95%A3%E4%BF%A1%E5%8F%B7">时域离散信号</a>
+<ul>
+<li><a href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E5%85%B8%E5%9E%8B%E5%BA%8F%E5%88%97">常用的典型序列</a></li>
+<li><a href="#%E5%BA%8F%E5%88%97%E7%9A%84%E8%BF%90%E7%AE%97">序列的运算</a></li>
+</ul>
+</li>
+<li><a href="#%E6%97%B6%E5%9F%9F%E7%A6%BB%E6%95%A3%E7%B3%BB%E7%BB%9F">时域离散系统</a>
+<ul>
+<li><a href="#%E7%BA%BF%E6%80%A7%E7%B3%BB%E7%BB%9F">线性系统</a></li>
+<li><a href="#%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F">时不变系统</a></li>
+<li><a href="#%E7%BA%BF%E6%80%A7%E6%97%B6%E4%B8%8D%E5%8F%98%E7%B3%BB%E7%BB%9F%E5%8F%8A%E5%85%B6%E8%BE%93%E5%85%A5%E4%B8%8E%E8%BE%93%E5%87%BA%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB">线性时不变系统及其输入与输出之间的关系</a></li>
+<li><a href="#%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9B%A0%E6%9E%9C%E6%80%A7%E5%92%8C%E7%A8%B3%E5%AE%9A%E6%80%A7">系统的因果性和稳定性</a></li>
+</ul>
+</li>
+<li><a href="#%E6%97%B6%E5%9F%9F%E7%A6%BB%E6%95%A3%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%8F%8F%E8%BF%B0%E6%B3%95%E7%BA%BF%E6%80%A7%E5%B8%B8%E7%B3%BB%E6%95%B0%E5%B7%AE%E5%88%86%E6%96%B9%E7%A8%8B">时域离散系统的输入输出描述法—线性常系数差分方程</a>
+<ul>
+<li><a href="#%E7%BA%BF%E6%80%A7%E5%B8%B8%E7%B3%BB%E6%95%B0%E5%B7%AE%E5%88%86%E6%96%B9%E7%A8%8B">线性常系数差分方程</a></li>
+<li><a href="#%E7%BA%BF%E6%80%A7%E5%B8%B8%E7%B3%BB%E6%95%B0%E5%B7%AE%E5%88%86%E6%96%B9%E7%A8%8B%E7%9A%84%E6%B1%82%E8%A7%A3">线性常系数差分方程的求解</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A8%A1%E6%8B%9F%E4%BF%A1%E5%8F%B7%E6%95%B0%E5%AD%97%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95">模拟信号数字处理方法</a>
+<ul>
+<li><a href="#%E9%87%87%E6%A0%B7%E5%AE%9A%E7%90%86%E5%8F%8Aad%E5%8F%98%E6%8D%A2">采样定理及A/D变换</a></li>
+<li><a href="#%E6%95%B0%E5%AD%97%E5%BA%8F%E5%88%97%E8%BD%AC%E6%8D%A2%E6%88%90%E6%A8%A1%E6%8B%9F%E4%BF%A1%E5%8F%B7">数字序列转换成模拟信号</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E6%97%B6%E5%9F%9F%E7%A6%BB%E6%95%A3%E4%BF%A1%E5%8F%B7%E5%92%8C%E7%B3%BB%E7%BB%9F%E7%9A%84%E9%A2%91%E5%9F%9F%E5%88%86%E6%9E%90">时域离散信号和系统的频域分析</a>
+<ul>
+<li><a href="#%E6%97%B6%E5%9F%9F%E7%A6%BB%E6%95%A3%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2%E7%9A%84%E5%AE%9A%E4%B9%89%E5%8F%8A%E6%80%A7%E8%B4%A8">时域离散信号的傅里叶变换的定义及性质</a>
+<ul>
+<li><a href="#dtft%E7%9A%84%E5%AE%9A%E4%B9%89">DTFT的定义</a></li>
+<li><a href="#dtft%E7%9A%84%E6%80%A7%E8%B4%A8">DTFT的性质</a></li>
+<li><a href="#%E5%91%A8%E6%9C%9F%E5%BA%8F%E5%88%97%E7%9A%84%E7%A6%BB%E6%95%A3%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0dfs">周期序列的离散傅里叶级数(DFS)</a></li>
+<li><a href="#%E5%91%A8%E6%9C%9F%E5%BA%8F%E5%88%97%E7%9A%84%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2%E8%A1%A8%E8%BE%BE%E5%BC%8Fft">周期序列的傅里叶变换表达式(FT)</a>
+<ul>
+<li><a href="#%E5%A4%8D%E6%8C%87%E6%95%B0%E5%BA%8F%E5%88%97ejomega_0n%E7%9A%84ft">复指数序列<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>e</mi><mrow><mi>j</mi><msub><mi>ω</mi><mn>0</mn></msub><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">e^{j{\omega_0}n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.824664em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mord mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ω</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31731428571428577em;"><span style="top:-2.357em;margin-left:-0.03588em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span><span class="mord mathdefault mtight">n</span></span></span></span></span></span></span></span></span></span></span></span>的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mi>T</mi></mrow><annotation encoding="application/x-tex">FT</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span></a></li>
+<li><a href="#%E5%91%A8%E6%9C%9F%E5%BA%8F%E5%88%97%E7%9A%84ft">周期序列的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mi>T</mi></mrow><annotation encoding="application/x-tex">FT</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span></a></li>
+<li><a href="#%E5%91%A8%E6%9C%9F%E5%BA%8F%E5%88%97%E7%9A%84ft%E4%B8%8E%E5%91%A8%E6%9C%9F%E4%BF%A1%E5%8F%B7ft%E7%9A%84%E8%81%94%E7%B3%BB">周期序列的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mi>T</mi></mrow><annotation encoding="application/x-tex">FT</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>与周期信号<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mi>T</mi></mrow><annotation encoding="application/x-tex">FT</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>的联系</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E6%97%B6%E5%9F%9F%E7%A6%BB%E6%95%A3%E4%BF%A1%E5%8F%B7%E7%9A%84ft%E4%B8%8E%E6%A8%A1%E6%8B%9F%E4%BF%A1%E5%8F%B7ft%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB">时域离散信号的FT与模拟信号FT之间的关系</a></li>
+<li><a href="#%E5%BA%8F%E5%88%97%E7%9A%84z%E5%8F%98%E6%8D%A2">序列的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>Z</mi></mrow><annotation encoding="application/x-tex">Z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.07153em;">Z</span></span></span></span>变换</a>
+<ul>
+<li><a href="#z%E5%8F%98%E6%8D%A2%E7%9A%84%E5%AE%9A%E4%B9%89%E5%8F%8A%E4%B8%8E%E5%BA%8F%E5%88%97%E7%9A%84ft%E7%9A%84%E5%85%B3%E7%B3%BB">Z变换的定义及与序列的FT的关系</a></li>
+<li><a href="#z%E5%8F%98%E6%8D%A2%E7%9A%84%E6%80%A7%E8%B4%A8">Z变换的性质</a></li>
+</ul>
+</li>
+<li><a href="#%E5%88%A9%E7%94%A8z%E5%8F%98%E6%8D%A2%E5%88%86%E6%9E%90%E4%BF%A1%E5%8F%B7%E5%92%8C%E7%B3%BB%E7%BB%9F%E7%9A%84%E9%A2%91%E5%93%8D%E7%89%B9%E6%80%A7">利用Z变换分析信号和系统的频响特性</a>
+<ul>
+<li><a href="#%E9%A2%91%E7%8E%87%E5%93%8D%E5%BA%94%E5%87%BD%E6%95%B0%E4%B8%8E%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0">频率响应函数与系统函数</a>
+<ul>
+<li><a href="#%E8%BE%93%E5%85%A5%E5%BA%8F%E5%88%97ejomegan%E7%9A%84%E9%A2%91%E7%8E%87%E5%93%8D%E5%BA%94">输入序列<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>e</mi><mrow><mi>j</mi><mi>ω</mi><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">e^{j{\omega}n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.824664em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ω</span></span><span class="mord mathdefault mtight">n</span></span></span></span></span></span></span></span></span></span></span></span>的频率响应</a></li>
+</ul>
+</li>
+<li><a href="#%E5%88%A9%E7%94%A8%E7%B3%BB%E7%BB%9F%E7%9A%84%E9%9B%B6%E6%9E%81%E7%82%B9%E5%88%86%E5%B8%83%E5%88%86%E6%9E%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E9%A2%91%E7%8E%87%E5%93%8D%E5%BA%94%E7%89%B9%E6%80%A7">利用系统的零极点分布分析系统的频率响应特性</a></li>
+<li><a href="#%E5%87%A0%E7%A7%8D%E7%89%B9%E6%AE%8A%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0%E5%8F%8A%E7%89%B9%E7%82%B9">几种特殊系统的系统函数及特点</a>
+<ul>
+<li><a href="#%E5%85%A8%E9%80%9A%E6%BB%A4%E6%B3%A2%E5%99%A8">全通滤波器</a></li>
+<li><a href="#%E6%A2%B3%E5%A6%86%E6%BB%A4%E6%B3%A2%E5%99%A8">梳妆滤波器</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%A6%BB%E6%95%A3%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2dft">离散傅里叶变换(DFT)</a>
+<ul>
+<li><a href="#dft%E7%9A%84%E5%AE%9A%E4%B9%89">DFT的定义</a>
+<ul>
+<li><a href="#%E5%92%8Cdfs%E7%9A%84%E6%AF%94%E8%BE%83">和DFS的比较</a></li>
+</ul>
+</li>
+<li><a href="#dft%E7%9A%84%E6%80%A7%E8%B4%A8">DFT的性质</a>
+<ul>
+<li><a href="#%E6%97%B6%E9%A2%91%E5%9F%9F%E5%BE%AA%E7%8E%AF%E7%A7%BB%E4%BD%8D%E5%AE%9A%E7%90%86">时/频域循环移位定理</a></li>
+<li><a href="#%E5%BE%AA%E7%8E%AF%E5%8D%B7%E7%A7%AF%E5%AE%9A%E7%90%86">循环卷积定理</a></li>
+<li><a href="#%E5%A4%8D%E5%85%B1%E8%BD%AD%E5%BA%8F%E5%88%97%E7%9A%84dft%E5%8F%8A%E5%85%B6%E5%AF%B9%E7%A7%B0%E6%80%A7">复共轭序列的DFT及其对称性</a></li>
+<li><a href="#%E7%BA%BF%E6%80%A7%E5%8D%B7%E7%A7%AF%E5%92%8C%E5%BE%AA%E7%8E%AF%E5%8D%B7%E7%A7%AF%E7%9A%84%E5%85%B3%E7%B3%BB">线性卷积和循环卷积的关系</a></li>
+</ul>
+</li>
+<li><a href="#%E9%A2%91%E7%8E%87%E5%9F%9F%E9%87%87%E6%A0%B7">频率域采样</a>
+<ul>
+<li><a href="#%E7%94%B1xk%E6%81%A2%E5%A4%8D%E5%87%BAxn%E7%9A%84%E6%9D%A1%E4%BB%B6">由<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>(</mo><mi>k</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">X(k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">)</span></span></span></span>恢复出<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>(</mo><mi>n</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">x(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">x</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>的条件</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E7%94%B1xk%E6%81%A2%E5%A4%8Dxz%E5%92%8Cxejomega">如何由<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>(</mo><mi>k</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">X(k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">)</span></span></span></span>恢复<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>(</mo><mi>z</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">X(z)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="mclose">)</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>(</mo><msup><mi>e</mi><mrow><mi>j</mi><mi>ω</mi></mrow></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">X(e^{j\omega})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0746639999999998em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ω</span></span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></a></li>
+</ul>
+</li>
+<li><a href="#%E7%94%A8dft%E5%AF%B9%E4%BF%A1%E5%8F%B7%E8%BF%9B%E8%A1%8C%E9%A2%91%E8%B0%B1%E5%88%86%E6%9E%90">用DFT对信号进行频谱分析</a>
+<ul>
+<li><a href="#%E5%AF%B9%E8%BF%9E%E7%BB%AD%E4%BF%A1%E5%8F%B7%E8%BF%9B%E8%A1%8C%E9%A2%91%E8%B0%B1%E5%88%86%E6%9E%90">对连续信号进行频谱分析</a></li>
+<li><a href="#%E5%AF%B9%E5%BA%8F%E5%88%97%E8%BF%9B%E8%A1%8C%E9%A2%91%E8%B0%B1%E5%88%86%E6%9E%90">对序列进行频谱分析</a></li>
+<li><a href="#%E8%AF%AF%E5%B7%AE%E5%88%86%E6%9E%90">误差分析</a>
+<ul>
+<li><a href="#%E6%B7%B7%E5%8F%A0%E7%8E%B0%E8%B1%A1">混叠现象</a></li>
+<li><a href="#%E6%A0%85%E6%A0%8F%E6%95%88%E5%BA%94">栅栏效应</a></li>
+<li><a href="#%E6%88%AA%E6%96%AD%E6%95%88%E5%BA%94">截断效应</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
 <h1 id="数字频率与模拟频率的关系与特点">数字频率与模拟频率的关系与特点</h1>
 <p><a href="https://zhuanlan.zhihu.com/p/95429428">link1</a>、<a href="https://zhuanlan.zhihu.com/p/36437854">link2</a>、<a href="https://zhuanlan.zhihu.com/p/53664104">link3</a></p>
 <p><a href="https://mp.weixin.qq.com/s/3wiq_eJePCZba81iERsw4g">模拟频率、数字角频率和DFT频率分辨率</a></p>
@@ -256,7 +374,7 @@ or{\quad}\sum_{i=0}^{N}a_iy(n-i)=\sum_{i=0}^{M}b_ix(n-i){\quad}a_0=1
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>a</mi></msub><mo>(</mo><mi>t</mi><mo>)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>n</mi><mo>=</mo><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mrow><mo>+</mo><mi mathvariant="normal">∞</mi></mrow></munderover><msub><mi>x</mi><mi>a</mi></msub><mo>(</mo><mi>n</mi><mi>T</mi><mo>)</mo><mfrac><mrow><mi>sin</mi><mo>⁡</mo><mo fence="false">[</mo><mi>π</mi><mo>(</mo><mi>t</mi><mo>−</mo><mi>n</mi><mi>T</mi><mo>)</mo><mo fence="false">]</mo><mo fence="false">/</mo><mi>T</mi></mrow><mrow><mi>π</mi><mo>(</mo><mi>t</mi><mo>−</mo><mi>n</mi><mi>T</mi><mo>)</mo><mo fence="false">/</mo><mi>T</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">x_a(t)=\sum_{n=-\infin}^{+\infin}x_a(nT)\frac{\sin\Big[{\pi}(t-nT)\Big]\Big/T}{{\pi}(t-nT)\Big/T}
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.88004em;vertical-align:-1.69002em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.7583360000000003em;"><span style="top:-1.8999949999999999em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span><span class="mrel mtight">=</span><span class="mord mtight">−</span><span class="mord mtight">∞</span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.300005em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">+</span><span class="mord mtight">∞</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.308336em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mclose">)</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.19002em;"><span style="top:-2.11em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span></span><span class="mopen">(</span><span class="mord mathdefault">t</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault">n</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mclose">)</span><span class="mord"><span class="delimsizing size2">/</span></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span><span style="top:-3.38em;"><span class="pstrut" style="height:3.15em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-4.1900200000000005em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mop">sin</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="delimsizing size2">[</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span></span><span class="mopen">(</span><span class="mord mathdefault">t</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault">n</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mclose">)</span><span class="mord"><span class="delimsizing size2">]</span></span><span class="mord"><span class="delimsizing size2">/</span></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.69002em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
 <p>实际中采用D/AC完成数字信号到模拟信号的转换，包括三部分：解码器、零阶保持器和平滑滤波器。框图如下：<br>
-<img src="https://CDJ-happier.github.io/post-images/1605428611249.png" alt="" loading="lazy"></p>
+<img src="http://localhost:4000/post-images/1605428611249.png" alt="" loading="lazy"></p>
 <p>由时域离散信号<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>a</mi></msub><mo>(</mo><mi>n</mi><mi>T</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">x_a(nT)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mclose">)</span></span></span></span>恢复模拟信号的过程是内插过程。</p>
 <h1 id="时域离散信号和系统的频域分析">时域离散信号和系统的频域分析</h1>
 <h2 id="时域离散信号的傅里叶变换的定义及性质">时域离散信号的傅里叶变换的定义及性质</h2>
@@ -559,11 +677,11 @@ ylabel('Phase');
 title('相频特性曲线');
 </code></pre>
 <p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mo>=</mo><mn>0.2</mn></mrow><annotation encoding="application/x-tex">a=0.2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">2</span></span></span></span>时的频率响应和零极点分布图：</p>
-<figure data-type="image" tabindex="3"><img src="https://CDJ-happier.github.io/post-images/1605428973141.jpg" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="4"><img src="https://CDJ-happier.github.io/post-images/1605428990176.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="http://localhost:4000/post-images/1605428973141.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="http://localhost:4000/post-images/1605428990176.jpg" alt="" loading="lazy"></figure>
 <p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mo>=</mo><mn>0.9</mn></mrow><annotation encoding="application/x-tex">a=0.9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">9</span></span></span></span>时的频率响应和零极点分布图：</p>
-<figure data-type="image" tabindex="5"><img src="https://CDJ-happier.github.io/post-images/1605429008096.jpg" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="6"><img src="https://CDJ-happier.github.io/post-images/1605429022259.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="http://localhost:4000/post-images/1605429008096.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="http://localhost:4000/post-images/1605429022259.jpg" alt="" loading="lazy"></figure>
 <h1 id="离散傅里叶变换dft">离散傅里叶变换(DFT)</h1>
 <p>对离散时间序列<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>(</mo><mi>n</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">x(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">x</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>进行FT得到的结果在频域仍然是连续的，不便于计算机处理。因此目的是对频域也进行离散化，方法有多种，如DFT、DFS。对于DFS，主要步骤就是对<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>(</mo><mi>n</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">x(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">x</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>进行周期性延拓，然后计算其傅里叶级数，该结果和DFT的结果是有关联的。</p>
 <h2 id="dft的定义">DFT的定义</h2>
@@ -625,7 +743,7 @@ DFT:
 </li>
 </ul>
 <p>设序列<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>(</mo><mi>n</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">x(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">x</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>的长度为M。</p>
-<figure data-type="image" tabindex="7"><img src="https://CDJ-happier.github.io/post-images/1605429097288.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="http://localhost:4000/post-images/1605429097288.png" alt="" loading="lazy"></figure>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>(</mo><mi>z</mi><mo>)</mo><mo>=</mo><mi>Z</mi><mi>T</mi><mo>[</mo><mi>x</mi><mo>(</mo><mi>n</mi><mo>)</mo><mo>]</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>n</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>M</mi><mo>−</mo><mn>1</mn></mrow></munderover><mi>x</mi><mo>(</mo><mi>n</mi><mo>)</mo><msup><mi>z</mi><mrow><mo>−</mo><mi>n</mi></mrow></msup><mspace width="1em"/><mo>(</mo><mn>1</mn><mo>)</mo><mspace linebreak="newline"></mspace><mi>X</mi><mo>(</mo><msup><mi>e</mi><mrow><mi>j</mi><mi>ω</mi></mrow></msup><mo>)</mo><mo>=</mo><mi>D</mi><mi>T</mi><mi>F</mi><mi>T</mi><mo>[</mo><mi>x</mi><mo>(</mo><mi>n</mi><mo>)</mo><mo>]</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>n</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>M</mi><mo>−</mo><mn>1</mn></mrow></munderover><mi>x</mi><mo>(</mo><mi>n</mi><mo>)</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>j</mi><mi>ω</mi><mi>n</mi></mrow></msup><mspace width="1em"/><mo>(</mo><mn>2</mn><mo>)</mo><mspace linebreak="newline"></mspace><mi>X</mi><mo>(</mo><mi>k</mi><mo>)</mo><mo>=</mo><mi>D</mi><mi>F</mi><mi>T</mi><mo>[</mo><mi>x</mi><mo>(</mo><mi>n</mi><mo>)</mo><msub><mo>]</mo><mi>N</mi></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>n</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>M</mi><mo>−</mo><mn>1</mn></mrow></munderover><mi>x</mi><mo>(</mo><mi>n</mi><mo>)</mo><msubsup><mi>W</mi><mi>N</mi><mrow><mi>k</mi><mi>n</mi></mrow></msubsup><mspace linebreak="newline"></mspace><mo>=</mo><munderover><mo>∑</mo><mrow><mi>n</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>M</mi><mo>−</mo><mn>1</mn></mrow></munderover><mi>x</mi><mo>(</mo><mi>n</mi><mo>)</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>j</mi><mfrac><mrow><mn>2</mn><mi>π</mi></mrow><mi>N</mi></mfrac><mi>n</mi><mi>k</mi></mrow></msup><mspace width="1em"/><mi>k</mi><mo>=</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>N</mi><mo>−</mo><mn>1</mn><mspace width="1em"/><mo>(</mo><mn>3</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">X(z)=ZT[x(n)]=\sum_{n=0}^{M-1}x(n)z^{-n}{\quad}(1)\\
 X(e^{j\omega})=DTFT[x(n)]=\sum_{n=0}^{M-1}x(n)e^{-j{\omega}n}{\quad}(2)\\
 X(k)=DFT[x(n)]_N=\sum_{n=0}^{M-1}x(n)W_N^{kn}\\
@@ -709,7 +827,7 @@ jX_I(k)=DFT[x_{op}(n)]\\
 <p>即<strong>循环卷积</strong>等于<strong>线性卷积</strong>以L为周期进行周期延拓后的序列的主值序列，若要求循环卷积和线性卷积相等，则需要周期延拓后无混叠，即<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi><mo>≥</mo><mi>N</mi><mo>+</mo><mi>M</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">L{\ge}N+M-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8193em;vertical-align:-0.13597em;"></span><span class="mord mathdefault">L</span><span class="mord"><span class="mrel">≥</span></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>。</p>
 <h2 id="频率域采样">频率域采样</h2>
 <h3 id="由xk恢复出xn的条件">由<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>(</mo><mi>k</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">X(k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">)</span></span></span></span>恢复出<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>x</mi><mo>(</mo><mi>n</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">x(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">x</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span>的条件</h3>
-<figure data-type="image" tabindex="8"><img src="https://CDJ-happier.github.io/post-images/1605429361071.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="http://localhost:4000/post-images/1605429361071.png" alt="" loading="lazy"></figure>
 <p>如何从x(n)N推导出x(n)呢？下面直接给出结论：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>N</mi></msub><mo>(</mo><mi>n</mi><mo>)</mo><mo>=</mo><mover accent="true"><mrow><mi>x</mi><mo>(</mo><mi>n</mi><mo>)</mo></mrow><mo stretchy="true">~</mo></mover><msub><mi>R</mi><mi>N</mi></msub><mo>(</mo><mi>n</mi><mo>)</mo><mspace linebreak="newline"></mspace><mo>=</mo><mo fence="false">[</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mi mathvariant="normal">∞</mi></munderover><mi>x</mi><mo>(</mo><mi>n</mi><mo>+</mo><mi>i</mi><mi>N</mi><mo>)</mo><mo fence="false">]</mo><msub><mi>R</mi><mi>N</mi></msub><mo>(</mo><mi>n</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">x_N(n)=\widetilde{x(n)}R_N(n)\\
 =\Big[\sum_{i=-\infin}^{\infin}x(n+iN)\Big]R_N(n)
@@ -878,7 +996,7 @@ jX_I(k)=DFT[x_{op}(n)]\\
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://CDJ-happier.github.io/post/Comprinciple/">
+            <a href="http://localhost:4000/post/Comprinciple/">
               <h3 class="post-title">
                 通信原理
               </h3>
@@ -890,7 +1008,7 @@ jX_I(k)=DFT[x_{op}(n)]\\
 
         <div class="site-footer">
   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

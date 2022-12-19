@@ -1,0 +1,192 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Linux高性能服务器设计 | DJCai</title>
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Linux高性能服务器设计 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="高性能服务器编程总结
+
+本总结是在学习《极客时间-网络编程实战》课程后的总结，结合自己的理解及其它相关知识。开发工具是Linux+makefile，主要知识有socket、pthread多线程、I/O多路复用等。
+
+Linux下一切皆文件，..." />
+    <meta name="keywords" content="C语言" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
+  </a>
+  <h1 class="site-title">
+    DJCai
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="http://localhost:4000" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Linux高性能服务器设计
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-01-25
+              </span>
+              <span>
+                2 min read
+              </span>
+              
+                <a href="http://localhost:4000/tag/-lWbWODrq/" class="post-tag">
+                  # C语言
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://static001.geekbang.org/resource/image/16/dd/167e8e055d690a15f22cee8f114fb5dd.png?wh=1014*1128" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="高性能服务器编程总结">高性能服务器编程总结</h1>
+<blockquote>
+<p>本总结是在学习《极客时间-网络编程实战》课程后的总结，结合自己的理解及其它相关知识。开发工具是Linux+makefile，主要知识有socket、pthread多线程、I/O多路复用等。</p>
+</blockquote>
+<p><strong>Linux下一切皆文件</strong>，磁盘文件、网卡、LED、传感器等设备都被抽象成文件，通过文件描述符fd（file describer）操作。</p>
+<p>socket是网络编程的核心，它对用户屏蔽了复杂的网络协议栈（TCP\IP），仅提供必要的编程接口给用户，比如<code>socket, bind, listen, connect, accept</code>等。正如前面所说，Linux下一切皆文件，网络编程中也是通过socket文件描述符<code>sockfd</code>进行操作的，往<code>sockfd</code>读、写内容、或监听客户端连接。</p>
+<p>多线程是一种并发技术，能够同时执行多个任务（并不是真正的同时），充分发挥单CPU的性能。pthread是符合POSIX标准的多线程编程接口，通过pthread提供的接口能够创建线程。</p>
+<p>I/O多路复用技术是对进/线程的复用（自己的理解），使得一个进/线程能够感知多个文件描述符fd的事件。主要有<code>select、poll、epoll</code>，其中epoll性能最优。关于阻塞I/O与非阻塞I/O，可以自行查阅相关资料。</p>
+<p>对于不同类型的fd，有不同的事件，但基本上都有读、写事件。I/O多路复用就是同时检测多个fd的事件，下面讲解一下<code>select、poll、epoll</code>的实现方式。</p>
+<figure data-type="image" tabindex="1"><img src="https://img-blog.csdnimg.cn/0c502b7f32b0419ca638061018808b25.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"></figure>
+<p>网络服务器设计模式主要分为reactor（同步）和proactor（异步）。网络服务器主要任务包括：接受新的连接请求、处理已连接的I/O事件。</p>
+<p>不同的网络服务器模式：</p>
+<p>单进程模式、多进程模式、多线程模式、single reactor thread架构、single reactor、thread + worker threads架构、主-从reactor架构、主-从reactor+worker threads架构。</p>
+<p>随课源码分析：</p>
+<p><a href="https://www.processon.com/view/link/5ead14555653bb6efc7cbe59">附上用processon画的架构图</a></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BC%96%E7%A8%8B%E6%80%BB%E7%BB%93">高性能服务器编程总结</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="http://localhost:4000/post/FFT-TIF/">
+              <h3 class="post-title">
+                FFT之蝶形运算
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

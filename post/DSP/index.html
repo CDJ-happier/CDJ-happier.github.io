@@ -2,19 +2,34 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>数字滤波器的设计 | CofCai&#39;s blog</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671417629542">
+<title>数字滤波器的设计 | DJCai</title>
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="数字滤波器的设计 | CofCai&#39;s blog - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="数字滤波器的设计 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
     <meta name="description" content="
-Author🚹：CofCai
-personal page🏠：https://cxx7ud.coding-pages.com/
-CSDN page🏠：https://blog.csdn.net/weixin_44360592?spm=..." />
+先导知识
+
+时频域互换
+什么是滤波器？
+如何设计滤波器？
+FT、LT、ZT之间的（映射）关系
+零、极点分布如何影响频率响应
+
+
+从均值滤波看滤波器及系统函数
+
+时域表达式
+频率表达式
+零极点分布图
+频率响应分析
+
+
+FIR和IIR滤波器的..." />
     <meta name="keywords" content="DSP" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -23,11 +38,11 @@ CSDN page🏠：https://blog.csdn.net/weixin_44360592?spm=..." />
     <div class="main">
       <div class="main-content">
         <div class="site-header">
-  <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671417629542" alt="">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
   </a>
   <h1 class="site-title">
-    CofCai&#39;s blog
+    DJCai
   </h1>
   <p class="site-description">
     more disciplined, more free
@@ -35,25 +50,25 @@ CSDN page🏠：https://blog.csdn.net/weixin_44360592?spm=..." />
   <div class="menu-container">
     
       
-        <a href="https://CDJ-happier.github.io" class="menu">
+        <a href="http://localhost:4000" class="menu">
           首页
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/archives" class="menu">
+        <a href="http://localhost:4000/archives" class="menu">
           归档
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/tags" class="menu">
+        <a href="http://localhost:4000/tags" class="menu">
           标签
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+        <a href="http://localhost:4000/post/about" class="menu">
           关于
         </a>
       
@@ -84,26 +99,123 @@ CSDN page🏠：https://blog.csdn.net/weixin_44360592?spm=..." />
                 2020-10-30
               </span>
               <span>
-                54 min read
+                56 min read
               </span>
               
-                <a href="https://CDJ-happier.github.io/tag/TrRIqGItK/" class="post-tag">
+                <a href="http://localhost:4000/tag/TrRIqGItK/" class="post-tag">
                   # DSP
                 </a>
               
             </div>
             
-              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/DSP.jpg" alt="">
+              <img class="post-feature-image" src="http://localhost:4000/post-images/DSP.jpg" alt="">
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <blockquote>
-<p>Author🚹：CofCai<br>
-personal page🏠：https://cxx7ud.coding-pages.com/<br>
-CSDN page🏠：https://blog.csdn.net/weixin_44360592?spm=1011.2124.3001.5113<br>
-Email✉️：cai.dongjun@nexuslink.cn<br>
-QQ🔭：1664866311</p>
-</blockquote>
+                <p><ul class="markdownIt-TOC">
+<li><a href="#%E5%85%88%E5%AF%BC%E7%9F%A5%E8%AF%86">先导知识</a>
+<ul>
+<li><a href="#%E6%97%B6%E9%A2%91%E5%9F%9F%E4%BA%92%E6%8D%A2">时频域互换</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%BB%A4%E6%B3%A2%E5%99%A8">什么是滤波器？</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E6%BB%A4%E6%B3%A2%E5%99%A8">如何设计滤波器？</a></li>
+<li><a href="#ft-lt-zt%E4%B9%8B%E9%97%B4%E7%9A%84%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB">FT、LT、ZT之间的（映射）关系</a></li>
+<li><a href="#%E9%9B%B6-%E6%9E%81%E7%82%B9%E5%88%86%E5%B8%83%E5%A6%82%E4%BD%95%E5%BD%B1%E5%93%8D%E9%A2%91%E7%8E%87%E5%93%8D%E5%BA%94">零、极点分布如何影响频率响应</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%8E%E5%9D%87%E5%80%BC%E6%BB%A4%E6%B3%A2%E7%9C%8B%E6%BB%A4%E6%B3%A2%E5%99%A8%E5%8F%8A%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0">从均值滤波看滤波器及系统函数</a>
+<ul>
+<li><a href="#%E6%97%B6%E5%9F%9F%E8%A1%A8%E8%BE%BE%E5%BC%8F">时域表达式</a></li>
+<li><a href="#%E9%A2%91%E7%8E%87%E8%A1%A8%E8%BE%BE%E5%BC%8F">频率表达式</a></li>
+<li><a href="#%E9%9B%B6%E6%9E%81%E7%82%B9%E5%88%86%E5%B8%83%E5%9B%BE">零极点分布图</a></li>
+<li><a href="#%E9%A2%91%E7%8E%87%E5%93%8D%E5%BA%94%E5%88%86%E6%9E%90">频率响应分析</a></li>
+</ul>
+</li>
+<li><a href="#fir%E5%92%8Ciir%E6%BB%A4%E6%B3%A2%E5%99%A8%E7%9A%84%E6%AF%94%E8%BE%83">FIR和IIR滤波器的比较</a>
+<ul>
+<li><a href="#%E6%80%A7%E8%83%BD%E4%B8%8A">性能上</a></li>
+<li><a href="#%E7%BB%93%E6%9E%84%E4%B8%8A">结构上</a></li>
+<li><a href="#%E8%AE%BE%E8%AE%A1%E5%B7%A5%E5%85%B7%E4%B8%8A">设计工具上</a></li>
+<li><a href="#%E6%95%88%E6%9E%9C%E4%B8%8A">效果上</a></li>
+</ul>
+</li>
+<li><a href="#fir%E6%BB%A4%E6%B3%A2%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1">FIR滤波器的设计</a>
+<ul>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF">基本设计思路</a></li>
+<li><a href="#%E7%AA%97%E5%87%BD%E6%95%B0%E6%B3%95">窗函数法</a></li>
+<li><a href="#%E9%A2%91%E7%8E%87%E9%87%87%E6%A0%B7%E6%B3%95">频率采样法</a></li>
+<li><a href="#%E5%93%8D%E5%BA%94%E6%9C%80%E4%BC%98%E6%B3%95">响应最优法</a>
+<ul>
+<li><a href="#%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95">最小二乘法</a></li>
+<li><a href="#%E5%88%87%E6%AF%94%E9%9B%AA%E5%A4%AB%E7%AD%89%E6%B3%A2%E7%BA%B9%E6%9C%80%E4%BD%B3%E9%80%BC%E8%BF%91%E6%B3%95">切比雪夫等波纹最佳逼近法</a></li>
+</ul>
+</li>
+<li><a href="#fir%E6%95%B0%E5%AD%97%E6%BB%A4%E6%B3%A2%E5%99%A8%E8%AE%BE%E8%AE%A1%E6%80%BB%E7%BB%93">FIR数字滤波器设计总结</a></li>
+</ul>
+</li>
+<li><a href="#iir%E6%BB%A4%E6%B3%A2%E5%99%A8%E8%AE%BE%E8%AE%A1">IIR滤波器设计</a>
+<ul>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF-2">基本设计思路</a></li>
+<li><a href="#%E5%85%B8%E5%9E%8B%E7%9A%84%E6%A8%A1%E6%8B%9F%E4%BD%8E%E9%80%9A%E6%BB%A4%E6%B3%A2%E5%99%A8">典型的模拟低通滤波器</a>
+<ul>
+<li><a href="#%E5%B7%B4%E7%89%B9%E6%B2%83%E6%96%AF%E6%BB%A4%E6%B3%A2%E5%99%A8">巴特沃斯滤波器</a>
+<ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E6%8C%87%E6%A0%87%E6%B1%82%E5%87%BA%E6%BB%A4%E6%B3%A2%E5%99%A8%E9%98%B6%E6%95%B0n">如何根据指标求出滤波器阶数N</a></li>
+<li><a href="#%E4%BD%8E%E9%80%9A%E5%B7%B4%E7%89%B9%E6%B2%83%E6%96%AF%E6%BB%A4%E6%B3%A2%E5%99%A8%E8%AE%BE%E8%AE%A1%E6%AD%A5%E9%AA%A4">低通巴特沃斯滤波器设计步骤</a></li>
+<li><a href="#%E8%AE%BE%E8%AE%A1%E4%BD%8E%E9%80%9A%E5%B7%B4%E7%89%B9%E6%B2%83%E6%96%AF%E6%BB%A4%E6%B3%A2%E5%99%A8%E5%AE%9E%E4%BE%8B">设计低通巴特沃斯滤波器实例</a></li>
+</ul>
+</li>
+<li><a href="#%E5%88%87%E6%AF%94%E9%9B%AA%E5%A4%ABi%E5%9E%8B%E6%BB%A4%E6%B3%A2%E5%99%A8">切比雪夫I型滤波器</a></li>
+<li><a href="#%E6%A4%AD%E5%9C%86%E6%BB%A4%E6%B3%A2%E5%99%A8">椭圆滤波器</a></li>
+</ul>
+</li>
+<li><a href="#%E9%AB%98%E9%80%9A-%E5%B8%A6%E9%80%9A%E5%92%8C%E5%B8%A6%E9%98%BB%E6%BB%A4%E6%B3%A2%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1">高通、带通和带阻滤波器的设计</a>
+<ul>
+<li><a href="#%E5%BD%92%E4%B8%80%E5%8C%96%E4%BD%8E%E9%80%9A%E6%BB%A4%E6%B3%A2%E5%99%A8">归一化低通滤波器</a></li>
+<li><a href="#%E6%A8%A1%E6%8B%9F%E4%BD%8E%E9%80%9A%E5%88%B0%E9%AB%98%E9%80%9A%E7%9A%84%E9%A2%91%E7%8E%87%E8%BD%AC%E6%8D%A2">模拟低通到高通的频率转换</a></li>
+<li><a href="#%E6%A8%A1%E6%8B%9F%E4%BD%8E%E9%80%9A%E5%88%B0%E5%B8%A6%E9%80%9A%E7%9A%84%E9%A2%91%E7%8E%87%E8%BD%AC%E6%8D%A2">模拟低通到带通的频率转换</a></li>
+<li><a href="#%E6%A8%A1%E6%8B%9F%E4%BD%8E%E9%80%9A%E5%88%B0%E5%B8%A6%E9%98%BB%E7%9A%84%E9%A2%91%E7%8E%87%E8%BD%AC%E6%8D%A2">模拟低通到带阻的频率转换</a></li>
+<li><a href="#%E6%A8%A1%E6%8B%9F%E6%BB%A4%E6%B3%A2%E5%99%A8%E4%B8%80%E8%88%AC%E8%AE%BE%E8%AE%A1%E6%AD%A5%E9%AA%A4">模拟滤波器一般设计步骤</a></li>
+<li><a href="#%E4%B9%A6%E4%B8%8A%E7%9A%84%E9%A2%91%E7%8E%87%E5%8F%98%E6%8D%A2">书上的频率变换</a>
+<ul>
+<li><a href="#%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB">映射关系</a></li>
+<li><a href="#%E6%A8%A1%E6%8B%9F%E4%BD%8E%E9%80%9A%E5%88%B0%E9%AB%98%E9%80%9A">模拟低通到高通</a>
+<ul>
+<li><a href="#%E8%AE%BE%E8%AE%A1%E5%AE%9E%E4%BE%8B">设计实例</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A8%A1%E6%8B%9F%E4%BD%8E%E9%80%9A%E5%88%B0%E5%B8%A6%E9%80%9A">模拟低通到带通</a>
+<ul>
+<li><a href="#%E8%AE%BE%E8%AE%A1%E5%AE%9E%E4%BE%8B-2">设计实例</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A8%A1%E6%8B%9F%E4%BD%8E%E9%80%9A%E5%88%B0%E5%B8%A6%E9%98%BB">模拟低通到带阻</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li></li>
+<li><a href="#%E4%BB%8E%E6%A8%A1%E6%8B%9F%E5%88%B0%E6%95%B0%E5%AD%97%E7%9A%84%E8%BD%AC%E6%8D%A2%E6%96%B9%E6%B3%95">从模拟到数字的转换方法</a>
+<ul>
+<li><a href="#%E8%84%89%E5%86%B2%E5%93%8D%E5%BA%94%E4%B8%8D%E5%8F%98%E6%B3%95">脉冲响应不变法</a>
+<ul>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF">基本思路</a></li>
+<li><a href="#%E6%8E%A8%E5%AF%BC%E8%BF%87%E7%A8%8B">推导过程</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%8C%E7%BA%BF%E6%80%A7%E5%8F%98%E6%8D%A2%E6%B3%95">双线性变换法</a>
+<ul>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF-2">基本思路</a></li>
+<li><a href="#%E8%BD%AC%E6%8D%A2%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90">转换性能分析</a></li>
+<li><a href="#iir%E6%BB%A4%E6%B3%A2%E5%99%A8%E8%AE%BE%E8%AE%A1%E5%AE%9E%E4%BE%8B">IIR滤波器设计实例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#iir%E6%95%B0%E5%AD%97%E6%BB%A4%E6%B3%A2%E5%99%A8%E8%AE%BE%E8%AE%A1%E6%80%BB%E7%BB%93">IIR数字滤波器设计总结</a></li>
+</ul>
+</li>
+</ul>
+</p>
 <h1 id="先导知识">先导知识</h1>
 <h2 id="时频域互换">时频域互换</h2>
 <p>从时域我们很难看出信号包含那些频率成分，也很难去掉信号中某些特定的成分。如果能将信号表达成不同频率成分之和，那么不就很容易看出该信号包含那些频率成分了吗。此时，就需要傅里叶级数（周期信号）、傅里叶变换（非周期信号）等。对于离散信号，需要DTFT（离散时间傅里叶变换）、DFS（离散傅里叶级数、离散周期信号）、DFT（离散傅里叶变换、离散非周期信号）等。</p>
@@ -150,7 +262,7 @@ QQ🔭：1664866311</p>
 <h2 id="什么是滤波器">什么是滤波器？</h2>
 <p>滤波器就是<strong>滤掉干扰信息（噪声），保留有用信息</strong>。</p>
 <p>下面分别是按滤掉噪声频率的几类滤波器的幅频曲线图：</p>
-<p><img src="https://CDJ-happier.github.io/post-images/1604146235349.png" alt="" loading="lazy"><br>
+<p><img src="http://localhost:4000/post-images/1604146235349.png" alt="" loading="lazy"><br>
 设计常规滤波器的时候，我们一般采用另外一种分类，FIR（Finite Impulse Response）和IIR（Infinite Impulse Response）filter，即有限脉冲响应滤波器和无限脉冲响应滤波器。</p>
 <p>理想脉冲信号，其傅里叶变换恒为1，也就时包含了所有频率分量，是一个理想的测试信号，能够激发出所有单位频率分量的响应，因此理想脉冲信号的响应，就代表了系统的特性。</p>
 <p>滤波器也可以看成一个系统，如果用一个理想脉冲信号激励，就会有输出，我们把<strong>输出个数有限</strong>的称为有限脉冲响应滤波器（FIR）；<strong>输出无限多</strong>的称为无限脉冲响应滤波器（IIR）。</p>
@@ -176,8 +288,8 @@ QQ🔭：1664866311</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>(</mo><mi>j</mi><mi>ω</mi><mo>)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>n</mi><mo>=</mo><mo>−</mo><mi mathvariant="normal">∞</mi></mrow><mrow><mo>+</mo><mi mathvariant="normal">∞</mi></mrow></munderover><mi>x</mi><mo>(</mo><mi>n</mi><mo>)</mo><msup><mi>z</mi><mrow><mo>−</mo><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">X(j{\omega})=\sum_{n=-\infin}^{+\infin}x(n)z^{-n}
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.0666720000000005em;vertical-align:-1.308336em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.7583360000000003em;"><span style="top:-1.8999949999999999em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span><span class="mrel mtight">=</span><span class="mord mtight">−</span><span class="mord mtight">∞</span></span></span></span><span style="top:-3.050005em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.300005em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">+</span><span class="mord mtight">∞</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.308336em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">x</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.821331em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathdefault mtight">n</span></span></span></span></span></span></span></span></span></span></span></span></span></p>
 <p>上式就是Z变换了。</p>
-<figure data-type="image" tabindex="1"><img src="https://CDJ-happier.github.io/post-images/1604146208483.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="2"><img src="https://CDJ-happier.github.io/post-images/1604146199370.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="http://localhost:4000/post-images/1604146208483.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="http://localhost:4000/post-images/1604146199370.png" alt="" loading="lazy"></figure>
 <p>如何理解上面的规律？</p>
 <ul>
 <li>需要明白幅频曲线自变量是频率<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>ω</mi></mrow><annotation encoding="application/x-tex">\omega</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span></span></span></span>，而不是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mo>=</mo><mi>δ</mi><mo>+</mo><mi>j</mi><mi>ω</mi></mrow><annotation encoding="application/x-tex">s={\delta}+j{\omega}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03785em;">δ</span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span></span></span></span></span>。</li>
@@ -190,7 +302,7 @@ QQ🔭：1664866311</p>
 <li>对于规律二，不在单位圆上的零点，单位圆上越靠近零点的频率，其<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∣</mi><mi>H</mi><mo>(</mo><mi>j</mi><mi>ω</mi><mo>)</mo><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|H(j\omega)|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span><span class="mord">∣</span></span></span></span>也就越小。</li>
 <li>对于规律三，因为是极点，极点为0时即系统函数的分母为0，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∣</mi><mi>H</mi><mo>(</mo><mi>j</mi><mi>ω</mi><mo>)</mo><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|H(j\omega)|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span><span class="mord">∣</span></span></span></span>很大。（至于为什么要指定是单位圆内部的极点呢？我猜是单位圆外部的极点使系统不稳定，因此不必讨论）</li>
 </ul>
-<figure data-type="image" tabindex="3"><img src="https://CDJ-happier.github.io/post-images/1604146186323.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="http://localhost:4000/post-images/1604146186323.png" alt="" loading="lazy"></figure>
 <h2 id="零-极点分布如何影响频率响应">零、极点分布如何影响频率响应</h2>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>H</mi><mo>(</mo><mi>z</mi><mo>)</mo><mo>=</mo><mi>A</mi><mfrac><mrow><munderover><mo>∏</mo><mrow><mi>r</mi><mo>=</mo><mn>1</mn></mrow><mi>M</mi></munderover><mo>(</mo><mn>1</mn><mo>−</mo><msub><mi>c</mi><mi>r</mi></msub><msup><mi>z</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>)</mo></mrow><mrow><munderover><mo>∏</mo><mrow><mi>r</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><mo>(</mo><mn>1</mn><mo>−</mo><msub><mi>d</mi><mi>r</mi></msub><msup><mi>z</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo>)</mo></mrow></mfrac><mspace linebreak="newline"></mspace><mi mathvariant="normal">∣</mi><mi>H</mi><mo>(</mo><msup><mi>e</mi><mrow><mi>j</mi><mi>ω</mi></mrow></msup><mo>)</mo><mi mathvariant="normal">∣</mi><mo>=</mo><mi mathvariant="normal">∣</mi><mi>A</mi><mi mathvariant="normal">∣</mi><mfrac><mrow><munderover><mo>∏</mo><mrow><mi>r</mi><mo>=</mo><mn>1</mn></mrow><mi>M</mi></munderover><mi mathvariant="normal">∣</mi><msub><mi>z</mi><mi>r</mi></msub><mi mathvariant="normal">∣</mi></mrow><mrow><munderover><mo>∏</mo><mrow><mi>r</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><mrow><mi mathvariant="normal">∣</mi><msub><mi>P</mi><mi>r</mi></msub><mi mathvariant="normal">∣</mi></mrow></mrow></mfrac><mspace linebreak="newline"></mspace><mi>ϕ</mi><mo>(</mo><mi>ω</mi><mo>)</mo><mo>=</mo><mi>ω</mi><mo>(</mo><mi>N</mi><mo>−</mo><mi>M</mi><mo>)</mo><mo>+</mo><munderover><mo>∑</mo><mrow><mi>r</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>α</mi><mi>r</mi></msub><mo>−</mo><munderover><mo>∑</mo><mrow><mi>r</mi><mo>=</mo><mn>1</mn></mrow><mi>M</mi></munderover><msub><mi>β</mi><mi>r</mi></msub></mrow><annotation encoding="application/x-tex">H(z)=A\frac{\prod_{r=1}^M(1-c_rz^{-1})}{\prod_{r=1}^{N}(1-d_rz^{-1})} \\
 |H(e^{j\omega})|=|A|\frac{\prod_{r=1}^M|z_r|}{\prod_{r=1}^N{|P_r|}} \\
@@ -230,7 +342,7 @@ for i = 1:3
     xlabel(['N=', num2str(N)]);
 end
 </code></pre>
-<figure data-type="image" tabindex="4"><img src="https://CDJ-happier.github.io/post-images/1604146170548.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="http://localhost:4000/post-images/1604146170548.jpg" alt="" loading="lazy"></figure>
 <h2 id="频率响应分析">频率响应分析</h2>
 <p>python代码分析均值滤波频率响应，采样率为200Hz，阶数为7。</p>
 <pre><code class="language-python">from scipy.optimize import newton
@@ -286,9 +398,9 @@ plt.yticks([-180, -135, -90, -45, 0, 45, 90])
 plt.axvline(cutoff_freq, color='red')
 plt.show()
 </code></pre>
-<figure data-type="image" tabindex="5"><img src="https://CDJ-happier.github.io/post-images/1604146147920.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="http://localhost:4000/post-images/1604146147920.png" alt="" loading="lazy"></figure>
 <p>改变滤波器阶数，观察幅频响应（N=3，7，18）：</p>
-<figure data-type="image" tabindex="6"><img src="https://CDJ-happier.github.io/post-images/1604146140017.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="http://localhost:4000/post-images/1604146140017.png" alt="" loading="lazy"></figure>
 <p>可以看出，均值滤波器：</p>
 <ul>
 <li>是一个低通滤波器</li>
@@ -335,7 +447,7 @@ plt.show()
 <li>若周期截断，则FFT频谱为单一谱线；</li>
 <li>若为非周期截断，则频谱出现拖尾，如图中部所示，可以看出泄漏很严重。</li>
 </ul>
-<figure data-type="image" tabindex="7"><img src="https://CDJ-happier.github.io/post-images/1604146117886.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="http://localhost:4000/post-images/1604146117886.png" alt="" loading="lazy"></figure>
 <p>为了减少泄漏，给信号施加一个窗函数（如图中上部红色曲线所示），原始截断后的信号与这个窗函数相乘之后得到的信号为上面右侧的信号。可以看出，此时，信号的起始时刻和结束时刻幅值都为0，也就是说在这个时间长度内，信号为周期信号，但是只有一个周期。对这个信号做FFT分析，得到的频谱如下部右侧所示。相比较之前未加窗的频谱，可以看出，泄漏已明显改善，但并没有完全消除。因此，窗函数只能减少泄漏，不能消除泄漏。</p>
 <p>基于窗函数法设计FIR滤波器，其基本步骤如下：</p>
 <ol>
@@ -352,7 +464,7 @@ plt.show()
 h = fir1(24, [0.2 0.4]);
 freqz(h, 1, 512);
 </code></pre>
-<figure data-type="image" tabindex="8"><img src="https://CDJ-happier.github.io/post-images/1604146109133.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="http://localhost:4000/post-images/1604146109133.jpg" alt="" loading="lazy"></figure>
 <h2 id="频率采样法">频率采样法</h2>
 <p>设希望逼近的滤波器的频响函数用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mi>d</mi></msub><mo>(</mo><msup><mi>e</mi><mrow><mi>j</mi><mi>ω</mi></mrow></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">H_d(e^{j\omega})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0746639999999998em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ω</span></span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>表示，对<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mi>d</mi></msub><mo>(</mo><msup><mi>e</mi><mrow><mi>j</mi><mi>ω</mi></mrow></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">H_d(e^{j\omega})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0746639999999998em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ω</span></span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>ω</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\omega=0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mi>π</mi></mrow><annotation encoding="application/x-tex">2\pi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord mathdefault" style="margin-right:0.03588em;">π</span></span></span></span>之间等间隔采样N点，得到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mi>d</mi></msub><mo>(</mo><mi>k</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">H_d(k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">)</span></span></span></span>：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mi>d</mi></msub><mo>(</mo><mi>k</mi><mo>)</mo><mo>=</mo><msub><mi>H</mi><mi>d</mi></msub><mo>(</mo><msup><mi>e</mi><mrow><mi>j</mi><mi>ω</mi></mrow></msup><mo>)</mo><msub><mi mathvariant="normal">∣</mi><mrow><mi>ω</mi><mo>=</mo><mfrac><mrow><mn>2</mn><mi>π</mi></mrow><mi>N</mi></mfrac><mi>k</mi></mrow></msub><mspace width="1em"/><mi>k</mi><mo>=</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>N</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">H_d(k)=H_d(e^{j\omega})|_{\omega=\frac{2\pi}{N}k}{\quad}k=0,1,...,N-1
@@ -367,7 +479,7 @@ freqz(h, 1, 512);
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>H</mi><mo>(</mo><mi>z</mi><mo>)</mo><mo>=</mo><mfrac><mrow><mn>1</mn><mo>−</mo><msup><mi>z</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow><mi>N</mi></mfrac><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></munderover><mfrac><mrow><msub><mi>H</mi><mi>d</mi></msub><mo>(</mo><mi>k</mi><mo>)</mo></mrow><mrow><mn>1</mn><mo>−</mo><msubsup><mi>W</mi><mi>N</mi><mrow><mo>−</mo><mi>k</mi></mrow></msubsup><msup><mi>z</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">H(z)=\frac{1-z^{-1}}{N}\sum_{k=0}^{N-1}\frac{H_d(k)}{1-W_N^{-k}z^{-1}}
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:3.1304490000000005em;vertical-align:-1.302113em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.491108em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8283360000000002em;"><span style="top:-1.8478869999999998em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span><span class="mrel mtight">=</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.0500049999999996em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.300005em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.302113em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.2207610000000004em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8892389999999999em;"><span style="top:-2.4064690000000004em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.1031310000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.293531em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740108em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.0727699999999998em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
 <p>上述两种方法如下：</p>
-<figure data-type="image" tabindex="9"><img src="https://CDJ-happier.github.io/post-images/1604146091291.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="http://localhost:4000/post-images/1604146091291.png" alt="" loading="lazy"></figure>
 <p>MATLAB中使用频率采样法设计FIR滤波器：</p>
 <pre><code class="language-matlab">% h = fir2(n, f, m);
 % n表示阶数；f表示分立点频率矢量；m表示分立点对应的幅值响应矢量
@@ -377,7 +489,7 @@ m = [10 1 0 0];
 h = fir2(24, f, m);
 freqz(h, 1);
 </code></pre>
-<figure data-type="image" tabindex="10"><img src="https://CDJ-happier.github.io/post-images/1604146080486.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="http://localhost:4000/post-images/1604146080486.jpg" alt="" loading="lazy"></figure>
 <h2 id="响应最优法">响应最优法</h2>
 <p>主要思路就是找到一组脉冲响应，<strong>让它的频域响应 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>H</mi><mo>(</mo><msup><mi>e</mi><mrow><mi>j</mi><mi>ω</mi></mrow></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">H(e^{j\omega})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0746639999999998em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ω</span></span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>与期望的滤波器的频域响应<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mi>d</mi></msub><mo>(</mo><msup><mi>e</mi><mrow><mi>j</mi><mi>ω</mi></mrow></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">H_d(e^{j\omega})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0746639999999998em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ω</span></span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>尽可能一致</strong>。主要通过两种方法来实现，一个是最小二乘法、另一个是（切比雪夫）等波纹逼近法。</p>
 <h3 id="最小二乘法">最小二乘法</h3>
@@ -394,7 +506,7 @@ m = [10 1 0 0];
 h = firls(24, f, m);
 freqz(h, 1)
 </code></pre>
-<figure data-type="image" tabindex="11"><img src="https://CDJ-happier.github.io/post-images/1604146069931.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="http://localhost:4000/post-images/1604146069931.jpg" alt="" loading="lazy"></figure>
 <h3 id="切比雪夫等波纹最佳逼近法">切比雪夫等波纹最佳逼近法</h3>
 <p>书上的：</p>
 <p>用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mi>d</mi></msub><mo>(</mo><mi>ω</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">H_d(\omega)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span></span></span></span>表示希望逼近的幅度特性函数，要求设计线性相位FIR数字滤波器时，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mi>d</mi></msub><mo>(</mo><mi>ω</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">H_d(\omega)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span></span></span></span>必须满足线性相位约束条件。用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mi>g</mi></msub><mo>(</mo><mi>ω</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">H_g(\omega)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span></span></span></span>表示实际设计的滤波器幅度特性函数，定义加权误差函数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>E</mi><mo>(</mo><mi>ω</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">E(\omega)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span></span></span></span>为：</p>
@@ -415,10 +527,10 @@ m = [100 1 0 0];
 h = firpm(24, f, m);
 freqz(h, 1)
 </code></pre>
-<figure data-type="image" tabindex="12"><img src="https://CDJ-happier.github.io/post-images/1604146059128.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="http://localhost:4000/post-images/1604146059128.jpg" alt="" loading="lazy"></figure>
 <h2 id="fir数字滤波器设计总结">FIR数字滤波器设计总结</h2>
 <p>对于<a href="#%E5%93%8D%E5%BA%94%E6%9C%80%E4%BC%98%E6%B3%95">响应最优法</a>更像是拟合，下图是<a href="#%E7%AA%97%E5%87%BD%E6%95%B0%E6%B3%95">窗函数法</a>和<a href="#%E9%A2%91%E7%8E%87%E9%87%87%E6%A0%B7%E6%B3%95">频率采样法</a>的流程图：<br>
-<img src="https://CDJ-happier.github.io/post-images/1605427393616.png" alt="" loading="lazy"></p>
+<img src="http://localhost:4000/post-images/1605427393616.png" alt="" loading="lazy"></p>
 <h1 id="iir滤波器设计">IIR滤波器设计</h1>
 <p><a href="https://zhuanlan.zhihu.com/p/51097798">如何快速设计一个IIR滤波器</a></p>
 <h2 id="基本设计思路-2">基本设计思路</h2>
@@ -472,7 +584,7 @@ P = exp(1i*pi*(0.5 + (2*k+1) ./ (2*N)));
 zplane(Z, P);
 title('零极点分布图');
 </code></pre>
-<figure data-type="image" tabindex="13"><img src="https://CDJ-happier.github.io/post-images/1604146045288.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="http://localhost:4000/post-images/1604146045288.jpg" alt="" loading="lazy"></figure>
 <p>取左半平面的N个极点构成系统函数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mi>a</mi></msub><mo>(</mo><mi>s</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">H_a(s)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault">s</span><span class="mclose">)</span></span></span></span>，并用3dB截止频率<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="normal">Ω</mi><mi>c</mi></msub></mrow><annotation encoding="application/x-tex">\Omega_c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord">Ω</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">c</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>归一化得：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>G</mi><mi>a</mi></msub><mo>(</mo><mfrac><mi>s</mi><msub><mi mathvariant="normal">Ω</mi><mi>c</mi></msub></mfrac><mo>)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><munderover><mo>∏</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></munderover><mo>(</mo><mfrac><mi>s</mi><msub><mi mathvariant="normal">Ω</mi><mi>c</mi></msub></mfrac><mo>−</mo><mfrac><msub><mi>s</mi><mi>k</mi></msub><msub><mi mathvariant="normal">Ω</mi><mi>c</mi></msub></mfrac><mo>)</mo></mrow></mfrac><mspace linebreak="newline"></mspace><mo>=</mo><mstyle mathcolor="blue"><mfrac><mn>1</mn><mrow><munderover><mo>∏</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></munderover><mo>(</mo><mi>p</mi><mo>−</mo><msub><mi>p</mi><mi>k</mi></msub><mo>)</mo></mrow></mfrac></mstyle><mspace width="1em"/><mo>(</mo><mn>1</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">G_a(\frac{s}{\Omega_c})=\frac{1}{\prod_{k=0}^{N-1}(\frac{s}{\Omega_c}-\frac{s_k}{\Omega_c})}\\
 ={\color{blue}\frac{1}{\prod_{k=0}^{N-1}(p-p_k)}}{\quad}(1)
@@ -570,7 +682,7 @@ plot(fk/1000, 20 * log10(abs(Hk))); grid on;
 xlabel('频率(kHz)'); ylabel('幅度(dB)');
 axis([0, 14, -40, 5]);
 </code></pre>
-<figure data-type="image" tabindex="14"><img src="https://CDJ-happier.github.io/post-images/1605427779162.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="14"><img src="http://localhost:4000/post-images/1605427779162.jpg" alt="" loading="lazy"></figure>
 <p>用MATLAB设计巴特沃斯滤波器（成电DSP书上P160有详细说明）：</p>
 <pre><code class="language-matlab">[Z, P, K] = buttap(N);
 [N, wc] = buttord(wp, ws, Rp, As);
@@ -802,14 +914,14 @@ let{\quad}s={\delta}+j\Omega,\ z=re^{j\omega}\\
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mo>=</mo><mfrac><mn>2</mn><mi>T</mi></mfrac><mfrac><mrow><mn>1</mn><mo>−</mo><msup><mi>z</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow><mrow><mn>1</mn><mo>+</mo><msup><mi>z</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow></mfrac><mspace width="1em"/><mo>(</mo><mn>1</mn><mo>)</mo><mspace linebreak="newline"></mspace><mi>z</mi><mo>=</mo><mfrac><mrow><mfrac><mn>2</mn><mi>T</mi></mfrac><mo>+</mo><mi>s</mi></mrow><mrow><mfrac><mn>2</mn><mi>T</mi></mfrac><mo>−</mo><mi>s</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">s=\frac{2}{T}\frac{1-z^{-1}}{1+z^{-1}}{\quad}(1)\\
 z=\frac{\frac{2}{T}+s}{\frac{2}{T}-s}
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.260438em;vertical-align:-0.7693300000000001em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.32144em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.491108em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740108em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693300000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord"><span class="mspace" style="margin-right:1em;"></span></span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.660216em;vertical-align:-1.080108em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.580108em;"><span style="top:-2.2648919999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.845108em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault">s</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.7350000000000003em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.845108em;"><span style="top:-2.6550000000000002em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathdefault">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.080108em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
-<figure data-type="image" tabindex="15"><img src="https://CDJ-happier.github.io/post-images/1604146011754.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="http://localhost:4000/post-images/1604146011754.jpg" alt="" loading="lazy"></figure>
 <h4 id="转换性能分析">转换性能分析</h4>
 <p>先分析<strong>模拟频率</strong><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Ω</mi></mrow><annotation encoding="application/x-tex">\Omega</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">Ω</span></span></span></span>和<strong>数字频率</strong><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>ω</mi></mrow><annotation encoding="application/x-tex">\omega</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span></span></span></span>之间的关系，令<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mo>=</mo><mi>j</mi><mi mathvariant="normal">Ω</mi><mo separator="true">,</mo><mtext> </mtext><mi>z</mi><mo>=</mo><msup><mi>e</mi><mrow><mi>j</mi><mi>ω</mi></mrow></msup></mrow><annotation encoding="application/x-tex">s=j\Omega,\ z=e^{j\omega}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mord">Ω</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mspace"> </span><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.824664em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ω</span></span></span></span></span></span></span></span></span></span></span></span>，并带入式（1）得到：</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>j</mi><mi mathvariant="normal">Ω</mi><mo>=</mo><mfrac><mn>2</mn><mi>T</mi></mfrac><mfrac><mrow><mn>1</mn><mo>−</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>j</mi><mi>ω</mi></mrow></msup></mrow><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>j</mi><mi>ω</mi></mrow></msup></mrow></mfrac><mspace linebreak="newline"></mspace><mi mathvariant="normal">Ω</mi><mo>=</mo><mfrac><mn>2</mn><mi>T</mi></mfrac><mi>tan</mi><mo>⁡</mo><mrow><mo>(</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mi>ω</mi><mo>)</mo></mrow></mrow><annotation encoding="application/x-tex">j\Omega=\frac{2}{T}\frac{1-e^{-j\omega}}{1+e^{-j\omega}}\\
 \Omega=\frac{2}{T}\tan{(\frac{1}{2}\omega)}
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mord">Ω</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.270994em;vertical-align:-0.7693300000000001em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.32144em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.5016639999999999em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.750664em;"><span style="top:-2.9890000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ω</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">ω</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693300000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">Ω</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.00744em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.32144em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mop">tan</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.32144em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mclose">)</span></span></span></span></span></span></p>
 <p>上式说明，s平面上的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Ω</mi></mrow><annotation encoding="application/x-tex">\Omega</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">Ω</span></span></span></span>与z平面的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>ω</mi></mrow><annotation encoding="application/x-tex">\omega</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span></span></span></span>成非线性<strong>正切关系</strong>。</p>
-<figure data-type="image" tabindex="16"><img src="https://CDJ-happier.github.io/post-images/1604145994323.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="http://localhost:4000/post-images/1604145994323.jpg" alt="" loading="lazy"></figure>
 <ul>
 <li>在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>ω</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\omega=0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>附近接近线性关系；</li>
 <li>当<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>ω</mi></mrow><annotation encoding="application/x-tex">\omega</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">ω</span></span></span></span>增加时，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">Ω</mi></mrow><annotation encoding="application/x-tex">\Omega</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">Ω</span></span></span></span>加得愈来愈快；</li>
@@ -874,8 +986,8 @@ s-65,47,-65,47z M834 80H400000v40H845z'/></svg></span></span></span><span class=
 <p>除了上面的两种方法外，还有其它的方法，<a href="https://mp.weixin.qq.com/s/Zi9juM9I3lTlEUYmDvPATw">具体参见（点我）</a></p>
 </li>
 </ul>
-<figure data-type="image" tabindex="17"><img src="https://CDJ-happier.github.io/post-images/1605428054524.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="18"><img src="https://CDJ-happier.github.io/post-images/1605428067169.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="17"><img src="http://localhost:4000/post-images/1605428054524.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="http://localhost:4000/post-images/1605428067169.jpg" alt="" loading="lazy"></figure>
 
               </div>
               <div class="toc-container">
@@ -991,7 +1103,7 @@ s-65,47,-65,47z M834 80H400000v40H845z'/></svg></span></span></span><span class=
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://CDJ-happier.github.io/post/DSP-base2/">
+            <a href="http://localhost:4000/post/DSP-base2/">
               <h3 class="post-title">
                 数字信号处理-基础二
               </h3>
@@ -1003,7 +1115,7 @@ s-65,47,-65,47z M834 80H400000v40H845z'/></svg></span></span></span><span class=
 
         <div class="site-footer">
   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

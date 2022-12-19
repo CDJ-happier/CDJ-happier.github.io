@@ -1,0 +1,240 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KeypointNeRF：3D head的重建 | DJCai</title>
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="KeypointNeRF：3D head的重建 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="KeypointNeRF: Generalizing Image-based Volumetric Avatars using Relative Spatial Encoding of Keypoints
+通过用3D关键点对query po..." />
+    <meta name="keywords" content="NeRF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
+  </a>
+  <h1 class="site-title">
+    DJCai
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="http://localhost:4000" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              KeypointNeRF：3D head的重建
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-11-23
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="http://localhost:4000/tag/CzCAdSGMg/" class="post-tag">
+                  # NeRF
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="http://localhost:4000/post-images/keypointnerf3d-head-de-chong-jian.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>KeypointNeRF: Generalizing Image-based Volumetric Avatars using Relative Spatial Encoding of Keypoints<br>
+通过用3D关键点对query point进行相对空间编码，解决全局编码对细节重建不好的缺点；以及使用pixel-aligned feature实现细节重建。</p>
+<!-- more -->
+<p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#%E9%87%8D%E7%82%B9component">重点component</a>
+<ul>
+<li><a href="#%E5%9F%BA%E4%BA%8E%E5%85%B3%E9%94%AE%E7%82%B9%E7%9A%84%E7%9B%B8%E5%AF%B9%E7%A9%BA%E9%97%B4%E7%BC%96%E7%A0%81relative-spatial-encoding">基于关键点的相对空间编码(relative spatial encoding)</a></li>
+<li><a href="#%E5%83%8F%E7%B4%A0%E5%AF%B9%E9%BD%90%E7%89%B9%E5%BE%81pixel-aligned-feature">像素对齐特征(pixel-aligned feature)</a></li>
+</ul>
+</li>
+<li><a href="#multi-view-feature-fusion">Multi-view Feature Fusion</a></li>
+<li><a href="#modeling-radiance-fields">Modeling Radiance Fields</a></li>
+<li><a href="#%E5%85%B6%E5%AE%83">其它</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="overview">Overview</h2>
+<figure data-type="image" tabindex="1"><img src="http://localhost:4000/post-images/1671438331078.png" alt="" loading="lazy"></figure>
+<p>以下各步骤与图中的编号相对应：</p>
+<ol>
+<li>通过input images得到K个2D关键点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">p_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，并提升为3D keypoints；</li>
+<li>camera cast a ray，and sample some query points；</li>
+<li>通过image encoder提取images的一些feature maps；</li>
+<li>对于某个query point：将其投影到各个feature maps获得像素对齐特征（图中绿色以及蓝色长方体，绿色长方体是将query point投影到images本身）；用step1中的3D keypoints对query point进行相对空间位置编码relative spatial encoding获得<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>s</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">s_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>；</li>
+<li>像素对齐特征与空间位置编码相融合；</li>
+<li>使用Radiance Field预测color &amp; density；</li>
+<li>使用volume rendering得到novel view的pixel value；</li>
+</ol>
+<h2 id="重点component">重点component</h2>
+<h3 id="基于关键点的相对空间编码relative-spatial-encoding">基于关键点的相对空间编码(relative spatial encoding)</h3>
+<p>一些工作使用global spatial encodings和multi-view geometric consistency减少了空间模糊性spatial ambiguity，但global encodings经常会因为训练数据的分布特性而导致过拟合，或者很难从稀疏视角sparse views学习multi-view consistent reconstruction（由于global encodings固有特点而导致）。</p>
+<p>本文一个关键的idea是使用sparse 3D keypoints编码相对空间3D信息，相对空间编码的特点是局部local，它更多学习的是局部特征之间的关系（有点类似于IBRNet中送入MLP的不是raw view direction，而是与camera direction的一个角度差。NeRF送入MLP是view direction，它只是一个坐标，不包含任何关于scene的特征，导致泛化性较差。而使用角度差，就像告诉MLP，谁离我比较近(角度差)，就多学习一点特征）。</p>
+<p>如何得到：</p>
+<p>N张input views，计算得到K个关键点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>p</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">p_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。对于一个3D query point X，将K+1个点投影到第n张input view上去，计算深度差值<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>δ</mi><mi>n</mi></msub><mo>(</mo><msub><mi>p</mi><mi>k</mi></msub><mo separator="true">,</mo><mi>X</mi><mo>)</mo><mo>=</mo><mi>z</mi><mo>(</mo><msub><mi>p</mi><mi>k</mi></msub><mi mathvariant="normal">∣</mi><msub><mi>P</mi><mi>n</mi></msub><mo>)</mo><mo>−</mo><mi>z</mi><mo>(</mo><mi>X</mi><mi mathvariant="normal">∣</mi><msub><mi>P</mi><mi>n</mi></msub><mo>)</mo></mrow><annotation encoding="application/x-tex">\delta_n(p_k, X)=z(p_k|P_n)-z(X|P_n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03785em;">δ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.03785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.04398em;">z</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mord">∣</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>P</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">P_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是指相机参数，投影用)，并使用位置编码<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>γ</mi><mo>(</mo><mo>∗</mo><mo>)</mo></mrow><annotation encoding="application/x-tex">\gamma(*)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05556em;">γ</span><span class="mopen">(</span><span class="mord">∗</span><span class="mclose">)</span></span></span></span>。计算X在第n张input view上的相对空间编码如下([*]即列表，[<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>s</mi><mrow><mi>n</mi><mn>1</mn></mrow></msub><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><msub><mi>s</mi><mrow><mi>n</mi><mi>K</mi></mrow></msub></mrow><annotation encoding="application/x-tex">s_{n1},..., s_{nK}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.30110799999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">.</span><span class="mord">.</span><span class="mord">.</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span><span class="mord mathdefault mtight" style="margin-right:0.07153em;">K</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>])：<br>
+<img src="http://localhost:4000/post-images/1671438589474.png" alt="" loading="lazy"></p>
+<h3 id="像素对齐特征pixel-aligned-feature">像素对齐特征(pixel-aligned feature)</h3>
+<p>是什么？一张input view，通过卷积或其它操作得到一些feature map，如feat_geometry_map, feat_appearance_map，将query point投影到这些特征平面上(会使用双线性插值确保一定有投影点)，会得到投影点，这些投影点就是像素对齐特征。</p>
+<p>本文的特征平面包括4种：<br>
+<img src="http://localhost:4000/post-images/1671438687225.png" alt="" loading="lazy"><br>
+前两个特征是用HourGlass网络得到的，第三个特征用带残差连接的卷积网络得到。X是一个3D query point，将其投影到各个特征平面可得像素对其特征，记为<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="normal">Φ</mi><mi>n</mi></msub><mo>(</mo><mi>X</mi><mi mathvariant="normal">∣</mi><mi>F</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">\Phi_n(X|F)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">Φ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mord">∣</span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mclose">)</span></span></span></span>，F取上面的4种特征（n是指第n张input view）。</p>
+<h2 id="multi-view-feature-fusion">Multi-view Feature Fusion</h2>
+<p>为了model一个multi-view consistent radiance filed，我们需要对每张view的空间编码<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>s</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">s_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>和像素对齐特征<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi mathvariant="normal">Φ</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">\Phi_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord">Φ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>进行融合，具体操作如下：<br>
+<img src="http://localhost:4000/post-images/1671438347015.png" alt="" loading="lazy"></p>
+<h2 id="modeling-radiance-fields">Modeling Radiance Fields</h2>
+<p>density和color的预测是独立的，density的预测比较简单、直接；color的预测则是结合了多种特征，并且先得到N个blending weights，然后融合。<br>
+<img src="http://localhost:4000/post-images/1671438357625.png" alt="" loading="lazy"></p>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>G</mi><mi>X</mi></msub></mrow><annotation encoding="application/x-tex">G_X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">G</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.07847em;">X</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>能保证geometrically consistent renderings。</p>
+<h2 id="其它">其它</h2>
+<p>损失函数用了一个VCC感知损失，能更好地捕获high-frequency details。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#%E9%87%8D%E7%82%B9component">重点component</a>
+<ul>
+<li><a href="#%E5%9F%BA%E4%BA%8E%E5%85%B3%E9%94%AE%E7%82%B9%E7%9A%84%E7%9B%B8%E5%AF%B9%E7%A9%BA%E9%97%B4%E7%BC%96%E7%A0%81relative-spatial-encoding">基于关键点的相对空间编码(relative spatial encoding)</a></li>
+<li><a href="#%E5%83%8F%E7%B4%A0%E5%AF%B9%E9%BD%90%E7%89%B9%E5%BE%81pixel-aligned-feature">像素对齐特征(pixel-aligned feature)</a></li>
+</ul>
+</li>
+<li><a href="#multi-view-feature-fusion">Multi-view Feature Fusion</a></li>
+<li><a href="#modeling-radiance-fields">Modeling Radiance Fields</a></li>
+<li><a href="#%E5%85%B6%E5%AE%83">其它</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="http://localhost:4000/post/learning-light-field-angular-super-resolution-via-a-geometry-aware-network/">
+              <h3 class="post-title">
+                Learning Light Field Angular Super-Resolution via a Geometry-Aware Network
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

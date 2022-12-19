@@ -1,0 +1,267 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ShearedEPI blur-deblur | DJCai</title>
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="ShearedEPI blur-deblur | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+Light Field Reconstruction Using Deep Convolutional Network on EPI
+
+背景
+问题分析
+本文insight
+疑问
+blur-restoration-deblur
+EPI bl..." />
+    <meta name="keywords" content="light field,深度学习" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
+  </a>
+  <h1 class="site-title">
+    DJCai
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="http://localhost:4000" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              ShearedEPI blur-deblur
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-21
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="http://localhost:4000/tag/ObyNCpG0_/" class="post-tag">
+                  # light field
+                </a>
+              
+                <a href="http://localhost:4000/tag/5XKbW1UrC/" class="post-tag">
+                  # 深度学习
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="http://localhost:4000/post-images/shearedepi-blur-deblur.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p><ul class="markdownIt-TOC">
+<li><a href="#light-field-reconstruction-using-deep-convolutional-network-on-epi">Light Field Reconstruction Using Deep Convolutional Network on EPI</a>
+<ul>
+<li><a href="#%E8%83%8C%E6%99%AF">背景</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90">问题分析</a></li>
+<li><a href="#%E6%9C%AC%E6%96%87insight">本文insight</a></li>
+<li><a href="#%E7%96%91%E9%97%AE">疑问</a></li>
+<li><a href="#blur-restoration-deblur">blur-restoration-deblur</a></li>
+<li><a href="#epi-blur%E4%B8%AD%E7%9A%841d-blur-kernel">EPI blur中的1D blur kernel</a></li>
+<li><a href="#cnn-architecture">CNN architecture</a>
+<ul>
+<li><a href="#loss-function">loss function</a></li>
+</ul>
+</li>
+<li><a href="#result">result</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="light-field-reconstruction-using-deep-convolutional-network-on-epi">Light Field Reconstruction Using Deep Convolutional Network on EPI</h1>
+<p>Gaochang Wu, Mandan Zhao, Liangyong Wang, Qionghai Dai, Tianyou Chai, and Yebin Liu		CVPR 2017</p>
+<p>论文所做的工作：light field reconstruction(view interpolation)，从3x3的views超分到7x7的views</p>
+<h2 id="背景">背景</h2>
+<p>目前的光场相机在角度分辨率和空间分辨率之间存在trade-off。大多数都在研究如何进行角度超分（即数据集都是空间分辨率远大于角度分辨率，然后对角度进行超分）。</p>
+<p>depth-base和depth-independent，前者会受到non-Lambertian和occlusion的影响；后者是在Fourier domain进行分析恢复，但前提条件比价多。本文结合二者的有点，在Fourier分析，并用CNN实现。</p>
+<h2 id="问题分析">问题分析</h2>
+<p>由于角度分辨率低，空间分辨率高，二者之间的这种不平衡在文中称为信息不对成information asymmetry，其在直接对角度进行上采样upsampling或超分super-resolved时会造成重影效果ghosting effect[24]。</p>
+<h2 id="本文insight">本文insight</h2>
+<ol>
+<li>为了维持角度和空间信息之间的平衡（information symmetry），本文提取空间域的低频信息（对空间域作低通滤波），即blur operation；</li>
+<li>然后再进行角度域上采样（双三次插值bicubic interpolation）到desire angular resolution；</li>
+<li>通过一个CNN网络恢复因undersampling的angular detail；</li>
+<li>再通过non-blind operation恢复因步骤一导致缺失的spatial information；</li>
+</ol>
+<p>提出”blur-restoration-deblur“框架</p>
+<p><strong>Note：</strong></p>
+<p>为了保证角度域和空间域信息对称information symmetry，一个直接的方法是对空间域下采样。但是，如果像Figure 2中这样角度和空间域差距很大的话，下采样会损失非常多的信息。因此，文中是通过1D blur kernel提取空间域的低频信息。<br>
+<img src="http://localhost:4000/post-images/1671437225676.png" alt="" loading="lazy"></p>
+<h2 id="疑问">疑问</h2>
+<ol>
+<li>为什么角度和空间之间的信息不对称会导致ghosting effect[24]；</li>
+<li>Figure 2中图(b)angular upsampling具体是怎么做的？</li>
+<li>non-blind deblur的non-blind是什么意思？参看文献[18]，<a href="https://blog.csdn.net/qq_43426078/article/details/123244207">参考链接</a>。</li>
+</ol>
+<h2 id="blur-restoration-deblur">blur-restoration-deblur</h2>
+<figure data-type="image" tabindex="1"><img src="http://localhost:4000/post-images/1671437235209.png" alt="" loading="lazy"></figure>
+<ol>
+<li>EPI blur是为了解决information asymmetry（为了解决angular和spatial差距比较大的情况，不是直接将spatial下采样，而是使用1D blur kernel提取低频信息实现information asymmetry）；</li>
+<li>Up-sampling，将angular上采样到指定resolution；</li>
+<li>CNN恢复的是由于undersampling的angular信息；</li>
+<li>Non-blind deblur是EPI blur的逆操作，恢复spatial information；</li>
+</ol>
+<h2 id="epi-blur中的1d-blur-kernel">EPI blur中的1D blur kernel</h2>
+<p>第一个sinc函数，第二个是二阶低通巴特沃斯滤波器，第三个是高斯函数。</p>
+<figure data-type="image" tabindex="2"><img src="http://localhost:4000/post-images/1671437245732.png" alt="" loading="lazy"></figure>
+<p>We evaluate these three kernels based on the following two principles: the final deblurred result must show <strong>visual coherency</strong> with the ground truth EPI, and the <strong>mean square error (MSE)</strong> between the blurred low angular resolution EPI and the blurred ground truth EPI is as minimal as possible:</p>
+<figure data-type="image" tabindex="3"><img src="http://localhost:4000/post-images/1671437254829.png" alt="" loading="lazy"></figure>
+<h2 id="cnn-architecture">CNN architecture</h2>
+<figure data-type="image" tabindex="4"><img src="http://localhost:4000/post-images/1671437263846.png" alt="" loading="lazy"></figure>
+<p>The proposed detail restoration network is composed of three layers. The first and the second layers are followed by a rectified linear unit (ReLU). The final output of the network is the sum of the predicted residual (detail) and the input.</p>
+<p>first layer包含64个1x9x9的滤波器，用于提取空间特征图；second layer包含32个64x5x5的滤波器，用于non-linear mapping；last layer包含1个32x5x5的滤波器，用于(角度域)细节重建。</p>
+<h3 id="loss-function">loss function</h3>
+<p>因为CNN的输出是预测残差直接加上输入EPI，即<code>output EPI = predicted residual + input EPI</code>，所以损失定义在预测残差上：</p>
+<figure data-type="image" tabindex="5"><img src="http://localhost:4000/post-images/1671437274421.png" alt="" loading="lazy"></figure>
+<h2 id="result">result</h2>
+<figure data-type="image" tabindex="6"><img src="http://localhost:4000/post-images/1671437282679.png" alt="" loading="lazy"></figure>
+<p>ablation study：第四行不包含“blur-deblur”步骤，直接用CNN预测残差。可以发现，“blur-deblur”对表现的提升非常大，证明了“blur-deblur”的有效，即有效解决了information asymmetry所引起的ghosting effect。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#light-field-reconstruction-using-deep-convolutional-network-on-epi">Light Field Reconstruction Using Deep Convolutional Network on EPI</a>
+<ul>
+<li><a href="#%E8%83%8C%E6%99%AF">背景</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90">问题分析</a></li>
+<li><a href="#%E6%9C%AC%E6%96%87insight">本文insight</a></li>
+<li><a href="#%E7%96%91%E9%97%AE">疑问</a></li>
+<li><a href="#blur-restoration-deblur">blur-restoration-deblur</a></li>
+<li><a href="#epi-blur%E4%B8%AD%E7%9A%841d-blur-kernel">EPI blur中的1D blur kernel</a></li>
+<li><a href="#cnn-architecture">CNN architecture</a>
+<ul>
+<li><a href="#loss-function">loss function</a></li>
+</ul>
+</li>
+<li><a href="#result">result</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="http://localhost:4000/post/ibrnetji-yu-ibr-de-nerf/">
+              <h3 class="post-title">
+                IBRNet：基于IBR的NeRF
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

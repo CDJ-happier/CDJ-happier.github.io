@@ -2,25 +2,36 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>FFT之蝶形运算 | CofCai&#39;s blog</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671417629542">
+<title>FFT之蝶形运算 | DJCai</title>
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="FFT之蝶形运算 | CofCai&#39;s blog - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="FFT之蝶形运算 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="[toc]
+    <meta name="description" content="
 
-Author🚹:CofCai
-Email✉️:cai.dongjun@nexuslink.cn
-QQ😙:1664866311
-personal Page🏠
-CSDN Page🏠
 
 前言
-写这篇博客时，是今天考完电信传输..." />
+相关文件
+实操
+
+准备工作
+倒序算法
+编程思想
+代码实现
+
+
+总结
+
+
+
+
+前言
+写这篇博客时，是今天考完电信传输理论后的5个小时，没带计算器，没找别人借，一个人抗下了所有。
+用C语言实现FFT之时域抽取法的想法是在考数字信号处..." />
     <meta name="keywords" content="DSP" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -29,11 +40,11 @@ CSDN Page🏠
     <div class="main">
       <div class="main-content">
         <div class="site-header">
-  <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671417629542" alt="">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
   </a>
   <h1 class="site-title">
-    CofCai&#39;s blog
+    DJCai
   </h1>
   <p class="site-description">
     more disciplined, more free
@@ -41,25 +52,25 @@ CSDN Page🏠
   <div class="menu-container">
     
       
-        <a href="https://CDJ-happier.github.io" class="menu">
+        <a href="http://localhost:4000" class="menu">
           首页
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/archives" class="menu">
+        <a href="http://localhost:4000/archives" class="menu">
           归档
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/tags" class="menu">
+        <a href="http://localhost:4000/tags" class="menu">
           标签
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+        <a href="http://localhost:4000/post/about" class="menu">
           关于
         </a>
       
@@ -93,24 +104,34 @@ CSDN Page🏠
                 19 min read
               </span>
               
-                <a href="https://CDJ-happier.github.io/tag/TrRIqGItK/" class="post-tag">
+                <a href="http://localhost:4000/tag/TrRIqGItK/" class="post-tag">
                   # DSP
                 </a>
               
             </div>
             
-              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/FFT-TIF.jpg" alt="">
+              <img class="post-feature-image" src="http://localhost:4000/post-images/FFT-TIF.jpg" alt="">
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>[toc]</p>
-<blockquote>
-<p>Author🚹:CofCai</p>
-<p>Email✉️:cai.dongjun@nexuslink.cn</p>
-<p>QQ😙:1664866311</p>
-<p><a href="https://cxx7ud.coding-pages.com/">personal Page</a>🏠</p>
-<p><a href="https://blog.csdn.net/weixin_44360592?spm=1011.2124.3001.5113">CSDN Page</a>🏠</p>
-</blockquote>
+                <p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E7%9B%B8%E5%85%B3%E6%96%87%E4%BB%B6">相关文件</a></li>
+<li><a href="#%E5%AE%9E%E6%93%8D">实操</a>
+<ul>
+<li><a href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">准备工作</a></li>
+<li><a href="#%E5%80%92%E5%BA%8F%E7%AE%97%E6%B3%95">倒序算法</a></li>
+<li><a href="#%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3">编程思想</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0">代码实现</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+</p>
 <h2 id="前言">前言</h2>
 <p>写这篇博客时，是今天考完电信传输理论后的5个小时，没带计算器，没找别人借，一个人抗下了所有。</p>
 <p>用C语言实现FFT之时域抽取法的想法是在考数字信号处理前萌发的，在复习时看到书上有编程思想，然后自己又好久都没有敲代码了，手有点痒，然后就按照书上的编程思想进行coding。但是之间有许多错误，哎！用C语言这么久了，还是没有养成编写代码时注意数组越界的习惯。</p>
@@ -657,7 +678,7 @@ int main(int argc, char const *argv[])
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://CDJ-happier.github.io/post/cmake-use-with-pcre2/">
+            <a href="http://localhost:4000/post/cmake-use-with-pcre2/">
               <h3 class="post-title">
                 CMake的使用及pcre2
               </h3>
@@ -669,7 +690,7 @@ int main(int argc, char const *argv[])
 
         <div class="site-footer">
   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

@@ -1,0 +1,237 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>IBRNet：基于IBR的NeRF | DJCai</title>
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="IBRNet：基于IBR的NeRF | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="渲染某个target view时，会使用与其在空间位置上相邻的N个input views作为参考。另外还使用了Transformer Ray，即将cast ray上的采样点视为序列点。
+
+IBRNet: Learning Multi-Vie..." />
+    <meta name="keywords" content="NeRF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
+  </a>
+  <h1 class="site-title">
+    DJCai
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="http://localhost:4000" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              IBRNet：基于IBR的NeRF
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-09-30
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="http://localhost:4000/tag/CzCAdSGMg/" class="post-tag">
+                  # NeRF
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="http://localhost:4000/post-images/ibrnetji-yu-ibr-de-nerf.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>渲染某个target view时，会使用与其在空间位置上相邻的N个input views作为参考。另外还使用了Transformer Ray，即将cast ray上的采样点视为序列点。</p>
+<!-- more -->
+<h1 id="ibrnet-learning-multi-view-image-based-rendering">IBRNet: Learning Multi-View Image-Based Rendering</h1>
+<p>针对问题：使NeRF具有泛化能力</p>
+<p>如何做：主要还是针对颜色和密度的预测进行改进（三维重建部分），和NeRF一样，使用的是volume rendering（渲染部分）。</p>
+<p>原始NeRF：<br>
+<img src="http://localhost:4000/post-images/1671435803136.jpg" alt="" loading="lazy"></p>
+<p>IBRNet：<br>
+<img src="http://localhost:4000/post-images/1671435811231.png" alt="" loading="lazy"></p>
+<p>密度和颜色的预测<br>
+<img src="http://localhost:4000/post-images/1671435821866.png" alt="" loading="lazy"></p>
+<p>成果：</p>
+<ol>
+<li>Unlike neural scene representation work that optimizes per-scene functions for rendering, we learn a generic view interpolation function that generalizes to novel scenes. 原始NeRF针对每个scene都需要优化（重头训练），而本文方法学习一个通用的view插值函数能够泛化到新的scenes。</li>
+<li>Experiments show that our method outperforms recent novel view synthesis methods that also seek to generalize to novel scenes. Further, if fine-tuned on each scene, our method is competitive with state-of-the-art single-scene neural rendering methods. 实验表明，在寻求泛化到新scenes时，我们的方法比其它好。更进一步，如果fine-tuned每一个scene，可以实现和目前SOTA的NVS任务相当的表现。</li>
+</ol>
+<p>主要：</p>
+<ol>
+<li>还是使用volume rendering。即通过网络预测出颜色和密度，再通过体渲染。</li>
+<li>在Volume density prediction时，将每条ray上的多个sampled point视为一个序列，然后使用自注意力机制预测最终的density（Ray Transformer）。好处：可以利用long-range contextual information。Ray Transformer的输入是density features序列（density features可以认为是PE的结果，类比）</li>
+<li>用source views预测target view的颜色时，不是使用source views的绝对方向，而是与target view的差值，即Δd，源于这样的事实：d 和 di 之间较小差异通常意味着目标视图处的颜色与视图 i 处的相应颜色相似的可能性更大，反之亦然。所以使用Δd。</li>
+</ol>
+<p>steps：</p>
+<ol>
+<li>
+<p>对于一个target view，会找到与其在空间上最邻近的N个source views（在一个大的source views pool中随机选取N个）；</p>
+<p>同时，通过ResUNet网络得出source views的特征Fi∈(Hi,Wi,d)</p>
+</li>
+<li>
+<p>target view的每一个像素发出一条射线<code>r(t)=o+td</code>，且在射线上有一些采样点</p>
+</li>
+<li>
+<p>对于每个query point，计算出其在N个source views上的投影点，并通过双线性插值【因为投影到source views时可能没在一个完整的像素点，可能在相邻点的中间，这时就需要用插值的方法得出投影点的Ci和fi】计算出投影点的颜色Ci和特征fi，fi∈Fi，i=1-N。</p>
+</li>
+<li>
+<p>计算fi的均值和方差，拼接后(1x3d)输入到MLP中得到fi‘和wi。注：此处是为了check consistency，论文中的Multi-view feature aggregation这一小节有说到。</p>
+</li>
+<li>
+<p>fi'和wi输入到MLP得到fδ，通过Ray transformer预测得到density δ</p>
+<p>fi’和Δdi拼接后输入到MLP中预测Ci的权重w_i^c，Ci和W_ic的加权得出query point的最终颜色</p>
+</li>
+<li>
+<p>利用volume density，渲染得到该ray对应的像素颜色。</p>
+</li>
+</ol>
+<p>网络结构：</p>
+<p>ResUNet用于提取Fi</p>
+<p>IBRNet用于预测density δ和color c。（IBRNet包括一个Ray transformer）<br>
+<img src="http://localhost:4000/post-images/1671435833873.png" alt="" loading="lazy"></p>
+<p>原始NeRF对每个scene都需要重新优化建模，即一个scene对应一个模型，没有泛化能力，该篇论文提出的IBRNet就是解决NeRF的泛化问题，实现在一些训练集上训练得到的模型，能够直接应用到其它scene上。并且还可以通过fine-tuned实现更好的结果。</p>
+<p>原始NeRF可大致分为2个步骤：三维重建（2D-3D的建模过程，用MLP隐式表达scene），渲染（3D-2D，volume rendering）</p>
+<p>原始NeRF为什么不具泛化性：个人认为是在三维重建时没有充分利用信息（渲染view时，都是孤立的点，且与其它view没有联系），直接从5D到颜色和透明度的映射。</p>
+<p>IBRNet的工作主要针对三维重建这一步，即5D映射到颜色和透明度这一步。</p>
+<p>渲染target view时，</p>
+<ol>
+<li>会基于与自己相邻的N个source views，</li>
+<li>充分利用信息，包括image color，view direction，image feature</li>
+<li>相邻view在scene表面更光滑，所以使用Δd作为view direction</li>
+<li>预测density时，不是孤立的点，而是将ray上的所有sampled point视为一个序列，使用transformer的self-attention预测density，利用空间信息；</li>
+<li>图像特征用UNet提取，骨干网络使用ResNet</li>
+<li>用类似PointNet检验图像特征一致性</li>
+</ol>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#ibrnet-learning-multi-view-image-based-rendering">IBRNet: Learning Multi-View Image-Based Rendering</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="http://localhost:4000/post/nerfshen-jing-fu-she-chang/">
+              <h3 class="post-title">
+                NeRF：神经辐射场
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

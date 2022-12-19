@@ -2,23 +2,34 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AlphaLinux学习笔记 | CofCai&#39;s blog</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671417629542">
+<title>AlphaLinux学习笔记 | DJCai</title>
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="AlphaLinux学习笔记 | CofCai&#39;s blog - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="AlphaLinux学习笔记 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="Linux根目录说明
-
+    <meta name="description" content="
+Linux根目录说明
 文件类型说明
-
-
 嵌入式Linux开发总结
+
 一、环境的搭建
-一般以Linux（Ubuntu）为开发环境，嵌入式Linux开发的环境主要包括：交叉编译工具链，但由于一般用的都是Windows主机，所以要么双系统，要么配..." />
+
+交叉编译工具链
+
+交叉编译工具链是干嘛的？
+c文件是如何被编译成可执行文件的
+
+
+Linux中设置环境变量
+
+
+二、裸机开发方式回顾
+
+一、STC89C51..." />
     <meta name="keywords" content="嵌入式Linux" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
@@ -27,11 +38,11 @@
     <div class="main">
       <div class="main-content">
         <div class="site-header">
-  <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671417629542" alt="">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
   </a>
   <h1 class="site-title">
-    CofCai&#39;s blog
+    DJCai
   </h1>
   <p class="site-description">
     more disciplined, more free
@@ -39,25 +50,25 @@
   <div class="menu-container">
     
       
-        <a href="https://CDJ-happier.github.io" class="menu">
+        <a href="http://localhost:4000" class="menu">
           首页
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/archives" class="menu">
+        <a href="http://localhost:4000/archives" class="menu">
           归档
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/tags" class="menu">
+        <a href="http://localhost:4000/tags" class="menu">
           标签
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+        <a href="http://localhost:4000/post/about" class="menu">
           关于
         </a>
       
@@ -88,10 +99,10 @@
                 2020-10-12
               </span>
               <span>
-                21 min read
+                22 min read
               </span>
               
-                <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/" class="post-tag">
+                <a href="http://localhost:4000/tag/KThzdm7dh/" class="post-tag">
                   # 嵌入式Linux
                 </a>
               
@@ -99,11 +110,81 @@
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <h1 id="linux根目录说明">Linux根目录说明</h1>
-<figure data-type="image" tabindex="1"><img src="https://CDJ-happier.github.io/post-images/Linux%E6%A0%B9%E7%9B%AE%E5%BD%95%E8%AF%B4%E6%98%8E.png" alt="Linux根目录说明" loading="lazy"></figure>
+                <p><ul class="markdownIt-TOC">
+<li><a href="#linux%E6%A0%B9%E7%9B%AE%E5%BD%95%E8%AF%B4%E6%98%8E">Linux根目录说明</a></li>
+<li><a href="#%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E8%AF%B4%E6%98%8E">文件类型说明</a></li>
+<li><a href="#%E5%B5%8C%E5%85%A5%E5%BC%8Flinux%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93">嵌入式Linux开发总结</a>
+<ul>
+<li><a href="#%E4%B8%80-%E7%8E%AF%E5%A2%83%E7%9A%84%E6%90%AD%E5%BB%BA">一、环境的搭建</a>
+<ul>
+<li><a href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E9%93%BE">交叉编译工具链</a>
+<ul>
+<li><a href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E9%93%BE%E6%98%AF%E5%B9%B2%E5%98%9B%E7%9A%84">交叉编译工具链是干嘛的？</a></li>
+<li><a href="#c%E6%96%87%E4%BB%B6%E6%98%AF%E5%A6%82%E4%BD%95%E8%A2%AB%E7%BC%96%E8%AF%91%E6%88%90%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E7%9A%84">c文件是如何被编译成可执行文件的</a></li>
+</ul>
+</li>
+<li><a href="#linux%E4%B8%AD%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F">Linux中设置环境变量</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%E6%96%B9%E5%BC%8F%E5%9B%9E%E9%A1%BE">二、裸机开发方式回顾</a>
+<ul>
+<li><a href="#%E4%B8%80-stc89c51">一、STC89C51</a></li>
+<li><a href="#%E4%BA%8C-stm32">二、STM32</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89-%E5%B5%8C%E5%85%A5%E5%BC%8Flinux%E4%B8%8B%E7%9A%84%E5%BC%80%E5%8F%91">三、嵌入式Linux下的开发</a>
+<ul>
+<li><a href="#%E4%B8%80-%E8%A3%B8%E6%9C%BA%E5%BC%8F%E5%BC%80%E5%8F%91">一、裸机式开发</a></li>
+<li><a href="#%E4%BA%8C-%E5%BA%93%E5%87%BD%E6%95%B0%E5%BC%8F%E5%BC%80%E5%8F%91">二、库函数式开发</a></li>
+<li><a href="#%E4%B8%89-%E9%A9%B1%E5%8A%A8%E6%A1%86%E6%9E%B6%E4%B8%8B%E7%9A%84%E5%BC%80%E5%8F%91">三、驱动框架下的开发</a>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%AE%BE%E5%A4%87%E6%A0%91">什么是设备树</a></li>
+<li><a href="#%E8%AE%BE%E5%A4%87%E6%A0%91%E5%9C%A8linux%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E4%BD%93%E7%8E%B0">设备树在Linux系统中的体现</a></li>
+<li><a href="#linux%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%90dtb%E6%96%87%E4%BB%B6">Linux内核解析DTB文件</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%9B%9B-linux%E4%B8%89%E5%B7%A8%E5%A4%B4">四、Linux三巨头</a>
+<ul>
+<li><a href="#%E4%B8%80-u-boot">一、u-boot</a>
+<ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E5%91%A2">如何配置呢？</a></li>
+<li><a href="#uboot%E5%A6%82%E4%BD%95%E5%90%AF%E5%8A%A8linux%E7%9A%84">uboot如何启动Linux的</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-linux%E5%86%85%E6%A0%B8">二、Linux内核</a></li>
+<li><a href="#%E4%B8%89-%E6%A0%B9%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F">三、根文件系统</a>
+<ul>
+<li><a href="#%E6%A0%B9%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%84%E4%B8%AA%E5%AD%90%E7%9B%AE%E5%BD%95">根文件系统的各个子目录</a></li>
+<li><a href="#busybox%E6%9E%84%E5%BB%BA%E6%A0%B9%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F">BusyBox构建根文件系统</a>
+<ul>
+<li><a href="#1-%E5%90%91rootfs%E7%9A%84lib%E7%9B%AE%E5%BD%95%E6%B7%BB%E5%8A%A0%E5%BA%93%E6%96%87%E4%BB%B6">1、向rootfs的/lib目录添加库文件</a></li>
+<li><a href="#2-%E5%90%91-rootfs-%E7%9A%84usrlib%E7%9B%AE%E5%BD%95%E6%B7%BB%E5%8A%A0%E5%BA%93%E6%96%87%E4%BB%B6">2、向 <strong>rootfs</strong> 的usr/lib目录添加库文件</a></li>
+<li><a href="#3-%E5%88%9B%E5%BB%BAetcinitdrcs%E6%96%87%E4%BB%B6">3、创建/etc/init.d/rcS文件</a></li>
+<li><a href="#4-%E5%88%9B%E5%BB%BAetcfstab%E6%96%87%E4%BB%B6">4、创建/etc/fstab文件</a></li>
+<li><a href="#5-%E5%88%9B%E5%BB%BAetcinittab%E6%96%87%E4%BB%B6">5、创建/etc/inittab文件</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%B9%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%88%9D%E6%AD%A5%E6%B5%8B%E8%AF%95">根文件系统初步测试</a>
+<ul>
+<li><a href="#%E8%BD%AF%E4%BB%B6%E8%BF%90%E8%A1%8C%E6%B5%8B%E8%AF%95">软件运行测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%BA%94-%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91">五、驱动开发</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="linux根目录说明">Linux根目录说明</h1>
+<figure data-type="image" tabindex="1"><img src="http://localhost:4000/post-images/Linux%E6%A0%B9%E7%9B%AE%E5%BD%95%E8%AF%B4%E6%98%8E.png" alt="Linux根目录说明" loading="lazy"></figure>
 <h1 id="文件类型说明">文件类型说明</h1>
-<figure data-type="image" tabindex="2"><img src="https://CDJ-happier.github.io/post-images/%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E8%AF%B4%E6%98%8E1.png" alt="文件类型说明1" loading="lazy"></figure>
-<figure data-type="image" tabindex="3"><img src="https://CDJ-happier.github.io/post-images/%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E8%AF%B4%E6%98%8E2.png" alt="文件类型说明2" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="http://localhost:4000/post-images/%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E8%AF%B4%E6%98%8E1.png" alt="文件类型说明1" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="http://localhost:4000/post-images/%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B%E8%AF%B4%E6%98%8E2.png" alt="文件类型说明2" loading="lazy"></figure>
 <h1 id="嵌入式linux开发总结">嵌入式Linux开发总结</h1>
 <h2 id="一-环境的搭建">一、环境的搭建</h2>
 <p>一般以Linux（Ubuntu）为开发环境，嵌入式Linux开发的环境主要包括：交叉编译工具链，但由于一般用的都是Windows主机，所以要么双系统，要么配虚拟机。</p>
@@ -112,9 +193,9 @@
 <h4 id="交叉编译工具链是干嘛的">交叉编译工具链是干嘛的？</h4>
 <p>在学习C语言时，我记得用的是codeblocks，当我们写好c程序后点击编译运行就能看到cmd命令窗口输出的结果。其实在我们点击<strong>编译运行</strong>这个按钮时，就相当于使用命令gcc来编译c程序使之成为可执行文件（在Windows下是exe格式，在Linux中是elf格式）。但是编译生成的可执行文件只能在此电脑（我的时x86）上运行，不能在arm架构上运行，所以我们可以<strong>借助交叉编译工具在x86架构上编译生成可以在arm架构上运行的程序</strong>。那为什么不直接在arm架构上编译c文件呢？第一：环境没有搭建好，比如开发板上连u-boot、Linux内核、跟文件系统都没有搭建好；第二：就算环境搭建好了，并且也把交叉编译工具链放到了开发板上，但是由于开发办性能不是很好，编译需要相对较长的时间。</p>
 <p>在Ubuntu中用gcc编译的c文件，用file命令查看生成的可执行文件：</p>
-<figure data-type="image" tabindex="4"><img src="https://CDJ-happier.github.io/post-images/gcc%E7%BC%96%E8%AF%91.png" alt="gcc编译" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="http://localhost:4000/post-images/gcc%E7%BC%96%E8%AF%91.png" alt="gcc编译" loading="lazy"></figure>
 <p>在Ubuntu中用交叉编译工具编译的c文件：</p>
-<figure data-type="image" tabindex="5"><img src="https://CDJ-happier.github.io/post-images/arm-linux-gnueaihif-gcc%E7%BC%96%E8%AF%91.png" alt="arm-linux-gnueaihif-gcc编译" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="http://localhost:4000/post-images/arm-linux-gnueaihif-gcc%E7%BC%96%E8%AF%91.png" alt="arm-linux-gnueaihif-gcc编译" loading="lazy"></figure>
 <h4 id="c文件是如何被编译成可执行文件的">c文件是如何被编译成可执行文件的</h4>
 <p>参看：<a href="https://zhuanlan.zhihu.com/p/86707793">一段C语言代码编译、运行全过程解析</a></p>
 <pre><code class="language-mermaid">graph LR
@@ -142,12 +223,12 @@ $  ./hello                               // 运行可执行文件hello
 <blockquote>
 <p>ps. Linux中的usr是指Unix System Resource，即Unix系统资源的缩写。/usr 是系统核心所在，包含了所有的共享文件。它是 unix 系统中最重要的目录之一，涵盖了二进制文件，各种文档，各种头文件，还有各种库文件；还有诸多程序，例如 ftp，telnet 等等。</p>
 </blockquote>
-<p>![whereis gcc](https://CDJ-happier.github.io/post-images/whereis gcc.png)</p>
-<figure data-type="image" tabindex="6"><img src="https://CDJ-happier.github.io/post-images/usr%E7%9B%AE%E5%BD%95.png" alt="usr目录" loading="lazy"></figure>
+<p>![whereis gcc](http://localhost:4000/post-images/whereis gcc.png)</p>
+<figure data-type="image" tabindex="6"><img src="http://localhost:4000/post-images/usr%E7%9B%AE%E5%BD%95.png" alt="usr目录" loading="lazy"></figure>
 <p><strong>而对于交叉编译来说</strong>，Ubuntu是没有的，需要我们自己安装。交叉编译工具链我（正点原子的教程）安装到了/usr/local/arm中去了。如下，</p>
-<figure data-type="image" tabindex="7"><img src="https://CDJ-happier.github.io/post-images/%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E9%93%BE.png" alt="交叉编译工具链" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="http://localhost:4000/post-images/%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E9%93%BE.png" alt="交叉编译工具链" loading="lazy"></figure>
 <p>bin目录下是一些可执行文件，就是我们常用的交叉编译工具链，如arm-linux-gnueabihf-gcc, arm-linux-gnueabihf-objdump, arm-linux-gnueabihf-ld等。其它目录就是一些库文件和头文件，也包含一些可执行文件。</p>
-<figure data-type="image" tabindex="8"><img src="https://CDJ-happier.github.io/post-images/%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E9%93%BE-bin%E7%9B%AE%E5%BD%95.png" alt="交叉编译工具链-bin目录" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="http://localhost:4000/post-images/%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7%E9%93%BE-bin%E7%9B%AE%E5%BD%95.png" alt="交叉编译工具链-bin目录" loading="lazy"></figure>
 <h3 id="linux中设置环境变量">Linux中设置环境变量</h3>
 <p>如果没有设置环境变量的话，在某个shell中使用命令arm-linux-gnueabihf-gcc会报错，只有在交叉编译工具链的目录下才不会报错，解决方法就是将这一目录加入环境变量PATH中去。<a href="https://blog.csdn.net/qq_36119192/article/details/82970778">Linux下设置环境变量参请参考此</a></p>
 <p>针对对所有用户都有效的方法：打开/etc/profile文件，在末尾添加如下内容：</p>
@@ -234,12 +315,12 @@ C(DTS-设备树源文件) --DTC-编译工具--&gt;B(DTB-设备树二进制文件
 </ol>
 <h4 id="设备树在linux系统中的体现">设备树在Linux系统中的体现</h4>
 <p>设备树在Linux中是以文件及文件夹形式显示。</p>
-<figure data-type="image" tabindex="9"><img src="https://CDJ-happier.github.io/post-images/%E8%AE%BE%E5%A4%87%E6%A0%91%E5%9C%A8Linux%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E4%BD%93%E7%8E%B0.png" alt="设备树在Linux系统中的体现" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="http://localhost:4000/post-images/%E8%AE%BE%E5%A4%87%E6%A0%91%E5%9C%A8Linux%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E4%BD%93%E7%8E%B0.png" alt="设备树在Linux系统中的体现" loading="lazy"></figure>
 <h4 id="linux内核解析dtb文件">Linux内核解析DTB文件</h4>
 <p>Linux 内核在启动的时候会解析 DTB 文件，然后在/proc/device-tree 目录下生成相应的设备树节点文件。</p>
 <h2 id="四-linux三巨头">四、Linux三巨头</h2>
 <p>如果学习过 UCOS/FreeRTOS 应该知道，UCOS/FreeRTOS 移植 就是在官方的 SDK 包里面找一个和自己所使用的芯片一样的工程编译一下，然后<strong>下载</strong>到开发 板就可以了。那么 Linux 的移植是不是也是这样的，下载 Linux 源码，然后找个和我们所使用 的芯片一样的工程编译一下就可以了？很明显不是的！Linux 的移植要复杂的多，在移植 Linux 之前我们需要先移植一个 bootloader 代码，这个 bootloader 代码用于启动 Linux 内核（相当于Windows下的BIOS），bootloader 有很多，常用的就是 U-Boot。移植好 U-Boot 以后再移植 Linux 内核，移植完 Linux 内核以后 Linux 还不能正常启动，还需要再移植一个根文件系统(rootfs)，根文件系统里面包含了一些最常用的命令和文件。所以 <strong>U-Boot</strong>、<strong>Linux kernel</strong> 和 <strong>rootfs</strong> 这三者一起构成了一个完整的 Linux 系 统，一个可以正常使用、功能完善的 Linux 系统</p>
-<figure data-type="image" tabindex="10"><img src="https://CDJ-happier.github.io/post-images/Linux%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B.png" alt="Linux启动过程" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="http://localhost:4000/post-images/Linux%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B.png" alt="Linux启动过程" loading="lazy"></figure>
 <h3 id="一-u-boot">一、u-boot</h3>
 <p>bootloader程序会先初始化DDR等外设，然后将Linux内核从flash(NAND， NOR FLASH，SD，MMC 等)拷贝到 DDR 中，最后启动 Linux 内核。</p>
 <p>u-boot可以看作是一个功能丰富、复杂的裸机程序，在编译生成可执行文件前可以根据自己的需求配置相应的功能，比如USB、网络、SD卡等。配置好后通过以下命令编译。</p>
@@ -249,7 +330,7 @@ make V=1 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- -j12
 </code></pre>
 <h4 id="如何配置呢">如何配置呢？</h4>
 <p>在uboot源码下的configs文件夹中，有许多配置文件，如下：</p>
-<figure data-type="image" tabindex="11"><img src="https://CDJ-happier.github.io/post-images/uboot%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6.png" alt="uboot配置文件" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="http://localhost:4000/post-images/uboot%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6.png" alt="uboot配置文件" loading="lazy"></figure>
 <ol>
 <li>
 <p>复制mx6ull_14x14_evk_emmc_defconfig，然后重命名为mx6ull_alientek_emmc_defconfig，修改其内容为：</p>
@@ -450,7 +531,7 @@ saveenv //保存环境变量
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://CDJ-happier.github.io/post/sublime-compiler/">
+            <a href="http://localhost:4000/post/sublime-compiler/">
               <h3 class="post-title">
                 sublime配置编译系统
               </h3>
@@ -462,7 +543,7 @@ saveenv //保存环境变量
 
         <div class="site-footer">
   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

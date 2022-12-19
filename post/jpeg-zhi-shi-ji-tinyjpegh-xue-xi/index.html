@@ -1,0 +1,535 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JPEG知识及tinyjpeg.h学习 | DJCai</title>
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="JPEG知识及tinyjpeg.h学习 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+JPEG相关知识及tinyjpeg.h库文件解读
+
+JPEG相关知识
+
+JPEG编码流程
+JPEG文件格式
+JPEG文件必须包含的段
+
+
+tinyjpeg.h文件解读
+
+核心结构体
+核心函数
+
+
+实践
+
+下载源码
+跑通程序
+自行修改源码学..." />
+    <meta name="keywords" content="图像处理,Tools,C语言" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
+  </a>
+  <h1 class="site-title">
+    DJCai
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="http://localhost:4000" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              JPEG知识及tinyjpeg.h学习
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-05-03
+              </span>
+              <span>
+                12 min read
+              </span>
+              
+                <a href="http://localhost:4000/tag/995irH74kv/" class="post-tag">
+                  # 图像处理
+                </a>
+              
+                <a href="http://localhost:4000/tag/3RgVl6bYZ/" class="post-tag">
+                  # Tools
+                </a>
+              
+                <a href="http://localhost:4000/tag/-lWbWODrq/" class="post-tag">
+                  # C语言
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="http://localhost:4000/post-images/jpeg-zhi-shi-ji-tinyjpegh-xue-xi.jpg" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p><ul class="markdownIt-TOC">
+<li><a href="#jpeg%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E5%8F%8Atinyjpegh%E5%BA%93%E6%96%87%E4%BB%B6%E8%A7%A3%E8%AF%BB">JPEG相关知识及tinyjpeg.h库文件解读</a>
+<ul>
+<li><a href="#jpeg%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86">JPEG相关知识</a>
+<ul>
+<li><a href="#jpeg%E7%BC%96%E7%A0%81%E6%B5%81%E7%A8%8B">JPEG编码流程</a></li>
+<li><a href="#jpeg%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F">JPEG文件格式</a></li>
+<li><a href="#jpeg%E6%96%87%E4%BB%B6%E5%BF%85%E9%A1%BB%E5%8C%85%E5%90%AB%E7%9A%84%E6%AE%B5">JPEG文件必须包含的段</a></li>
+</ul>
+</li>
+<li><a href="#tinyjpegh%E6%96%87%E4%BB%B6%E8%A7%A3%E8%AF%BB">tinyjpeg.h文件解读</a>
+<ul>
+<li><a href="#%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84%E4%BD%93">核心结构体</a></li>
+<li><a href="#%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0">核心函数</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9E%E8%B7%B5">实践</a>
+<ul>
+<li><a href="#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81">下载源码</a></li>
+<li><a href="#%E8%B7%91%E9%80%9A%E7%A8%8B%E5%BA%8F">跑通程序</a></li>
+<li><a href="#%E8%87%AA%E8%A1%8C%E4%BF%AE%E6%94%B9%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0">自行修改源码学习</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93">学习总结</a></li>
+</ul>
+</li>
+</ul>
+</p>
+<h1 id="jpeg相关知识及tinyjpegh库文件解读">JPEG相关知识及tinyjpeg.h库文件解读</h1>
+<h2 id="jpeg相关知识">JPEG相关知识</h2>
+<h3 id="jpeg编码流程">JPEG编码流程</h3>
+<p>​图像压缩非常重要，jpeg或jpg是一种图像格式，也是一种图像压缩标准。jpeg2000是对jpeg的改进，但本文只是对图像压缩有一个简单的了解，只分析JPEG。</p>
+<p>​图像压缩的核心是减小像素间的空间相关性，从而获得压缩。JPEG压缩过程一般如下：</p>
+<pre><code class="language-mermaid">graph LR
+	src_img--&gt; convert[&quot;颜色空间转换&quot;]--&gt; block[&quot;分块&quot;] --&gt; DCT[&quot;DCT变换&quot;] --&gt; DCT_co[&quot;DCT系数&quot;] --&gt; quatization[&quot;量化&quot;] --&gt; codeing[&quot;编码&quot;]
+</code></pre>
+<ol>
+<li>JPEG处理的是YUV数据，因此需要先将其它格式的数据转为YUV，转换公式可在网上查阅；</li>
+<li>然后对YUV图像分块，JPEG分为<code>8x8</code>的小块，并进行<code>DCT</code>变换，得到<code>DCT</code>系数；</li>
+<li><code>DCT</code>系数也是<code>8x8</code>的矩阵。最左上角表示直流分量（DC系数），是图像的低频信息；其余部分代表交流分流（AC系数），是图像的中高频信息；</li>
+<li><strong>压缩的核心</strong>：对高频信息压缩（量化），保留低频信息，如果采用的量化间隔越大，则压缩率越高，但图像丢失的信息越多，重建图像与原图像差距越大。JPEG是采用<code>zig-zag</code>顺序对<code>DCT</code>系数矩阵进行压缩，这样能先对低频信息进行量化（TODO：有什么用呢？）；</li>
+<li>对量化后的结果编码（熵编码），如采用Huffman或RLE。</li>
+</ol>
+<h3 id="jpeg文件格式">JPEG文件格式</h3>
+<p><a href="https://blog.csdn.net/yun_hen/article/details/78135122">JPEG文件格式参考</a></p>
+<p>​整体过程如上，但JPEG类型文件的最开始还包括一系列文件头信息和其它标志，JPEG图片格式组成部分：<strong>SOI（文件头）+APP0（图像识别信息）+ DQT（定义量化表）+ SOF0（图像基本信息）+ DHT（定义Huffman表）</strong> + DRI（定义重新开始间隔）+ <strong>SOS（扫描行开始）+ EOI（文件尾）</strong>。</p>
+<p>​JPEG文件是一段一段进行存储的，JPEG文件的每个段都一定包含两部分：一个是<strong>段的标识</strong>，它由两个字节构成：第一个字节是十六进制0xFF，第二个字节对于不同的段，这个值是不同的。另一部分是：紧接着的两个字节存放的是这个<strong>段的长度</strong>（除了前面的两个字节0xFF和0xXX，X表示不确定。他们是不算到段的长度中的）。段的结构如下：</p>
+<pre><code class="language-c">-----------------------------------------------------------------
+名称  字节数     数据  说明
+-----------------------------------------------------------------
+段标识   1         FF      每个新段的开始标识
+段类型   1                 类型编码（称作“标记码”）
+段长度   2                 包括段内容和段长度本身,不包括段标识和段类型
+段内容                     ≤65533字节
+</code></pre>
+<p><strong>特别注意</strong>：长度的表示方法是按照高位在前，低位在后的，即big-endiam模式。</p>
+<h3 id="jpeg文件必须包含的段">JPEG文件必须包含的段</h3>
+<p>​JPEG总共有30个段，有10个段必须提供，其余的可选。<a href="https://blog.csdn.net/yun_hen/article/details/78135122">可参考此链接</a></p>
+<h2 id="tinyjpegh文件解读">tinyjpeg.h文件解读</h2>
+<p>​<code>tinyjpeg.h</code>是单文件的JPEG encoder，可读性高，适合学习JPEG编码，可在GitHub上获取。使用方法也很简单，在文件最开始部分也有说明：</p>
+<pre><code class="language-c">#define STB_IMAGE_IMPLEMENTATION
+#include &quot;stb_image.h&quot;			// 另外一个开源库
+#define TJE_IMPLEMENTATION
+#include &quot;tiny_jpeg.h&quot;
+int main()
+{
+    int width, height, num_components;
+    unsigned char* data = stbi_load(&quot;in.bmp&quot;, &amp;width, &amp;height, &amp;num_components, 0);
+    if ( !data ) {
+        puts(&quot;Could not find file&quot;);
+        return EXIT_FAILURE;
+    }
+
+    if ( !tje_encode_to_file(&quot;out.jpg&quot;, width, height, num_components, data) ) {
+        fprintf(stderr, &quot;Could not write JPEG\n&quot;);
+        return EXIT_FAILURE;
+    }
+    return EXIT_SUCCESS;
+}
+</code></pre>
+<h3 id="核心结构体">核心结构体</h3>
+<p>​两个核心结构体，<code>TJEState</code>包含<code>TJEWriteContext</code>，图片数据流动过程：</p>
+<pre><code class="language-mermaid">graph LR
+	block[&quot;8x8块或&lt;br/&gt;段数据&quot;] --&gt;|&quot;encoding&quot;| sta[&quot;TJEState.output_buffer&quot;] --&gt; |&quot;TJEState.wc.func()&quot;| context[&quot;TJEState.wc.context&quot;]
+</code></pre>
+<p>​<code>8x8</code>图像块经过压缩后或者JPEG文件段信息数据通过函数<code>tjei_write()</code>写入到<code>TJEState.output_buffer</code>中去，然后再通过<code>TJEState.wc.func()</code>函数写入到<code>TJEState.wc.context</code>中去，<code>TJEState.wc.context</code>可以是一个输出文件的文件指针。<code>TJEState.wc.func()</code>是一个核心函数。</p>
+<p>结构体具体成员：</p>
+<pre><code class="language-c">typedef struct {
+    void*           context;    // 数据目的地，如输出文件的文件指针
+    tje_write_func* func;
+} TJEWriteContext;
+
+typedef struct {
+    // Huffman data.
+    uint8_t         ehuffsize[4][257];
+    uint16_t        ehuffcode[4][256];
+    uint8_t const * ht_bits[4];
+    uint8_t const * ht_vals[4];
+    // Quantization tables.
+    uint8_t         qt_luma[64];
+    uint8_t         qt_chroma[64];
+    // fwrite by default. User-defined when using tje_encode_with_func.
+    TJEWriteContext write_context;
+    // Buffered output. Big performance win when using the usual stdlib implementations.
+    size_t          output_buffer_count;
+    uint8_t         output_buffer[TJEI_BUFFER_SIZE];
+} TJEState;
+</code></pre>
+<h3 id="核心函数">核心函数</h3>
+<p>​公共接口：<code>tje_encode_to_file(),tje_encode_to_file_at_quality()</code>，以及<code>tje_encode_with_func()</code>。</p>
+<pre><code class="language-c">tje_encode_to_file()	// qulity=3
+     |
+     tje_encode_to_file_at_quality()  // 使用默认tjei_stdlib_func() 
+         |
+         tje_encode_with_func()
+             |
+             tjei_encode_main()
+                 |
+                 传入的TJEState的成员write_context中包含func
+</code></pre>
+<p>核心函数<code>tjei_encode_main()</code>及<code>tjei_encode_and_write_MCU()</code>：</p>
+<pre><code class="language-c">// 此函数输入的是整张图片，在函数中会遍历8x8的小块(MCU)，然后调用下面的函数
+static int tjei_encode_main(TJEState* state,
+                            const unsigned char* src_data,
+                            const int width,
+                            const int height,
+                            const int src_num_components)
+// 处理8x8的MCU，JPEG压缩的核心函数
+static void tjei_encode_and_write_MCU(
+    TJEState* state,
+    float* mcu,
+#if TJE_USE_FAST_DCT  
+    float* qt, 	// Pre-processed quantization matrix.
+#else
+    uint8_t* qt,
+#endif
+    uint8_t* huff_dc_len, uint16_t* huff_dc_code, // hfm tables
+    uint8_t* huff_ac_len, uint16_t* huff_ac_code,
+    int* pred,  // DC系数用到的
+    uint32_t* bitbuffer,  // Bitstack.
+    uint32_t* location)
+</code></pre>
+<p>​<code>tjei_encode_main()</code>主要是遍历原始图像，并进行分块，主要逻辑如下：</p>
+<pre><code class="language-c">for ( int y = 0; y &lt; height; y += 8 ) {
+        for ( int x = 0; x &lt; width; x += 8 ) {
+            // Block loop: ====
+            for ( int off_y = 0; off_y &lt; 8; ++off_y ) {
+                for ( int off_x = 0; off_x &lt; 8; ++off_x ) {
+                    // 块内索引0-63
+                    int block_index = (off_y * 8 + off_x);  
+                    // 获取原始图像数据并转为yuv
+                    du_y[block_index] = luma;
+                    du_b[block_index] = cb;
+                    du_r[block_index] = cr;
+                }
+            }
+            // 调用MCU压缩编码函数
+            tjei_encode_and_write_MCU(state, du_y, ...);
+            tjei_encode_and_write_MCU(state, du_b, ...);
+            tjei_encode_and_write_MCU(state, du_r, ...);
+        }
+}
+</code></pre>
+<p>​而<code>tjei_encode_and_write_MCU()</code>就是真正进行压缩编码的函数，包括DCT变换、量化、编码。</p>
+<p>​工具函数：<code>tjei_fdct(),tjei_write()</code>。<code>tjei_write(TJEState* state, const void* data, size_t num_bytes, size_t num_elements)</code>是将<code>num_bytes X num_elements</code>大小的数据<code>data</code>通过<code>state.wc.func()</code>写入到<code>state.wc.context</code>，此函数会递归调用自己（如果data数据长度大于1024(TJEI_BUFFER_SIZE)，则会递归调用）。</p>
+<pre><code class="language-c">// 此函数会递归调用自己
+static void tjei_write(TJEState* state, const void* data, size_t num_bytes, size_t num_elements) {
+    size_t to_write = num_bytes * num_elements;
+    // Cap to the buffer available size and copy memory.
+    size_t capped_count = tjei_min(to_write, TJEI_BUFFER_SIZE - 1 - state-&gt;output_buffer_count);
+    
+    memcpy(state-&gt;output_buffer + state-&gt;output_buffer_count, data, capped_count);
+    state-&gt;output_buffer_count += capped_count;
+
+    assert (state-&gt;output_buffer_count &lt;= TJEI_BUFFER_SIZE - 1);
+
+    // NOTE: (5) tje_encode_with_func()传入的自定义函数在此处被调用
+    // Flush the buffer.
+    if ( state-&gt;output_buffer_count == TJEI_BUFFER_SIZE - 1 ) {
+        // context是指已压缩数据要写入的地方，比如一个文件指针。即将output_buffer中的内容写入到context中去
+        state-&gt;write_context.func(state-&gt;write_context.context, state-&gt;output_buffer, (int)state-&gt;output_buffer_count);
+        state-&gt;output_buffer_count = 0;
+    }
+
+    // Recursively calling ourselves with the rest of the buffer.
+    if (capped_count &lt; to_write) {
+        tjei_write(state, (uint8_t*)data+capped_count, to_write - capped_count, 1);
+    }
+}
+</code></pre>
+<h2 id="实践">实践</h2>
+<h3 id="下载源码">下载源码</h3>
+<p>从github上下载<code>tiny_jpeg.h</code>（<a href="https://github.com/serge-rgb/TinyJPEG">点击这里</a>）以及从<a href="https://github.com/nothings/stb">开源图像库stb</a>中提取出<code>stb_image.h</code>，并放入同一文件夹中。</p>
+<pre><code class="language-shell">-jpegtiny-test
+	|-stb_image.h		// 用于获取输入图片的原始图像数据，如bmp、gif等
+	|-tiny_jpeg.h		// 对原始图像数据进行压缩编码
+	|-tinyjpeg_test.c	// 测试程序
+	|-lena.bmp			// 测试图片
+</code></pre>
+<p><code>stb_image.h</code>可加载不同类型的图片，包括<code>JPG, PNG, TGA, BMP, PSD, GIF, HDR, PIC</code>，并解码出其原始数据（应该是YUV或者RGB），具体得看源码。</p>
+<p>测试程序<code>tinyjpeg_test.c</code>：</p>
+<pre><code class="language-c">#define STB_IMAGE_IMPLEMENTATION
+#include &quot;stb_image.h&quot;
+#define TJE_IMPLEMENTATION
+#include &quot;tiny_jpeg.h&quot;
+
+int main(int argc, char const *argv[])
+{
+    int width, height, num_components, quality;
+    if (argc != 4) {
+        printf(&quot;usage:\n&quot;);
+        printf(&quot;xxx.exe infile.bmp outfile.jpg quality\n&quot;);
+        printf(&quot;quality:1 2 3, 3--&gt;the output img is bigger&quot;);
+        return 0;
+    }
+    quality = (int)(*argv[3]-0x30);
+    printf(&quot;the quality is: %d\n&quot;, quality);
+
+    unsigned char* data = stbi_load(argv[1], &amp;width, &amp;height, &amp;num_components, 0);
+    if ( !data ) {
+        puts(&quot;Could not find file&quot;);
+        return EXIT_FAILURE;
+    }
+
+    if ( !tje_encode_to_file_at_quality(argv[2], quality, width, height, num_components, data) ) {
+        fprintf(stderr, &quot;Could not write JPEG\n&quot;);
+        return EXIT_FAILURE;
+    }
+    return EXIT_SUCCESS;
+}
+</code></pre>
+<h3 id="跑通程序">跑通程序</h3>
+<p>编译命令：<code>gcc tinyjpeg_test.c tiny_jpeg.h stb_image.h -o tinyjpeg_test</code></p>
+<p>执行命令：<code>tinyjpeg_test.exe lena.bmp lena_q1.jpg 1</code>，1表示quality为1，<code>tiny_jpeg.h</code>提供了3种quality。<code>quality=3</code>时量化矩阵<code>qt</code>的所有元素都为1，即不对DCT系数进行压缩，因此输出图片质量最高，但图片大小也最大；<code>quality=2</code>时次之、<code>quality=1</code>最次。<strong>可以自行修改源码中的量化矩阵</strong>，或者自己增加quality的选择。</p>
+<p>3种<code>quality</code>与原图的对比，几乎差不多：<br>
+<img src="https://img-blog.csdnimg.cn/eb36e53086ae4a9a808686afd58f4aac.png#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="自行修改源码学习">自行修改源码学习</h3>
+<p>跑通程序后就可以自行修改源码学习JPEG，比如前面所说改变<strong>量化矩阵</strong>、将DCT变换修改为Wavelet变换、还可以自己修改分块大小，如4x4、16x16等。还可以计算块与块之间的相似性，运动补偿，找两幅相似的图片进行<strong>帧间预测</strong>学习。</p>
+<p><code>tiny_jpeg.h</code>中可以自行定义<strong>写数据函数</strong>，即将压缩后的数据写到某个地方，默认是调用标准库的<code>fwrite()</code>将压缩后的数据写入到<code>context</code>(输出文件的文件指针)。此处自定义写数据函数，将压缩数据直接输出到<code>stdout</code>，也就是屏幕。</p>
+<pre><code class="language-c">......									// 输出到stdout
+ret = tje_encode_with_func(cdj_tje_func, (void *)stdout, quality, width, height, num_components, data);
+if ( !ret ) {
+    fprintf(stderr, &quot;Could not write JPEG\n&quot;);
+    return EXIT_FAILURE;
+}
+// 可以自行实现tiny_jpeg.h的写函数（将编码后的数据写到某处）
+static void cdj_tje_func(void* context, void* data, int size) {
+    printf(&quot;\n\n=======cdj_tje_func was called======\n&quot;);
+    // context其实就是stdout，tje_encode_with_func()传入的参数
+    FILE * where2write = (FILE *)context;// stdout是FILE*类型的变量
+    char * data_ch = (char *)data;
+    // 数据太多，只输出10B
+    for (int i = 0; i &lt; 10 &amp;&amp; i &lt; size; ++i) {
+        fprintf(where2write, &quot;%0x &quot;, data_ch[i]);
+    }
+}
+</code></pre>
+<p>如下图，直接将压缩后的数据（或JPEG文件段信息）输出到<code>stdout</code>，即屏幕：<br>
+<img src="https://img-blog.csdnimg.cn/ba86528acd2248768ba269732fbc231c.png#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<p>可以对比最开始调用<code>tjei_write()</code>写入的内容，即<code>TJEJPEGHeader</code>结构体：</p>
+<pre><code class="language-c">{ // Write header
+    TJEJPEGHeader header;
+    // JFIF header.
+    header.SOI = tjei_be_word(0xffd8);  // Sequential DCT
+    header.APP0 = tjei_be_word(0xffe0);
+ 	/*SOI &amp; APP0 markers*/;
+    uint16_t jfif_len = sizeof(TJEJPEGHeader) - 4
+    header.jfif_len = tjei_be_word(jfif_len);
+    memcpy(header.jfif_id, (void*)tjeik_jfif_id, 5);
+    header.version = tjei_be_word(0x0102);
+    header.units = 0x01;  // Dots-per-inch
+    header.x_density = tjei_be_word(0x0060);  // 96 DPI
+    header.y_density = tjei_be_word(0x0060);  // 96 DPI
+    header.x_thumb = 0;
+    header.y_thumb = 0;
+    tjei_write(state, &amp;header, sizeof(TJEJPEGHeader), 1);
+}
+</code></pre>
+<h2 id="学习总结">学习总结</h2>
+<p>​结构体的<code>1btye</code>对齐，一是更节省空间、二是在写一些文件头信息时的常用技巧：</p>
+<pre><code class="language-c">#pragma pack(push)
+#pragma pack(1)
+typedef struct {
+    uint16_t SOI;           // start of image
+    // JFIF header.
+    uint16_t APP0;          // 图片信息
+    uint16_t version;       // 版本
+    uint8_t  units;
+    uint16_t x_density;
+    uint16_t y_density;
+} TJEJPEGHeader;
+#pragma pack(pop)
+</code></pre>
+<p>利用代码块<code>{...}</code>，使代码更易读。</p>
+<pre><code class="language-c">// NOTE: (3) 值得学习的写法，利用代码块来表示不同部分
+// Write JPEG header to file
+{ 
+    TJEJPEGHeader header;
+    // JFIF header.
+    header.SOI = tjei_be_word(0xffd8);  // Sequential DCT
+    header.APP0 = tjei_be_word(0xffe0);
+	...
+    header.version = tjei_be_word(0x0102);
+    header.units = 0x01;  // Dots-per-inch
+    header.x_density = tjei_be_word(0x0060);  // 96 DPI
+    header.y_density = tjei_be_word(0x0060);  // 96 DPI
+    // 将JPEG的文件头header写入到state的wc的context中去，也就是输出文件的文件指针（可以自定义输出位置，甚至输出到串口），只需调用tje_encode_with_func()并提供自定义func并作为参数传入
+    tjei_write(state, &amp;header, sizeof(TJEJPEGHeader), 1);
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#jpeg%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E5%8F%8Atinyjpegh%E5%BA%93%E6%96%87%E4%BB%B6%E8%A7%A3%E8%AF%BB">JPEG相关知识及tinyjpeg.h库文件解读</a>
+<ul>
+<li><a href="#jpeg%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86">JPEG相关知识</a>
+<ul>
+<li><a href="#jpeg%E7%BC%96%E7%A0%81%E6%B5%81%E7%A8%8B">JPEG编码流程</a></li>
+<li><a href="#jpeg%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F">JPEG文件格式</a></li>
+<li><a href="#jpeg%E6%96%87%E4%BB%B6%E5%BF%85%E9%A1%BB%E5%8C%85%E5%90%AB%E7%9A%84%E6%AE%B5">JPEG文件必须包含的段</a></li>
+</ul>
+</li>
+<li><a href="#tinyjpegh%E6%96%87%E4%BB%B6%E8%A7%A3%E8%AF%BB">tinyjpeg.h文件解读</a>
+<ul>
+<li><a href="#%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84%E4%BD%93">核心结构体</a></li>
+<li><a href="#%E6%A0%B8%E5%BF%83%E5%87%BD%E6%95%B0">核心函数</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9E%E8%B7%B5">实践</a>
+<ul>
+<li><a href="#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81">下载源码</a></li>
+<li><a href="#%E8%B7%91%E9%80%9A%E7%A8%8B%E5%BA%8F">跑通程序</a></li>
+<li><a href="#%E8%87%AA%E8%A1%8C%E4%BF%AE%E6%94%B9%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0">自行修改源码学习</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93">学习总结</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="http://localhost:4000/post/qiu-zhi-bi-shi-ti-ruan-jian-kai-fa-lei/">
+              <h3 class="post-title">
+                求职笔试题-软件开发类
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

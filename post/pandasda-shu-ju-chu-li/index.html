@@ -1,0 +1,527 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pandas：大数据处理 | DJCai</title>
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Pandas：大数据处理 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+
+
+groupby大法
+先导知识
+
+Series数据结构
+DataFrame数据结构
+groupby作用
+
+
+实战
+
+统计某个设备某天的交易额和交易次数
+统计某个设备的工作天数
+
+方法一
+方法二-使用apply
+
+
+新需求
+在做比赛时用到..." />
+    <meta name="keywords" content="数据处理,Tools" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
+  </a>
+  <h1 class="site-title">
+    DJCai
+  </h1>
+  <p class="site-description">
+    more disciplined, more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="http://localhost:4000" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="http://localhost:4000/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Pandas：大数据处理
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-03-04
+              </span>
+              <span>
+                10 min read
+              </span>
+              
+                <a href="http://localhost:4000/tag/sOTz0rDk-/" class="post-tag">
+                  # 数据处理
+                </a>
+              
+                <a href="http://localhost:4000/tag/3RgVl6bYZ/" class="post-tag">
+                  # Tools
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://ts1.cn.mm.bing.net/th/id/R-C.4fdb554aa28a9cbd5bea7e9b47139500?rik=GhuZJC1ZlJTniA&amp;riu=http%3a%2f%2fpngimg.com%2fuploads%2fpanda%2fpanda_PNG2.png&amp;ehk=L4VJ6Hsq17q4GzsH%2fT1Fmr4EOUAyMmhAY%2bK0ahUa2nc%3d&amp;risl=&amp;pid=ImgRaw&amp;r=0" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#groupby%E5%A4%A7%E6%B3%95">groupby大法</a></li>
+<li><a href="#%E5%85%88%E5%AF%BC%E7%9F%A5%E8%AF%86">先导知识</a>
+<ul>
+<li><a href="#series%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">Series数据结构</a></li>
+<li><a href="#dataframe%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">DataFrame数据结构</a></li>
+<li><a href="#groupby%E4%BD%9C%E7%94%A8">groupby作用</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9E%E6%88%98">实战</a>
+<ul>
+<li><a href="#%E7%BB%9F%E8%AE%A1%E6%9F%90%E4%B8%AA%E8%AE%BE%E5%A4%87%E6%9F%90%E5%A4%A9%E7%9A%84%E4%BA%A4%E6%98%93%E9%A2%9D%E5%92%8C%E4%BA%A4%E6%98%93%E6%AC%A1%E6%95%B0">统计某个设备某天的交易额和交易次数</a></li>
+<li><a href="#%E7%BB%9F%E8%AE%A1%E6%9F%90%E4%B8%AA%E8%AE%BE%E5%A4%87%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%A4%A9%E6%95%B0">统计某个设备的工作天数</a>
+<ul>
+<li><a href="#%E6%96%B9%E6%B3%95%E4%B8%80">方法一</a></li>
+<li><a href="#%E6%96%B9%E6%B3%95%E4%BA%8C-%E4%BD%BF%E7%94%A8apply">方法二-使用apply</a></li>
+</ul>
+</li>
+<li><a href="#%E6%96%B0%E9%9C%80%E6%B1%82">新需求</a></li>
+<li><a href="#%E5%9C%A8%E5%81%9A%E6%AF%94%E8%B5%9B%E6%97%B6%E7%94%A8%E5%88%B0%E4%BA%86%E5%9C%B0%E5%9D%80%E8%A7%A3%E6%9E%90">在做比赛时用到了地址解析</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</p>
+<h2 id="groupby大法">groupby大法</h2>
+<p>Pandas AIHub社区：<a href="https://www.kuxai.com/f/pandas">https://www.kuxai.com/f/pandas</a><br>
+groupby参考链接：<a href="https://www.kuxai.com/post/141">https://www.kuxai.com/post/141</a><br>
+元素选取参考链接：<a href="https://www.kuxai.com/post/126">https://www.kuxai.com/post/126</a><br>
+相关链接：<a href="https://zhuanlan.zhihu.com/p/100064394">https://zhuanlan.zhihu.com/p/100064394</a></p>
+<p><strong>相关函数:</strong></p>
+<pre><code class="language-python"> groupby
+ isin
+ map
+ dict(zip(list1, list2))：两个列表合为一个字典
+ apply
+ reset_index
+ fillna
+ data.rename(columns={'x1': 'y1', 'x2': 'y2'})
+ drop_duplicates()
+</code></pre>
+<p><strong>实验数据</strong><br>
+来源：2020农商行杯数据建模A题：01_ATM交易明细.xlsx(120M大小）<br>
+<img src="https://img-blog.csdnimg.cn/c52354e615eb414eb369be3e732a8edb.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<h2 id="先导知识">先导知识</h2>
+<h3 id="series数据结构">Series数据结构</h3>
+<p>Series 是一个带有 <strong>名称</strong> 和 <strong>索引</strong> 的 一维数组，在 Series 中包含的数据类型可以是整数、浮点、字符串、Python对象等。其基础属性如下：</p>
+<pre><code class="language-python">values：返回元素
+index：返回索引
+columns：返回列名
+dtypes：返回类型
+size：返回元素个数
+ndim：返回维度数
+shape：返回数据形状（行列数目）
+</code></pre>
+<p>实例：<br>
+读入：使用的数据读入后是一个Dataframe类型的结构体，通过iloc获取其第一列。</p>
+<pre><code class="language-python">import pandas as pd
+
+data = pd.read_csv(r'01_ATM交易明细_1.csv')
+print('data is: ')
+print(data.head
+())  # head查看数据，默认输出5行
+print('data type is: ', type(data))
+ser = data.iloc[:, 0]  # 获取data的的一列
+ser = data.iloc[0] = data.iloc[0, :]  # 获取data的第一行
+print('ser is: ')
+print(ser.head())
+print('ser type is: ', type(ser))
+</code></pre>
+<p>结果截图：<br>
+<img src="https://img-blog.csdnimg.cn/8b1337db6915401ab046cb28936e1da0.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<p>属性操作：</p>
+<pre><code class="language-python">print('ser values: ')
+print(ser.values)
+print('ser index: ')
+print(ser.index)
+# print(ser.columns)
+# AttributeError: 'Series' object has no attribute 'columns'
+print('ser dtypes: ')
+print(ser.dtypes)
+print('ser ndim: ')
+print(ser.ndim)
+print('ser shape: ')
+print(ser.shape)
+</code></pre>
+<p>结果截图：<br>
+<img src="https://img-blog.csdnimg.cn/9d07e76ec87c45cb90bee53384fc2155.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="dataframe数据结构">DataFrame数据结构</h3>
+<p>DataFrame 是一个带有索引的二维数据结构，每列可以有自己的名字，并且可以有不同的数据类型。你可以把它想象成一个 excel 表格或者数据库中的一张表，DataFrame 是最常用的 Pandas 对象。其基础属性：</p>
+<pre><code class="language-python">values：返回元素
+index：返回索引
+columns：返回列名
+dtypes：返回类型
+size：返回元素个数
+ndim：返回维度数
+shape：返回数据形状（行列数目）
+</code></pre>
+<p>属性操作：</p>
+<pre><code class="language-python">import pandas as pd
+
+data = pd.read_csv(r'01_ATM交易明细_1.csv')
+print('data is: ')
+print(data.head())  # head查看数据，默认输出5行
+print('data type is: ', type(data))
+
+print('data values: ')
+print(data.values)
+print('data index: ')
+print(data.index)
+print('data columns: ')
+print(data.columns)
+print('data dtypes: ')
+print(data.dtypes)
+print('data ndim: ')
+print(data.ndim)
+print('data shape: ')
+print(data.shape)
+</code></pre>
+<p>结果截图：<br>
+<img src="https://img-blog.csdnimg.cn/506815dbd12c46e794121a19b3fab684.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"><br>
+object就是字符串</p>
+<h3 id="groupby作用">groupby作用</h3>
+<p>在日常的数据分析中，经常需要将数据根据某个（多个）字段划分为不同的群体（group）进行分析，如电商领域将全国的总销售额根据省份进行划分，分析各省销售额的变化情况，社交领域将用户根据画像（性别、年龄）进行细分，研究用户的使用情况和偏好等。<br>
+注意groupby之后的数据类型，它不再是一个dataframe，而是一个GroupBy对象，我们后面函数的任何操作都是基于这个对象的。</p>
+<h2 id="实战">实战</h2>
+<h3 id="统计某个设备某天的交易额和交易次数">统计某个设备某天的交易额和交易次数</h3>
+<p>以设备编号和交易日期字段为分组标准后，再对交易金额进行聚合操作-求和，对于交易次数可以通过对任一字段作计数操作，然后重命名即可。<br>
+代码如下：</p>
+<pre><code class="language-python">dfGrpBy = data.groupby(['设备编号', '交易日期'])
+print('dfGrpBy type is: ', type(dfGrpBy))
+
+databyid_date = dfGrpBy.agg({'交易金额': 'sum', '交易时间': 'count'})
+# 对DataFrameGroupBy对象使用聚合操作，对交易金额求和，对交易时间计数
+# 在这里计数的作用是可以得到某个设备某个交易日期(这一天)交易的次数
+databyid_date = databyid_date.rename(columns={'交易金额': '总交易额', '交易时间': '交易次数'})
+print('databyid_date is: ')
+print(databyid_date)
+databyid_date = databyid_date.reset_index()
+print('databyid_date after reset_index is: ')
+print(databyid_date)
+</code></pre>
+<p>结果截图：<br>
+<img src="https://img-blog.csdnimg.cn/b77ed50efa9d4b8c8a8f74a3f888f7b1.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<p>上面的代码不是很简洁，需要reset_index，其实可以在使用分组时设置参数as_index=False，如下：</p>
+<pre><code class="language-python">dfGrpBy = data.groupby(['设备编号', '交易日期'], as_index=False)
+</code></pre>
+<p>结果如下：<br>
+<img src="https://img-blog.csdnimg.cn/ea521c3f4d984844a2041cc46ee92604.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<p>即使用as_index=False后跟原先使用reset_index()的效果一样。<br>
+使用as_index=False表示<strong>不要使用在原先数据中的索引</strong>，而是重新从0开始排索引。而reset_index()顾名思义就是<strong>重置索引</strong>，其实就是加了一列新的索引，这个索引是从0顺序开始的。</p>
+<h3 id="统计某个设备的工作天数">统计某个设备的工作天数</h3>
+<p>问题关键在于交易日期的去重。</p>
+<h4 id="方法一">方法一</h4>
+<p>先以设备编号、交易日期分组，这样就<strong>间接把交易日期去重</strong>了，然后再以设备编号分组，对交易日期字段进行计数即可。</p>
+<pre><code class="language-python">dfGrpBy = data.groupby(['设备编号', '交易日期'], as_index=False)
+
+# 这里无所谓，操作其它字段也没问题，采用sum\mean\std\var等聚合方法
+# 也都行，这里主要就是把交易日期间接去重。
+dataNew = dfGrpBy.agg({'交易时间': 'count'})
+print('间接去重交易日期：')
+print(dataNew)
+dfGrpBy = dataNew.groupby(['设备编号'], as_index=False)
+dataNew = dfGrpBy.agg({'交易日期': 'count'})
+dataNew = dataNew.rename(columns={'交易日期': '工作天数'})
+print('某设备工作天数如下：')
+print(dataNew)
+</code></pre>
+<p>结果截图：<br>
+<img src="https://img-blog.csdnimg.cn/5b37717fee1b4eb39e6a250152ab4640.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<h4 id="方法二-使用apply">方法二-使用apply</h4>
+<p>applyt过程图解：https://www.kuxai.com/post/141<br>
+简单的说，它是将经过分组后的<strong>每一组依次传入</strong>apply对应的处理函数，然后进行相依的操作，最后再将结果聚合起来。</p>
+<pre><code class="language-python">global i
+i = 1
+
+## 计算每个ATM总的工作天数
+def calcuWkDay(x):
+	global i
+	y = x['交易日期'].drop_duplicates()  # 先把日期去重
+	y = y.count()
+	if i == 1:  # 只是想看一下传入的x是什么东西（只打印第一次）
+		print('传入的参数是:')
+		print(x)
+		i = i + 1
+	return y
+dfGrpBy = data.groupby(['设备编号'], as_index=False)
+dataNew = dfGrpBy.apply(calcuWkDay)
+print('某设备工作天数如下：')
+print(dataNew)
+</code></pre>
+<p>结果截图：<br>
+<img src="https://img-blog.csdnimg.cn/b39c7143c68240af8039d123d1d9615f.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<p>上面的代码确实实现了工作天数的统计，返回的是一个Series类型。但设备编号好像没有了，所以修改一下代码，实现与设备编号相对应。</p>
+<pre><code class="language-python">## 计算每个ATM总的工作天数
+def calcuWkDay(x):
+	deviceID = x['设备编号']  # 结果是一个Series，即包括了前面的索引
+	deviceID = deviceID.values[0]
+	y = x['交易日期'].drop_duplicates()  # 先把日期去重
+	y = y.count()
+	return (deviceID, y)
+	
+dfGrpBy = data.groupby(['设备编号'], as_index=False)
+dataNew = dfGrpBy.apply(calcuWkDay)
+print('某设备工作天数如下：')
+print(dataNew)
+</code></pre>
+<p>结果截图：<br>
+<img src="https://img-blog.csdnimg.cn/791214d1e33e4066a8c3f9ba6cd3431c.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<p><strong>函数isin-提取交易类型为存取款的记录</strong></p>
+<pre><code class="language-python">dataNew = data[data['交易类型'].isin(['存款', '取款'])]
+print('取款和存款的流水如下：')
+print(dataNew.iloc[0:10, :])
+</code></pre>
+<p>结果截图：<br>
+<img src="https://img-blog.csdnimg.cn/fcd2f8b0305f4f13b648a39c28c71ee5.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<p><strong>函数map的应用-不同交易类型有不同的花费时间</strong></p>
+<pre><code class="language-python">spendTime = {&quot;存款&quot;:3, &quot;取款&quot;: 3, &quot;转账&quot;: 5, &quot;查询&quot;: 1}  # 单位：min
+dataNew = data
+dataNew['花费时间'] = dataNew['交易类型'].map(spendTime)
+print('根据交易类型赋予不同交易时间：')
+print(dataNew)
+# 因为map需要传入的参数是一个字典，所以有时可以通过下面的方式将
+# 两个列表合为一个字典
+# map1 = dict(zip(list1, list2))
+</code></pre>
+<p>结果截图：<br>
+<img src="https://img-blog.csdnimg.cn/7bd61abc19ab4515a7b84d59641d2d60.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<p>2020:8:28:21:55<br>
+<strong>把某列作为索引/index</strong></p>
+<pre><code class="language-python">print('data is: ')
+print(data.head())
+
+# 将设备编号列设为索引（默认同时删除对应的数据）
+dataNew = data.set_index(['设备编号'])
+print('dataNew is: ')
+print(dataNew.head())
+
+# 将设备编号列设为索引（不删除对应的数据）
+dataNew = data.set_index(['设备编号'], drop=False)
+print('dataNew is: ')
+print(dataNew.head())
+</code></pre>
+<p>结果截图：<br>
+<img src="https://img-blog.csdnimg.cn/c8de4cc3cbd04cc1b66807a7d93bad08.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="新需求">新需求</h3>
+<p>如下：https://www.kuxai.com/post/139<br>
+<img src="https://img-blog.csdnimg.cn/aa89b88eab614084a3849ca5e39ac04e.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<p>先构造如图类型的表，如下：</p>
+<pre><code class="language-python">print('data is: ')
+print(data.head())
+
+dfGrpBy = data.groupby(['设备编号', '交易类型'], as_index=False)
+dataNew = dfGrpBy.agg({'交易日期': 'count'})
+dataNew = dataNew.rename(columns={'交易日期': '交易次数'})
+print('dataNew is: ')
+print(dataNew)
+</code></pre>
+<p>结果截图：<br>
+<img src="https://img-blog.csdnimg.cn/50096e82d386444eaed53a0436d6eac6.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<p><strong>方法如下：</strong></p>
+<pre><code class="language-python">def convert(x):
+	y = dict(zip(list(x['交易类型']), list(x['交易次数'])))
+	y = pd.DataFrame(data=y, index=[0])  # 这里必须指明index，不然报错
+	return y
+
+dataNew = dataNew.groupby(['设备编号']).apply(convert)
+print('dataNew before reset_index is: ')
+print(dataNew.head())
+dataNew = dataNew.reset_index()
+print('dataNew after reset_index is: ')
+print(dataNew.head())
+del dataNew['level_1']  # 删除level_1这一列，这一列全为0
+dataNew = dataNew.fillna(0)
+print('dataNew after fillnan is: ')
+print(dataNew.head())
+</code></pre>
+<p>结果截图：<br>
+<img src="https://img-blog.csdnimg.cn/e5490e6e7b92402db84ec9458e8e2fd2.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBAQ29mQ2Fp,size_20,color_FFFFFF,t_70,g_se,x_16#pic_center" alt="在这里插入图片描述" loading="lazy"></p>
+<h3 id="在做比赛时用到了地址解析">在做比赛时用到了地址解析</h3>
+<p>获取某个位置的经度纬度</p>
+<pre><code class="language-python">import requests
+
+#使用高德API
+def geocodeG(address):
+    par = {'address': address, 'key': '6e2f236cefff29925caf4650caccd20f'}
+    base = 'http://restapi.amap.com/v3/geocode/geo'
+    response = requests.get(base, par)
+    answer = response.json()
+    GPS=answer['geocodes'][0]['location'].split(&quot;,&quot;)
+    return GPS[0],GPS[1]
+
+#使用百度API
+def geocodeB(address):
+    base = url = &quot;http://api.map.baidu.com/geocoder?address=&quot; + address + &quot;&amp;output=json&amp;key=f247cdb592eb43ebac6ccd27f796e2d2&quot;
+    response = requests.get(base)
+    answer = response.json()
+    return answer['result']['location']['lng'],answer['result']['location']['lat']
+
+addr = geocodeG('江北区观音桥步行街7号')
+print(addr)
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#groupby%E5%A4%A7%E6%B3%95">groupby大法</a></li>
+<li><a href="#%E5%85%88%E5%AF%BC%E7%9F%A5%E8%AF%86">先导知识</a>
+<ul>
+<li><a href="#series%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">Series数据结构</a></li>
+<li><a href="#dataframe%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">DataFrame数据结构</a></li>
+<li><a href="#groupby%E4%BD%9C%E7%94%A8">groupby作用</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9E%E6%88%98">实战</a>
+<ul>
+<li><a href="#%E7%BB%9F%E8%AE%A1%E6%9F%90%E4%B8%AA%E8%AE%BE%E5%A4%87%E6%9F%90%E5%A4%A9%E7%9A%84%E4%BA%A4%E6%98%93%E9%A2%9D%E5%92%8C%E4%BA%A4%E6%98%93%E6%AC%A1%E6%95%B0">统计某个设备某天的交易额和交易次数</a></li>
+<li><a href="#%E7%BB%9F%E8%AE%A1%E6%9F%90%E4%B8%AA%E8%AE%BE%E5%A4%87%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%A4%A9%E6%95%B0">统计某个设备的工作天数</a>
+<ul>
+<li><a href="#%E6%96%B9%E6%B3%95%E4%B8%80">方法一</a></li>
+<li><a href="#%E6%96%B9%E6%B3%95%E4%BA%8C-%E4%BD%BF%E7%94%A8apply">方法二-使用apply</a></li>
+</ul>
+</li>
+<li><a href="#%E6%96%B0%E9%9C%80%E6%B1%82">新需求</a></li>
+<li><a href="#%E5%9C%A8%E5%81%9A%E6%AF%94%E8%B5%9B%E6%97%B6%E7%94%A8%E5%88%B0%E4%BA%86%E5%9C%B0%E5%9D%80%E8%A7%A3%E6%9E%90">在做比赛时用到了地址解析</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="http://localhost:4000/post/linux-gao-xing-neng-fu-wu-qi-she-ji/">
+              <h3 class="post-title">
+                Linux高性能服务器设计
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
