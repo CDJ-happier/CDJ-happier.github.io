@@ -3,10 +3,10 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>NeRF：神经辐射场 | CofCai&#39;s blog</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671368847801">
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671417629512">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="NeRF：神经辐射场 | CofCai&#39;s blog - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="NeRF：神经辐射场 | CofCai&#39;s blog - Atom Feed" href="http://localhost:4000/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -23,8 +23,8 @@ tradition: 用point clouds, mesh, voxel等方式显式表示scene，缺点：离
     <div class="main">
       <div class="main-content">
         <div class="site-header">
-  <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671368847801" alt="">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671417629512" alt="">
   </a>
   <h1 class="site-title">
     CofCai&#39;s blog
@@ -35,25 +35,25 @@ tradition: 用point clouds, mesh, voxel等方式显式表示scene，缺点：离
   <div class="menu-container">
     
       
-        <a href="https://CDJ-happier.github.io" class="menu">
+        <a href="http://localhost:4000" class="menu">
           首页
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/archives" class="menu">
+        <a href="http://localhost:4000/archives" class="menu">
           归档
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/tags" class="menu">
+        <a href="http://localhost:4000/tags" class="menu">
           标签
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+        <a href="http://localhost:4000/post/about" class="menu">
           关于
         </a>
       
@@ -87,13 +87,13 @@ tradition: 用point clouds, mesh, voxel等方式显式表示scene，缺点：离
                 2 min read
               </span>
               
-                <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
+                <a href="http://localhost:4000/tag/CzCAdSGMg/" class="post-tag">
                   # NeRF
                 </a>
               
             </div>
             
-              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/nerfshen-jing-fu-she-chang.jpg" alt="">
+              <img class="post-feature-image" src="http://localhost:4000/post-images/nerfshen-jing-fu-she-chang.jpg" alt="">
             
             <div class="post-content-wrapper">
               <div class="post-content">
@@ -103,7 +103,7 @@ tradition: 用point clouds, mesh, voxel等方式显式表示scene，缺点：离
 <p>tradition: 用point clouds, mesh, voxel等方式显式表示scene，缺点：<strong>离散表示</strong>，导致合成的view表面粗糙</p>
 <p>NeRF：用MLP function隐式表示scene，优点：<strong>可微</strong>，即连续，合成的view表面细腻。</p>
 <h2 id="pipeline">Pipeline</h2>
-<figure data-type="image" tabindex="1"><img src="https://CDJ-happier.github.io/post-images/1671367883043.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="http://localhost:4000/post-images/1671367883043.jpg" alt="" loading="lazy"></figure>
 <h2 id="steps">Steps</h2>
 <ol>
 <li>每张input view的每个像素都会生成一条<code>ray=o+td, t∈(tn, tf)</code></li>
@@ -115,31 +115,31 @@ tradition: 用point clouds, mesh, voxel等方式显式表示scene，缺点：离
 </ol>
 <h2 id="volume-rendering">Volume Rendering</h2>
 <p>积分形式：<br>
-<img src="https://CDJ-happier.github.io/post-images/1671367900173.png" alt="" loading="lazy"></p>
+<img src="http://localhost:4000/post-images/1671367900173.png" alt="" loading="lazy"></p>
 <p>离散化：<br>
-<img src="https://CDJ-happier.github.io/post-images/1671367907808.png" alt="" loading="lazy"></p>
+<img src="http://localhost:4000/post-images/1671367907808.png" alt="" loading="lazy"></p>
 <p>动态示意图：<br>
-<img src="https://CDJ-happier.github.io/post-images/1671367921647.gif" alt="" loading="lazy"></p>
+<img src="http://localhost:4000/post-images/1671367921647.gif" alt="" loading="lazy"></p>
 <h2 id="optimization">Optimization</h2>
 <h3 id="positional-encoding">Positional Encoding</h3>
 <p>MLP不能很好的学习高频函数，直接将5D信息输入到MLP，所渲染出的scene的表面比较模糊，即低频分量。</p>
 <p>将5D信息映射到高维后，再进行训练渲染所得出的scene的表面有很清楚的纹理，即高频分量。</p>
 <p>位置编码公式（对于位置L=10，角度L=4）：<br>
-<img src="https://CDJ-happier.github.io/post-images/1671367931918.png" alt="" loading="lazy"></p>
+<img src="http://localhost:4000/post-images/1671367931918.png" alt="" loading="lazy"></p>
 <p>效果对比：<br>
-<img src="https://CDJ-happier.github.io/post-images/1671367938680.png" alt="" loading="lazy"></p>
+<img src="http://localhost:4000/post-images/1671367938680.png" alt="" loading="lazy"></p>
 <h3 id="hierarchical-volume-sampling">Hierarchical Volume Sampling</h3>
 <ol>
 <li>N点采样时，如果均匀采样，则MLP只能学到离散位置的信息。将所需采样的区间均匀分为N段，在每一段内部采用均匀采样，这样就能够学习连续的位置信息。</li>
 <li>“coarse to fine” 思想，通过上一步，将Nc个采样点输入到coarse network中去，计算透明度概率分布，然后再进行fine采样得到Nf个采样点，连同Nc输入到fine network中去。</li>
 </ol>
 <p>示意图：<br>
-<img src="https://CDJ-happier.github.io/post-images/1671367950309.png" alt="" loading="lazy"></p>
+<img src="http://localhost:4000/post-images/1671367950309.png" alt="" loading="lazy"></p>
 <h2 id="view-dependent">view-dependent</h2>
 <p>从不同的角度观察scene的同一个位置，透明度一样，但颜色可能不同。基于此，MLP的基本结构如下：<br>
-<img src="https://CDJ-happier.github.io/post-images/1671367959172.jpg" alt="" loading="lazy"></p>
+<img src="http://localhost:4000/post-images/1671367959172.jpg" alt="" loading="lazy"></p>
 <p>view-dependent能实现不同角度不同颜色的效果：<br>
-<img src="https://CDJ-happier.github.io/post-images/1671367970214.png" alt="" loading="lazy"></p>
+<img src="http://localhost:4000/post-images/1671367970214.png" alt="" loading="lazy"></p>
 <p>缺点：计算量大，虽然MLP网络不大，但每个采样点都需要送入到MLP中进行计算。</p>
 
               </div>
@@ -169,7 +169,7 @@ tradition: 用point clouds, mesh, voxel等方式显式表示scene，缺点：离
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://CDJ-happier.github.io/post/FFT-TIF/">
+            <a href="http://localhost:4000/post/FFT-TIF/">
               <h3 class="post-title">
                 FFT之蝶形运算
               </h3>
@@ -181,7 +181,7 @@ tradition: 用point clouds, mesh, voxel等方式显式表示scene，缺点：离
 
         <div class="site-footer">
   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>
