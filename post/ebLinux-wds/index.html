@@ -3,10 +3,10 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>嵌入式Linux驱动开发框架-韦东山 | DJCai</title>
-<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671439797367">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="嵌入式Linux驱动开发框架-韦东山 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="嵌入式Linux驱动开发框架-韦东山 | DJCai - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -25,8 +25,8 @@
     <div class="main">
       <div class="main-content">
         <div class="site-header">
-  <a href="http://localhost:4000">
-  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
+  <a href="https://CDJ-happier.github.io">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671439797367" alt="">
   </a>
   <h1 class="site-title">
     DJCai
@@ -37,25 +37,25 @@
   <div class="menu-container">
     
       
-        <a href="http://localhost:4000" class="menu">
+        <a href="https://CDJ-happier.github.io" class="menu">
           首页
         </a>
       
     
       
-        <a href="http://localhost:4000/archives" class="menu">
+        <a href="https://CDJ-happier.github.io/archives" class="menu">
           归档
         </a>
       
     
       
-        <a href="http://localhost:4000/tags" class="menu">
+        <a href="https://CDJ-happier.github.io/tags" class="menu">
           标签
         </a>
       
     
       
-        <a href="http://localhost:4000/post/about" class="menu">
+        <a href="https://CDJ-happier.github.io/post/about" class="menu">
           关于
         </a>
       
@@ -163,14 +163,14 @@ loop:
 <p>上面我们说了，嵌入式Linux开发分为两类：应用开发和驱动开发。</p>
 <h2 id="实现最基本的需求">实现最基本的需求</h2>
 <p>主要分为应用程序部分和驱动部分。整体框架如下：</p>
-<figure data-type="image" tabindex="1"><img src="http://localhost:4000/post-images/ebLinux3.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://CDJ-happier.github.io/post-images/ebLinux3.png" alt="" loading="lazy"></figure>
 <h3 id="应用程序部分">应用程序部分</h3>
 <p>直接调用open、read、write、close等函数。</p>
 <h3 id="驱动程序部分">驱动程序部分</h3>
 <p>实现chr_open、chr_read、chr_write、chr_close等函数供应用程序调用。而在这些函数中要实现其自己的功能，比如配置寄存器、操作寄存器等。</p>
 <h2 id="面向对象的思想">面向对象的思想</h2>
 <p>在驱动程序中的相应函数中直接操作寄存器会使程序移植、维护变得困难，可以将操作物理寄存器和驱动分开。即整体框架如下：</p>
-<figure data-type="image" tabindex="2"><img src="http://localhost:4000/post-images/ebLinux1.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://CDJ-happier.github.io/post-images/ebLinux1.png" alt="" loading="lazy"></figure>
 <p>对于开发板上的led灯，可以抽象出一个led_opr结构体，其中包括对led的初始化和配置函数，并且将led_opr结构体提供给上层。</p>
 <pre><code class="language-c">struct led_operations {
 	int num;
@@ -188,13 +188,13 @@ struct led_operations *get_board_led_opr(void);
 <p>主要有4个文件，app.c， driver.c， led_resource.c， chip_gpio.c。调用关系为：app.c调用相关函数，进入到driver.c驱动程序中，而在驱动程序中的open函数中调用chip_gpio.c提供的init函数（同上面的led_opr），在init函数中初始化相应的led管脚，具体是哪一个管脚呢？由led_resource.c指定。也可一这么说，在init函数中调用led_resource.c提供的led_pin；在驱动程序中的write函数中调用chip_gpio.c提供的ctrl函数（同上面的led_opr）操作相应的led管脚（led对应的gpio已经由init函数获得）。</p>
 <h2 id="更进一步总线驱动">更进一步/总线驱动</h2>
 <p>前面一直在说对led的操作，那么对于其它的呢？比如蜂鸣器、spi等。那么Linux内核抽象出了platform_device和platform_driver，一个定义资源，一个实现操作。</p>
-<figure data-type="image" tabindex="3"><img src="http://localhost:4000/post-images/ebLinux2.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://CDJ-happier.github.io/post-images/ebLinux2.png" alt="" loading="lazy"></figure>
 <p>更具体的图：</p>
-<figure data-type="image" tabindex="4"><img src="http://localhost:4000/post-images/ebLinux6.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://CDJ-happier.github.io/post-images/ebLinux6.png" alt="" loading="lazy"></figure>
 <p>和上面比，其实platform_device=led_resource.c，platform_driver=chip_gpio.c。</p>
-<figure data-type="image" tabindex="5"><img src="http://localhost:4000/post-images/ebLinux5.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://CDJ-happier.github.io/post-images/ebLinux5.png" alt="" loading="lazy"></figure>
 <p>chip_demo_gpio.c（chip_gpio.c）相当于最开始的中根据platform_device指定的资源进行初始化和操作，该文件中有platform_driver结构体，其中有probe成员。</p>
-<figure data-type="image" tabindex="6"><img src="http://localhost:4000/post-images/ebLinux4.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://CDJ-happier.github.io/post-images/ebLinux4.png" alt="" loading="lazy"></figure>
 <p>board_A_led.c（相当于最开始的led_resource.c）中根据platform_device指定需要操作对象，上图中的resource成员指定了2个gpio管脚。</p>
 <p>文件有点多，说明一下它们之间的关系：</p>
 <p>platform_device这个文件加载时，platform_driver结构体中的probe成员会自动执行（如果两者匹配成功的话），并且platform_device作为probe的参数，所以就可以在probe中获得platform_device指定的pin管脚资源。而platform_driver这个文件是操作物理寄存器的，所以它加载到内核时，首先把自己操作物理寄存器的init和ctrl方法告诉（写一个函数返回封装的led_opr）给它的上层驱动程序leddrv.c，而又由于platform_driver已经获得了具体的资源，所以init和ctrl都有了具体的操作对象。</p>
@@ -269,7 +269,7 @@ device_node --部分--&gt; platform_device
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="http://localhost:4000/post/cpuStart/">
+            <a href="https://CDJ-happier.github.io/post/cpuStart/">
               <h3 class="post-title">
                 CPU上电如何启动的
               </h3>
@@ -281,7 +281,7 @@ device_node --部分--&gt; platform_device
 
         <div class="site-footer">
   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

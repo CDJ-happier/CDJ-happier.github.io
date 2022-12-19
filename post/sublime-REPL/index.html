@@ -3,10 +3,10 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>sublime创建交互式python环境及调试 | DJCai</title>
-<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671439797367">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="sublime创建交互式python环境及调试 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="sublime创建交互式python环境及调试 | DJCai - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -20,8 +20,8 @@
     <div class="main">
       <div class="main-content">
         <div class="site-header">
-  <a href="http://localhost:4000">
-  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
+  <a href="https://CDJ-happier.github.io">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671439797367" alt="">
   </a>
   <h1 class="site-title">
     DJCai
@@ -32,25 +32,25 @@
   <div class="menu-container">
     
       
-        <a href="http://localhost:4000" class="menu">
+        <a href="https://CDJ-happier.github.io" class="menu">
           首页
         </a>
       
     
       
-        <a href="http://localhost:4000/archives" class="menu">
+        <a href="https://CDJ-happier.github.io/archives" class="menu">
           归档
         </a>
       
     
       
-        <a href="http://localhost:4000/tags" class="menu">
+        <a href="https://CDJ-happier.github.io/tags" class="menu">
           标签
         </a>
       
     
       
-        <a href="http://localhost:4000/post/about" class="menu">
+        <a href="https://CDJ-happier.github.io/post/about" class="menu">
           关于
         </a>
       
@@ -84,7 +84,7 @@
                 5 min read
               </span>
               
-                <a href="http://localhost:4000/tag/i5ot-lyUg/" class="post-tag">
+                <a href="https://CDJ-happier.github.io/tag/i5ot-lyUg/" class="post-tag">
                   # sublime
                 </a>
               
@@ -97,13 +97,13 @@
 <h2 id="第一步">第一步</h2>
 <p>刚开始，百度到的都是要先安装sublimeREPL这个插件，确实要安装，然后安装好后，那些垃圾博客就开始说明怎么用，没有一些实质性的讲解，事实是会遇到很多其它问题。<br>
 遇到的博客都是安装好sublimeREPL后执行Python-RUN current file<br>
-<img src="http://localhost:4000/post-images/1602506486298.png" alt="" loading="lazy"><br>
+<img src="https://CDJ-happier.github.io/post-images/1602506486298.png" alt="" loading="lazy"><br>
 交互式界面打是打开了，但是报了一个错误，就是没有找到python解释器。虽然我配置过python解释器，但是那个是编译系统中进行配置的，而这个需要对sublimeREPL所使用的解释器进行配置。百度了好久都没有一篇博客说明，最后终于发现了一篇，才慢慢搞明白是怎么回事。[参看](https://www.jianshu.com/p/561ab6d620b4）</p>
 <h2 id="第二步">第二步</h2>
 <p>在sublime中通过浏览插件进入到插件安装的目录，如下：<br>
-<img src="http://localhost:4000/post-images/1602506480070.png" alt="" loading="lazy"><br>
+<img src="https://CDJ-happier.github.io/post-images/1602506480070.png" alt="" loading="lazy"><br>
 接着依次进入到SublimeREPL、config中，出现以下界面：<br>
-<img src="http://localhost:4000/post-images/1602506498390.png" alt="" loading="lazy"></p>
+<img src="https://CDJ-happier.github.io/post-images/1602506498390.png" alt="" loading="lazy"></p>
 <p>仔细观察会发现这些就是第一幅图中sublimeREPL中对应的各种交互式环境。因此我们可以创建不同版本的python环境，下面我们就来创建python35的交互式环境（编译系统中我也是用python35来执行python环境的）</p>
 <h2 id="第三步-创建一个python35的交互式环境">第三步-创建一个python35的交互式环境</h2>
 <ol>
@@ -140,11 +140,11 @@
 <ol start="2">
 <li><strong>编写python程序</strong>，按下F5，进入到交互式界面，重点讲F8，如何单步调试<br>
 按下F8，进入到调式窗口，如下：<br>
-<img src="http://localhost:4000/post-images/1602506414767.png" alt="" loading="lazy"><br>
+<img src="https://CDJ-happier.github.io/post-images/1602506414767.png" alt="" loading="lazy"><br>
 （<strong>对了，如何实现两个文件并列显示在菜单栏中---视图---布局---选择各种布局</strong>）<br>
 右边就是按下F8后弹出的调试窗口（注意看出现了Pdb）。如何调试了，这个就要学一些调试命令了。具体可百度学习pdb调试命令和其机制（分为侵入/非侵入方式），这里推荐两篇关于命令的文章：https://blog.csdn.net/qingkong1994/article/details/80038199 及https://www.zhihu.com/tardis/sogou/art/37294138<br>
 常用命令：b、l、ll、n、c、s。效果如下：<br>
-<img src="http://localhost:4000/post-images/1602506382829.png" alt="" loading="lazy"></li>
+<img src="https://CDJ-happier.github.io/post-images/1602506382829.png" alt="" loading="lazy"></li>
 </ol>
 <h2 id="总结">总结</h2>
 <ol>
@@ -175,7 +175,7 @@
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="http://localhost:4000/post/hello-gridea/">
+            <a href="https://CDJ-happier.github.io/post/hello-gridea/">
               <h3 class="post-title">
                 Hello Gridea
               </h3>
@@ -187,7 +187,7 @@
 
         <div class="site-footer">
   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

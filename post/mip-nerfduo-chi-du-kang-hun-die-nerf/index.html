@@ -3,10 +3,10 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Mip-NeRF：多尺度、抗混叠NeRF | DJCai</title>
-<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671439797328">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671439797367">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Mip-NeRF：多尺度、抗混叠NeRF | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Mip-NeRF：多尺度、抗混叠NeRF | DJCai - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -26,8 +26,8 @@
     <div class="main">
       <div class="main-content">
         <div class="site-header">
-  <a href="http://localhost:4000">
-  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671439797328" alt="">
+  <a href="https://CDJ-happier.github.io">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671439797367" alt="">
   </a>
   <h1 class="site-title">
     DJCai
@@ -38,25 +38,25 @@
   <div class="menu-container">
     
       
-        <a href="http://localhost:4000" class="menu">
+        <a href="https://CDJ-happier.github.io" class="menu">
           首页
         </a>
       
     
       
-        <a href="http://localhost:4000/archives" class="menu">
+        <a href="https://CDJ-happier.github.io/archives" class="menu">
           归档
         </a>
       
     
       
-        <a href="http://localhost:4000/tags" class="menu">
+        <a href="https://CDJ-happier.github.io/tags" class="menu">
           标签
         </a>
       
     
       
-        <a href="http://localhost:4000/post/about" class="menu">
+        <a href="https://CDJ-happier.github.io/post/about" class="menu">
           关于
         </a>
       
@@ -90,13 +90,13 @@
                 5 min read
               </span>
               
-                <a href="http://localhost:4000/tag/CzCAdSGMg/" class="post-tag">
+                <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
                   # NeRF
                 </a>
               
             </div>
             
-              <img class="post-feature-image" src="http://localhost:4000/post-images/mip-nerfduo-chi-du-kang-hun-die-nerf.png" alt="">
+              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/mip-nerfduo-chi-du-kang-hun-die-nerf.png" alt="">
             
             <div class="post-content-wrapper">
               <div class="post-content">
@@ -119,7 +119,7 @@
 </ul>
 </p>
 <h2 id="原始nerf的问题">原始NeRF的问题</h2>
-<figure data-type="image" tabindex="1"><img src="http://localhost:4000/post-images/1671438003889.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://CDJ-happier.github.io/post-images/1671438003889.png" alt="" loading="lazy"></figure>
 <ol>
 <li>(a, top) 用full-resolution训练的NeRF能够渲染photo-realistic view，但仅仅是渲染与训练图像相同的scale或resolution时；</li>
 <li>(a, bottom) 减小图像分辨率（后拉camera并zooming in或相似的操作。smartphone：人往后退，用双指将屏幕中的图像放大）会导致renderings出现严重的锯齿；注：此处应该是指在full-resolution的NeRF模型上渲染低分辨率图像会导致严重的锯齿，而不是指训练数据用低分辨率；</li>
@@ -127,7 +127,7 @@
 <li>(c) MipNeRF也是在multi-resolution images上进行训练，但跨尺度渲染的效果不错。</li>
 </ol>
 <p>原因：<br>
-<img src="http://localhost:4000/post-images/1671438012988.png" alt="" loading="lazy"></p>
+<img src="https://CDJ-happier.github.io/post-images/1671438012988.png" alt="" loading="lazy"></p>
 <p>NeRF沿着pixel对应的ray提取point-sampled positional encoding features，这些point-sampled features：</p>
 <ol>
 <li><strong>忽略了</strong>ray看到的volume的形状和大小（图中的蓝色和黄色截头圆锥。右边的camera更近，其看到的scene volume如蓝色所示，较小的截头圆锥；而左边的camera更远，看到的应该比右边的要大，如黄色部分所示）；</li>
@@ -135,14 +135,14 @@
 </ol>
 <p>NeRF的Ray Tracing存在<strong>ambiguity</strong>：不同位置camera对相同空间点提取了相同的point-sampled feature，即无辨识度。</p>
 <p>而MipNeRF通过Cone Tracing解决这种<strong>ambiguity</strong>，如下图所示。因为不同位置camera所cast的cone是不一样大小的，所以对空间同一点所产生的feature不一样（如何产生feature见后文IPE），有辨识度。<br>
-<img src="http://localhost:4000/post-images/1671438024375.png" alt="" loading="lazy"></p>
+<img src="https://CDJ-happier.github.io/post-images/1671438024375.png" alt="" loading="lazy"></p>
 <p>从信号处理的角度解决锯齿/混叠问题：一是增加采样频率（增加采样点数量，每个pixel 用多条rays）；二是预滤波，用low-pass filter减小所需的Nyquist频率，这样所需的采样点数量减少（本文属于方式二）。</p>
 <h2 id="重点components">重点components</h2>
 <h3 id="cone-tracing">Cone Tracing</h3>
 <p>pixel所cast的不是ray，而是cone，可消除NeRF的ambiguity。</p>
 <h3 id="ipe-integrated-positional-encoding">IPE-integrated positional encoding</h3>
 <p>IPE(integrated positional encoding)：MipNeRF将cone划分为N段，即N个截头圆锥，如何获取这些截头圆锥的feature呢？一个直接的方法就是用NeRF中所用的积分方式，公式如下：<br>
-<img src="http://localhost:4000/post-images/1671438038085.png" alt="" loading="lazy"></p>
+<img src="https://CDJ-happier.github.io/post-images/1671438038085.png" alt="" loading="lazy"></p>
 <p>其中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mo>(</mo><mo>∗</mo><mo>)</mo></mrow><annotation encoding="application/x-tex">F(*)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mopen">(</span><span class="mord">∗</span><span class="mclose">)</span></span></span></span>表示某个截头圆锥，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>γ</mi><mo>(</mo><mi>X</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">\gamma(X)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05556em;">γ</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mclose">)</span></span></span></span>就是截头圆锥某点的positional encoding特征(就是NeRF中的PE)。但是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mo>(</mo><mo>∗</mo><mo>)</mo></mrow><annotation encoding="application/x-tex">F(*)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mopen">(</span><span class="mord">∗</span><span class="mclose">)</span></span></span></span>的分布是未知的，所以上式无法计算。本文用多元高斯函数来近似一个截头圆锥，从而能够计算上式。</p>
 <p>如何用多元高斯函数近似一个截头圆锥？具体推导见论文及论文附录。</p>
 <h2 id="pe与ipe的差异">PE与IPE的差异</h2>
@@ -150,15 +150,15 @@
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mstyle mathsize="1.44em"><mi>γ</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mo>[</mo><mi>s</mi><mi>i</mi><mi>n</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo separator="true">,</mo><mi>c</mi><mi>o</mi><mi>s</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mi>s</mi><mi>i</mi><mi>n</mi><mo>(</mo><msup><mn>2</mn><mrow><mi>L</mi><mo>−</mo><mn>1</mn></mrow></msup><mi>x</mi><mo>)</mo><mo separator="true">,</mo><mi>c</mi><mi>o</mi><mi>s</mi><mo>(</mo><msup><mn>2</mn><mrow><mi>L</mi><mo>−</mo><mn>1</mn></mrow></msup><mi>x</mi><mo>)</mo><mo>]</mo></mstyle></mrow><annotation encoding="application/x-tex">\Large \gamma(x) = [sin(x), cos(x), ..., sin(2^{L-1}x),cos(2^{L-1}x)]
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.44em;vertical-align:-0.36em;"></span><span class="mord mathdefault sizing reset-size6 size8" style="margin-right:0.05556em;">γ</span><span class="mopen sizing reset-size6 size8">(</span><span class="mord mathdefault sizing reset-size6 size8">x</span><span class="mclose sizing reset-size6 size8">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel sizing reset-size6 size8">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.6380499999999998em;vertical-align:-0.36em;"></span><span class="mopen sizing reset-size6 size8">[</span><span class="mord mathdefault sizing reset-size6 size8">s</span><span class="mord mathdefault sizing reset-size6 size8">i</span><span class="mord mathdefault sizing reset-size6 size8">n</span><span class="mopen sizing reset-size6 size8">(</span><span class="mord mathdefault sizing reset-size6 size8">x</span><span class="mclose sizing reset-size6 size8">)</span><span class="mpunct sizing reset-size6 size8">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault sizing reset-size6 size8">c</span><span class="mord mathdefault sizing reset-size6 size8">o</span><span class="mord mathdefault sizing reset-size6 size8">s</span><span class="mopen sizing reset-size6 size8">(</span><span class="mord mathdefault sizing reset-size6 size8">x</span><span class="mclose sizing reset-size6 size8">)</span><span class="mpunct sizing reset-size6 size8">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord sizing reset-size6 size8">.</span><span class="mord sizing reset-size6 size8">.</span><span class="mord sizing reset-size6 size8">.</span><span class="mpunct sizing reset-size6 size8">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault sizing reset-size6 size8">s</span><span class="mord mathdefault sizing reset-size6 size8">i</span><span class="mord mathdefault sizing reset-size6 size8">n</span><span class="mopen sizing reset-size6 size8">(</span><span class="mord sizing reset-size6 size8"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8875347222222222em;"><span style="top:-3.4130000000000003em;margin-right:0.034722222222222224em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size8 size6 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">L</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mord mathdefault sizing reset-size6 size8">x</span><span class="mclose sizing reset-size6 size8">)</span><span class="mpunct sizing reset-size6 size8">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault sizing reset-size6 size8">c</span><span class="mord mathdefault sizing reset-size6 size8">o</span><span class="mord mathdefault sizing reset-size6 size8">s</span><span class="mopen sizing reset-size6 size8">(</span><span class="mord sizing reset-size6 size8"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8875347222222222em;"><span style="top:-3.4130000000000003em;margin-right:0.034722222222222224em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size8 size6 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">L</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mord mathdefault sizing reset-size6 size8">x</span><span class="mclose sizing reset-size6 size8">)</span><span class="mclose sizing reset-size6 size8">]</span></span></span></span></span></p>
 <p><a href="https://blog.csdn.net/qq_43620967/article/details/124458976">MipNeRF的IPE公式</a>：<br>
-<img src="http://localhost:4000/post-images/1671438050852.png" alt="" loading="lazy"></p>
+<img src="https://CDJ-happier.github.io/post-images/1671438050852.png" alt="" loading="lazy"></p>
 <p>和NeRF中的PE相比，多了一个指数衰减项，且空间位置X变成了<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>μ</mi><mi>γ</mi></msub></mrow><annotation encoding="application/x-tex">\mu_{\gamma}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault">μ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.15139200000000003em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.05556em;">γ</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>，即截头圆锥均值的PE，是一个统计值。<br>
-<img src="http://localhost:4000/post-images/1671438057014.png" alt="" loading="lazy"></p>
+<img src="https://CDJ-happier.github.io/post-images/1671438057014.png" alt="" loading="lazy"></p>
 <p><a href="https://blog.csdn.net/qq_40943760/article/details/125238788">参考链接-IPE的特点</a>。一个截头圆锥的统计属性（均值、方差）和它所处的位置相关，意味着IPE特征是用截头圆锥的位置计算的，和PE的本质一样，只不过IPE用的是位置的统计属性。上图中蓝色表示高频、红色表示低频。对于高频部分变化较快，有很多细条；低频部分变化较慢，是宽条。IPE对这些频率进行积分，如果截头圆锥比较大，则最终积分结果中高频趋于0；如果截头圆锥比较小，则高低频都有（此时等价于PE）。</p>
 <h2 id="训练数据的结构">训练数据的结构</h2>
 <p>用源代码中<code>dataset.py</code>文件进行分析。将synthetic data缩放为不同等级，如800x800, 400x400, 200x200, 100x100的大小，总计400张。代码文件<code>dataset.py</code>中的<code>MultiCamera</code>类即是所使用的多尺度训练数据，其有两个比较重要的成员：<code>self.images</code>, <code>self.rays</code>，前者是图片数据，类型是list，大小为400，每个成员是一张图片，图片大小为上面4种情况；<br>
-<img src="http://localhost:4000/post-images/1671438076758.png" alt="" loading="lazy"></p>
+<img src="https://CDJ-happier.github.io/post-images/1671438076758.png" alt="" loading="lazy"></p>
 <p>后者是一个类似于字典的“类”，包括：directions, far等字段，它们均是list类型，长度均为400（与400张图片相对应）。如viewdirs成员变量，其第一个元素是(800,800,3)，表示了(x,y)像素处的view direction(3D空间)。<strong>疑问：directions和viewdirs有什么不同？</strong><br>
-<img src="http://localhost:4000/post-images/1671438085653.png" alt="" loading="lazy"></p>
+<img src="https://CDJ-happier.github.io/post-images/1671438085653.png" alt="" loading="lazy"></p>
 
               </div>
               <div class="toc-container">
@@ -186,7 +186,7 @@
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="http://localhost:4000/post/keypointnerf3d-head-de-chong-jian/">
+            <a href="https://CDJ-happier.github.io/post/keypointnerf3d-head-de-chong-jian/">
               <h3 class="post-title">
                 KeypointNeRF：3D head的重建
               </h3>
@@ -198,7 +198,7 @@
 
         <div class="site-footer">
   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>
