@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>关于 | DJCai</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671439797367">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671444878327">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
 <link rel="alternate" type="application/atom+xml" title="关于 | DJCai - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
@@ -33,13 +33,13 @@ https://blog.cs..." />
       <div class="main-content">
         <div class="site-header">
   <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671439797367" alt="">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671444878327" alt="">
   </a>
   <h1 class="site-title">
     DJCai
   </h1>
   <p class="site-description">
-    more disciplined, more free
+    The more disciplined, the more free
   </p>
   <div class="menu-container">
     
@@ -135,6 +135,32 @@ https://blog.cs..." />
 
         
 
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '977674602169f3a5fb6d',
+    clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
+    repo: 'CDJ-happier.github.io',
+    owner: 'CDJ-happier',
+    admin: ['CDJ-happier'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
         
 
         <div class="site-footer">

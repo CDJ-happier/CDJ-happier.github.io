@@ -2,11 +2,11 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://CDJ-happier.github.io</id>
     <title>DJCai</title>
-    <updated>2022-12-19T08:52:06.403Z</updated>
+    <updated>2022-12-19T10:16:07.642Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://CDJ-happier.github.io"/>
     <link rel="self" href="https://CDJ-happier.github.io/atom.xml"/>
-    <subtitle>more disciplined, more free</subtitle>
+    <subtitle>The more disciplined, the more free</subtitle>
     <logo>https://CDJ-happier.github.io/images/avatar.png</logo>
     <icon>https://CDJ-happier.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, DJCai</rights>
