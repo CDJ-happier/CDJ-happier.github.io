@@ -3,10 +3,10 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ShearedEPI blur-deblur | DJCai</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671539773718">
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671539773683">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="ShearedEPI blur-deblur | DJCai - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="ShearedEPI blur-deblur | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -28,8 +28,8 @@ EPI bl..." />
     <div class="main">
       <div class="main-content">
         <div class="site-header">
-  <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671539773718" alt="">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671539773683" alt="">
   </a>
   <h1 class="site-title">
     DJCai
@@ -40,25 +40,25 @@ EPI bl..." />
   <div class="menu-container">
     
       
-        <a href="https://CDJ-happier.github.io" class="menu">
+        <a href="http://localhost:4000" class="menu">
           首页
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/archives" class="menu">
+        <a href="http://localhost:4000/archives" class="menu">
           归档
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/tags" class="menu">
+        <a href="http://localhost:4000/tags" class="menu">
           标签
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+        <a href="http://localhost:4000/post/about" class="menu">
           关于
         </a>
       
@@ -92,17 +92,17 @@ EPI bl..." />
                 4 min read
               </span>
               
-                <a href="https://CDJ-happier.github.io/tag/ObyNCpG0_/" class="post-tag">
+                <a href="http://localhost:4000/tag/ObyNCpG0_/" class="post-tag">
                   # light field
                 </a>
               
-                <a href="https://CDJ-happier.github.io/tag/5XKbW1UrC/" class="post-tag">
+                <a href="http://localhost:4000/tag/5XKbW1UrC/" class="post-tag">
                   # 深度学习
                 </a>
               
             </div>
             
-              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/shearedepi-blur-deblur.png" alt="">
+              <img class="post-feature-image" src="http://localhost:4000/post-images/shearedepi-blur-deblur.png" alt="">
             
             <div class="post-content-wrapper">
               <div class="post-content">
@@ -143,7 +143,7 @@ EPI bl..." />
 <p>提出”blur-restoration-deblur“框架</p>
 <p><strong>Note：</strong></p>
 <p>为了保证角度域和空间域信息对称information symmetry，一个直接的方法是对空间域下采样。但是，如果像Figure 2中这样角度和空间域差距很大的话，下采样会损失非常多的信息。因此，文中是通过1D blur kernel提取空间域的低频信息。<br>
-<img src="https://CDJ-happier.github.io/post-images/1671437225676.png" alt="" loading="lazy"></p>
+<img src="http://localhost:4000/post-images/1671437225676.png" alt="" loading="lazy"></p>
 <h2 id="疑问">疑问</h2>
 <ol>
 <li>为什么角度和空间之间的信息不对称会导致ghosting effect[24]；</li>
@@ -151,7 +151,7 @@ EPI bl..." />
 <li>non-blind deblur的non-blind是什么意思？参看文献[18]，<a href="https://blog.csdn.net/qq_43426078/article/details/123244207">参考链接</a>。</li>
 </ol>
 <h2 id="blur-restoration-deblur">blur-restoration-deblur</h2>
-<figure data-type="image" tabindex="1"><img src="https://CDJ-happier.github.io/post-images/1671437235209.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="http://localhost:4000/post-images/1671437235209.png" alt="" loading="lazy"></figure>
 <ol>
 <li>EPI blur是为了解决information asymmetry（为了解决angular和spatial差距比较大的情况，不是直接将spatial下采样，而是使用1D blur kernel提取低频信息实现information asymmetry）；</li>
 <li>Up-sampling，将angular上采样到指定resolution；</li>
@@ -160,18 +160,18 @@ EPI bl..." />
 </ol>
 <h2 id="epi-blur中的1d-blur-kernel">EPI blur中的1D blur kernel</h2>
 <p>第一个sinc函数，第二个是二阶低通巴特沃斯滤波器，第三个是高斯函数。</p>
-<figure data-type="image" tabindex="2"><img src="https://CDJ-happier.github.io/post-images/1671437245732.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="http://localhost:4000/post-images/1671437245732.png" alt="" loading="lazy"></figure>
 <p>We evaluate these three kernels based on the following two principles: the final deblurred result must show <strong>visual coherency</strong> with the ground truth EPI, and the <strong>mean square error (MSE)</strong> between the blurred low angular resolution EPI and the blurred ground truth EPI is as minimal as possible:</p>
-<figure data-type="image" tabindex="3"><img src="https://CDJ-happier.github.io/post-images/1671437254829.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="http://localhost:4000/post-images/1671437254829.png" alt="" loading="lazy"></figure>
 <h2 id="cnn-architecture">CNN architecture</h2>
-<figure data-type="image" tabindex="4"><img src="https://CDJ-happier.github.io/post-images/1671437263846.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="http://localhost:4000/post-images/1671437263846.png" alt="" loading="lazy"></figure>
 <p>The proposed detail restoration network is composed of three layers. The first and the second layers are followed by a rectified linear unit (ReLU). The final output of the network is the sum of the predicted residual (detail) and the input.</p>
 <p>first layer包含64个1x9x9的滤波器，用于提取空间特征图；second layer包含32个64x5x5的滤波器，用于non-linear mapping；last layer包含1个32x5x5的滤波器，用于(角度域)细节重建。</p>
 <h3 id="loss-function">loss function</h3>
 <p>因为CNN的输出是预测残差直接加上输入EPI，即<code>output EPI = predicted residual + input EPI</code>，所以损失定义在预测残差上：</p>
-<figure data-type="image" tabindex="5"><img src="https://CDJ-happier.github.io/post-images/1671437274421.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="http://localhost:4000/post-images/1671437274421.png" alt="" loading="lazy"></figure>
 <h2 id="result">result</h2>
-<figure data-type="image" tabindex="6"><img src="https://CDJ-happier.github.io/post-images/1671437282679.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="http://localhost:4000/post-images/1671437282679.png" alt="" loading="lazy"></figure>
 <p>ablation study：第四行不包含“blur-deblur”步骤，直接用CNN预测残差。可以发现，“blur-deblur”对表现的提升非常大，证明了“blur-deblur”的有效，即有效解决了information asymmetry所引起的ghosting effect。</p>
 
               </div>
@@ -203,7 +203,7 @@ EPI bl..." />
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://CDJ-happier.github.io/post/ibrnetji-yu-ibr-de-nerf/">
+            <a href="http://localhost:4000/post/ibrnetji-yu-ibr-de-nerf/">
               <h3 class="post-title">
                 IBRNet：基于IBR的NeRF
               </h3>
@@ -241,7 +241,7 @@ EPI bl..." />
 
         <div class="site-footer">
   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>
