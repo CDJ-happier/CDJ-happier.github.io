@@ -3,10 +3,10 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>IBRNet：基于IBR的NeRF | DJCai</title>
-<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671539345003">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671539345041">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="IBRNet：基于IBR的NeRF | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="IBRNet：基于IBR的NeRF | DJCai - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -22,8 +22,8 @@ IBRNet: Learning Multi-Vie..." />
     <div class="main">
       <div class="main-content">
         <div class="site-header">
-  <a href="http://localhost:4000">
-  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671539345003" alt="">
+  <a href="https://CDJ-happier.github.io">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671539345041" alt="">
   </a>
   <h1 class="site-title">
     DJCai
@@ -34,25 +34,25 @@ IBRNet: Learning Multi-Vie..." />
   <div class="menu-container">
     
       
-        <a href="http://localhost:4000" class="menu">
+        <a href="https://CDJ-happier.github.io" class="menu">
           首页
         </a>
       
     
       
-        <a href="http://localhost:4000/archives" class="menu">
+        <a href="https://CDJ-happier.github.io/archives" class="menu">
           归档
         </a>
       
     
       
-        <a href="http://localhost:4000/tags" class="menu">
+        <a href="https://CDJ-happier.github.io/tags" class="menu">
           标签
         </a>
       
     
       
-        <a href="http://localhost:4000/post/about" class="menu">
+        <a href="https://CDJ-happier.github.io/post/about" class="menu">
           关于
         </a>
       
@@ -86,13 +86,13 @@ IBRNet: Learning Multi-Vie..." />
                 5 min read
               </span>
               
-                <a href="http://localhost:4000/tag/CzCAdSGMg/" class="post-tag">
+                <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
                   # NeRF
                 </a>
               
             </div>
             
-              <img class="post-feature-image" src="http://localhost:4000/post-images/ibrnetji-yu-ibr-de-nerf.png" alt="">
+              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/ibrnetji-yu-ibr-de-nerf.png" alt="">
             
             <div class="post-content-wrapper">
               <div class="post-content">
@@ -102,11 +102,11 @@ IBRNet: Learning Multi-Vie..." />
 <p>针对问题：使NeRF具有泛化能力</p>
 <p>如何做：主要还是针对颜色和密度的预测进行改进（三维重建部分），和NeRF一样，使用的是volume rendering（渲染部分）。</p>
 <p>原始NeRF：<br>
-<img src="http://localhost:4000/post-images/1671435803136.jpg" alt="" loading="lazy"></p>
+<img src="https://CDJ-happier.github.io/post-images/1671435803136.jpg" alt="" loading="lazy"></p>
 <p>IBRNet：<br>
-<img src="http://localhost:4000/post-images/1671435811231.png" alt="" loading="lazy"></p>
+<img src="https://CDJ-happier.github.io/post-images/1671435811231.png" alt="" loading="lazy"></p>
 <p>密度和颜色的预测<br>
-<img src="http://localhost:4000/post-images/1671435821866.png" alt="" loading="lazy"></p>
+<img src="https://CDJ-happier.github.io/post-images/1671435821866.png" alt="" loading="lazy"></p>
 <p>成果：</p>
 <ol>
 <li>Unlike neural scene representation work that optimizes per-scene functions for rendering, we learn a generic view interpolation function that generalizes to novel scenes. 原始NeRF针对每个scene都需要优化（重头训练），而本文方法学习一个通用的view插值函数能够泛化到新的scenes。</li>
@@ -144,7 +144,7 @@ IBRNet: Learning Multi-Vie..." />
 <p>网络结构：</p>
 <p>ResUNet用于提取Fi</p>
 <p>IBRNet用于预测density δ和color c。（IBRNet包括一个Ray transformer）<br>
-<img src="http://localhost:4000/post-images/1671435833873.png" alt="" loading="lazy"></p>
+<img src="https://CDJ-happier.github.io/post-images/1671435833873.png" alt="" loading="lazy"></p>
 <p>原始NeRF对每个scene都需要重新优化建模，即一个scene对应一个模型，没有泛化能力，该篇论文提出的IBRNet就是解决NeRF的泛化问题，实现在一些训练集上训练得到的模型，能够直接应用到其它scene上。并且还可以通过fine-tuned实现更好的结果。</p>
 <p>原始NeRF可大致分为2个步骤：三维重建（2D-3D的建模过程，用MLP隐式表达scene），渲染（3D-2D，volume rendering）</p>
 <p>原始NeRF为什么不具泛化性：个人认为是在三维重建时没有充分利用信息（渲染view时，都是孤立的点，且与其它view没有联系），直接从5D到颜色和透明度的映射。</p>
@@ -173,7 +173,7 @@ IBRNet: Learning Multi-Vie..." />
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="http://localhost:4000/post/nerfshen-jing-fu-she-chang/">
+            <a href="https://CDJ-happier.github.io/post/nerfshen-jing-fu-she-chang/">
               <h3 class="post-title">
                 NeRF：神经辐射场
               </h3>
@@ -211,7 +211,7 @@ IBRNet: Learning Multi-Vie..." />
 
         <div class="site-footer">
   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>

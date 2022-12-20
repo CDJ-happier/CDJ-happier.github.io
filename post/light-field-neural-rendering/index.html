@@ -3,10 +3,10 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Light Field Neural Rendering | DJCai</title>
-<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671539345003">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671539345041">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Light Field Neural Rendering | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Light Field Neural Rendering | DJCai - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -21,8 +21,8 @@
     <div class="main">
       <div class="main-content">
         <div class="site-header">
-  <a href="http://localhost:4000">
-  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671539345003" alt="">
+  <a href="https://CDJ-happier.github.io">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671539345041" alt="">
   </a>
   <h1 class="site-title">
     DJCai
@@ -33,25 +33,25 @@
   <div class="menu-container">
     
       
-        <a href="http://localhost:4000" class="menu">
+        <a href="https://CDJ-happier.github.io" class="menu">
           首页
         </a>
       
     
       
-        <a href="http://localhost:4000/archives" class="menu">
+        <a href="https://CDJ-happier.github.io/archives" class="menu">
           归档
         </a>
       
     
       
-        <a href="http://localhost:4000/tags" class="menu">
+        <a href="https://CDJ-happier.github.io/tags" class="menu">
           标签
         </a>
       
     
       
-        <a href="http://localhost:4000/post/about" class="menu">
+        <a href="https://CDJ-happier.github.io/post/about" class="menu">
           关于
         </a>
       
@@ -85,13 +85,13 @@
                 5 min read
               </span>
               
-                <a href="http://localhost:4000/tag/CzCAdSGMg/" class="post-tag">
+                <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
                   # NeRF
                 </a>
               
             </div>
             
-              <img class="post-feature-image" src="http://localhost:4000/post-images/light-field-neural-rendering.png" alt="">
+              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/light-field-neural-rendering.png" alt="">
             
             <div class="post-content-wrapper">
               <div class="post-content">
@@ -115,11 +115,11 @@
 <p>经典LF rendering能够重现view-dependent(如reflection、refraction、translucency)的效果，但是需要大量views；基于geometry的方法只需少量views，但不能准确地对non-Lambertian效应建模。本文结合二者优点，在训练和推理阶段增加几何约束，scene geometry是从sparse views中隐式学习的。</p>
 <p>更具体，我们引入一个<strong>two-stage transformer-based的model</strong>。</p>
 <h2 id="prerequisites-对极几何约束">prerequisites-对极几何约束</h2>
-<figure data-type="image" tabindex="1"><img src="http://localhost:4000/post-images/1671438838458.jpg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://CDJ-happier.github.io/post-images/1671438838458.jpg" alt="" loading="lazy"></figure>
 <p>X是空间中一点（物点），<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>C</mi><mi>L</mi></msub><mo separator="true">,</mo><msub><mi>C</mi><mi>R</mi></msub></mrow><annotation encoding="application/x-tex">C_L,C_R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.00773em;">R</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>分别是两个虚拟相机的光心，二者的连线称为基线baseline，基线与两成像平面的交点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>e</mi><mi>L</mi></msub><mo separator="true">,</mo><msub><mi>e</mi><mi>R</mi></msub></mrow><annotation encoding="application/x-tex">e_L,e_R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.00773em;">R</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>为极点；<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>x</mi><mi>L</mi></msub><mo separator="true">,</mo><msub><mi>x</mi><mi>R</mi></msub></mrow><annotation encoding="application/x-tex">x_L,x_R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.00773em;">R</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>是像点，极点与像点的连线称为极线；相机光心与物点X所形成的平面为极平面。</p>
 <p><strong>由上可知</strong>，若<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>C</mi><mi>L</mi></msub><mi>X</mi></mrow><annotation encoding="application/x-tex">C_LX</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span></span></span></span>是NeRF中的一条ray，在其上面采样多个点，将这些点投影到右边的像平面，则这些点必定落在右边的极线上<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>e</mi><mi>R</mi></msub><mo separator="true">,</mo><msub><mi>x</mi><mi>R</mi></msub></mrow><annotation encoding="application/x-tex">e_R,x_R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.00773em;">R</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.00773em;">R</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。</p>
 <h2 id="model-overview">Model Overview</h2>
-<figure data-type="image" tabindex="2"><img src="http://localhost:4000/post-images/1671438844784.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://CDJ-happier.github.io/post-images/1671438844784.png" alt="" loading="lazy"></figure>
 <p>在渲染一个pixel时，会参考邻近的K个reference view。具体分为三步，即数据处理、极线特征聚合、视图特征聚合。</p>
 <ol>
 <li>数据处理：提取每个reference view关于cast ray的极点特征epipolar feature；</li>
@@ -165,7 +165,7 @@
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="http://localhost:4000/post/mip-nerfduo-chi-du-kang-hun-die-nerf/">
+            <a href="https://CDJ-happier.github.io/post/mip-nerfduo-chi-du-kang-hun-die-nerf/">
               <h3 class="post-title">
                 Mip-NeRF：多尺度、抗混叠NeRF
               </h3>
@@ -203,7 +203,7 @@
 
         <div class="site-footer">
   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>
