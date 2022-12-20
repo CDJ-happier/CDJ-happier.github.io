@@ -3,10 +3,10 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>嵌入式Linux驱动开发相关结构体 | DJCai</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671444878327">
+<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671538334890">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="嵌入式Linux驱动开发相关结构体 | DJCai - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="嵌入式Linux驱动开发相关结构体 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -28,8 +28,8 @@ struct inode/struct fi..." />
     <div class="main">
       <div class="main-content">
         <div class="site-header">
-  <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671444878327" alt="">
+  <a href="http://localhost:4000">
+  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671538334890" alt="">
   </a>
   <h1 class="site-title">
     DJCai
@@ -40,25 +40,25 @@ struct inode/struct fi..." />
   <div class="menu-container">
     
       
-        <a href="https://CDJ-happier.github.io" class="menu">
+        <a href="http://localhost:4000" class="menu">
           首页
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/archives" class="menu">
+        <a href="http://localhost:4000/archives" class="menu">
           归档
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/tags" class="menu">
+        <a href="http://localhost:4000/tags" class="menu">
           标签
         </a>
       
     
       
-        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+        <a href="http://localhost:4000/post/about" class="menu">
           关于
         </a>
       
@@ -92,7 +92,7 @@ struct inode/struct fi..." />
                 8 min read
               </span>
               
-                <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/" class="post-tag">
+                <a href="http://localhost:4000/tag/KThzdm7dh/" class="post-tag">
                   # 嵌入式Linux
                 </a>
               
@@ -275,7 +275,7 @@ struct device {
 </blockquote>
 <p><strong>应用---&gt;系统调用---&gt;驱动，struct file就是在系统调用这一层被创建</strong>。这也说明了有时候我们没有在驱动程序中编写应用程序对应的函数（比如drv_open）也不会报错，因为有sys_open（此函数中可能会做一些处理）。</p>
 <p><a href="https://www.cnblogs.com/chen-farsight/p/6177870.html">两者关系-图解</a><br>
-<img src="https://CDJ-happier.github.io/post-images/1602503886302.png" alt="" loading="lazy"></p>
+<img src="http://localhost:4000/post-images/1602503886302.png" alt="" loading="lazy"></p>
 <p>用户空间使用open()系统调用函数打开一个字符设备时<code>（ int fd = open(&quot;dev/demo&quot;, O_RDWR) ）</code>大致有以下过程：</p>
 <ol>
 <li>在虚拟文件系统VFS中的查找对应与字符设备对应 **<u>struct inode</u>**节点</li>
@@ -324,7 +324,7 @@ struct device {
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://CDJ-happier.github.io/post/TeleTransTheory/">
+            <a href="http://localhost:4000/post/TeleTransTheory/">
               <h3 class="post-title">
                 电信传输理论
               </h3>
@@ -362,7 +362,7 @@ struct device {
 
         <div class="site-footer">
   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>
