@@ -3,10 +3,10 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>驱动程序基石 | DJCai</title>
-<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1671538334890">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1671538334922">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="驱动程序基石 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="驱动程序基石 | DJCai - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -52,8 +52,8 @@ poll机制
     <div class="main">
       <div class="main-content">
         <div class="site-header">
-  <a href="http://localhost:4000">
-  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1671538334890" alt="">
+  <a href="https://CDJ-happier.github.io">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1671538334922" alt="">
   </a>
   <h1 class="site-title">
     DJCai
@@ -64,25 +64,25 @@ poll机制
   <div class="menu-container">
     
       
-        <a href="http://localhost:4000" class="menu">
+        <a href="https://CDJ-happier.github.io" class="menu">
           首页
         </a>
       
     
       
-        <a href="http://localhost:4000/archives" class="menu">
+        <a href="https://CDJ-happier.github.io/archives" class="menu">
           归档
         </a>
       
     
       
-        <a href="http://localhost:4000/tags" class="menu">
+        <a href="https://CDJ-happier.github.io/tags" class="menu">
           标签
         </a>
       
     
       
-        <a href="http://localhost:4000/post/about" class="menu">
+        <a href="https://CDJ-happier.github.io/post/about" class="menu">
           关于
         </a>
       
@@ -116,7 +116,7 @@ poll机制
                 25 min read
               </span>
               
-                <a href="http://localhost:4000/tag/KThzdm7dh/" class="post-tag">
+                <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/" class="post-tag">
                   # 嵌入式Linux
                 </a>
               
@@ -238,7 +238,7 @@ int do_sys_poll(struct pollfd __user *ufds, unsigned int nfds, struct timespec *
 <blockquote>
 <p>参看：include/linux/wait.h</p>
 </blockquote>
-<figure data-type="image" tabindex="1"><img src="http://localhost:4000/post-images/1602505104294.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://CDJ-happier.github.io/post-images/1602505104294.png" alt="" loading="lazy"></figure>
 <pre><code class="language-c">#define wait_event(wq, condition)					\
 do {									\
 	might_sleep();							\
@@ -266,7 +266,7 @@ do {									\
 })
 </code></pre>
 <h4 id="唤醒函数">唤醒函数</h4>
-<figure data-type="image" tabindex="2"><img src="http://localhost:4000/post-images/1602505088683.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://CDJ-happier.github.io/post-images/1602505088683.png" alt="" loading="lazy"></figure>
 <pre><code class="language-c">void __wake_up(
     wait_queue_head_t *q, 
     unsigned int mode, 
@@ -287,7 +287,7 @@ void __wake_up_locked(
 #define wake_up_interruptible_all(x)	__wake_up(x, TASK_INTERRUPTIBLE, 0, NULL)
 </code></pre>
 <h4 id="一般框架">一般框架</h4>
-<figure data-type="image" tabindex="3"><img src="http://localhost:4000/post-images/1602505073328.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://CDJ-happier.github.io/post-images/1602505073328.png" alt="" loading="lazy"></figure>
 <p>要休眠的线程，放在 wq 队列里，中断处理函数从 wq 队列里把它取出来唤醒。</p>
 <p>所以，我们要做这几件事：</p>
 <ol>
@@ -302,10 +302,10 @@ void __wake_up_locked(
 <p>在<strong>中断服务程序里</strong>设置 event 为 TRUE，并调用 wake_up_interruptible 唤醒线程。</p>
 </li>
 </ol>
-<figure data-type="image" tabindex="4"><img src="http://localhost:4000/post-images/1602505055466.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://CDJ-happier.github.io/post-images/1602505055466.png" alt="" loading="lazy"></figure>
 <h1 id="poll机制">poll机制</h1>
 <p>对于休眠唤醒机制，必须要有人唤醒才能返回；但是poll可以设置超时时间，时间到后还是没有等到相应的时间也会返回。</p>
-<figure data-type="image" tabindex="5"><img src="http://localhost:4000/post-images/1602505041971.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://CDJ-happier.github.io/post-images/1602505041971.png" alt="" loading="lazy"></figure>
 <h2 id="驱动编写要点">驱动编写要点</h2>
 <ol>
 <li>在驱动中把当前线程放入某个等待队列wq（但不会导致休眠），并且根据实际情况（比如当前有无按键值可以读）返回驱动程序的状态（如POLLIN）。</li>
@@ -379,10 +379,10 @@ close(fd);
 <li>信号处理函数和信号，之间怎么挂钩：APP 注册信号处理函数</li>
 </ol>
 <p>APP 打开驱动程序时，内核（系统调用）会创建对应的 struct file 结构体，file 中有 f_flags；f_flags 中有一个 FASYNC 位，它被设置为 1 时表示使能异步通知功能。<strong>当 f_flags 中的 FASYNC 位发生变化时，驱动程序的 fasync 函数被调用</strong>。</p>
-<figure data-type="image" tabindex="6"><img src="http://localhost:4000/post-images/1602505023223.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://CDJ-happier.github.io/post-images/1602505023223.png" alt="" loading="lazy"></figure>
 <pre><code class="language-c">struct fasync_struct *button_fasync;
 </code></pre>
-<figure data-type="image" tabindex="7"><img src="http://localhost:4000/post-images/1602504990127.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://CDJ-happier.github.io/post-images/1602504990127.png" alt="" loading="lazy"></figure>
 <h2 id="驱动编写要点-2">驱动编写要点</h2>
 <ul>
 <li>编写<code>fasync</code>函数提供给<code>file_operation</code>结构体，在此函数中调用<code>fasync_helper(fd,file,on,&amp;fasync_struct)</code>，此函数的目的是将驱动与app相联系起来，以便以后驱动知道把信号发给谁（file中含有app的pid，然后此函数把pid赋给fasync_struct）。</li>
@@ -428,8 +428,8 @@ static void sig_func(int sig)
 <li>使用 poll 时，如果传入的超时时间不为 0，这种访问方法也是<strong>阻塞的</strong>。</li>
 <li>使用 poll 时，可以设置超时时间为 0，这样即使没有数据它也会立刻返回，这就是<strong>非阻塞方式</strong>。</li>
 </ul>
-<figure data-type="image" tabindex="8"><img src="http://localhost:4000/post-images/1602504970012.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="9"><img src="http://localhost:4000/post-images/1602504944393.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://CDJ-happier.github.io/post-images/1602504970012.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://CDJ-happier.github.io/post-images/1602504944393.png" alt="" loading="lazy"></figure>
 <h2 id="驱动编写要点-3">驱动编写要点</h2>
 <pre><code class="language-c">static ssize_t gpio_key_drv_read (struct file *file, char __user *buf, size_t size, loff_t *offset)
 {
@@ -450,7 +450,7 @@ static void sig_func(int sig)
 <p>从驱动代码也可以看出来，当 APP 打开某个驱动时，在内核中会有一个 struct file 结构体对应这个驱动，这个结构体中有 f_flags，就是打开文件时的标记位；可以设置 f_flasgs 的 O_NONBLOCK 位，表示非阻塞；也可以清除这个位表示阻塞。</p>
 <p><strong>驱动程序要根据这个标记位决定事件未就绪时是休眠和还是立刻返回。</strong></p>
 <p>如果没有按键可以读取并且是非阻塞，那么就立刻返回；否则就休眠。<br>
-<img src="http://localhost:4000/post-images/1602504916967.png" alt="" loading="lazy"></p>
+<img src="https://CDJ-happier.github.io/post-images/1602504916967.png" alt="" loading="lazy"></p>
 <h2 id="应用程序编写要点-2">应用程序编写要点</h2>
 <pre><code class="language-c">/* 2. 非阻塞模式打开文件 */
 fd = open(argv[1], O_RDWR | O_NONBLOCK);
@@ -484,9 +484,9 @@ close(fd);
 </code></pre>
 <h2 id="实验结果">实验结果</h2>
 <p>非阻塞立刻执行</p>
-<figure data-type="image" tabindex="10"><img src="http://localhost:4000/post-images/1602504888375.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://CDJ-happier.github.io/post-images/1602504888375.png" alt="" loading="lazy"></figure>
 <p>阻塞方式（按下一次按键才打印一次）</p>
-<figure data-type="image" tabindex="11"><img src="http://localhost:4000/post-images/1602504865739.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://CDJ-happier.github.io/post-images/1602504865739.png" alt="" loading="lazy"></figure>
 <h1 id="定时器">定时器</h1>
 <blockquote>
 <p>expire的意思是到期、期满。</p>
@@ -524,7 +524,7 @@ close(fd);
 </ul>
 <p>内核中有很多 timer，如果高效地找到超时的 timer？这是比较复杂的，<a href="https://blog.csdn.net/tianmohust/article/details/8707162">可以看看这文章</a>。</p>
 <h2 id="使用步骤">使用步骤</h2>
-<figure data-type="image" tabindex="12"><img src="http://localhost:4000/post-images/1602504840896.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://CDJ-happier.github.io/post-images/1602504840896.png" alt="" loading="lazy"></figure>
 <ul>
 <li><code>setup_timer(定时器，对应函数，传给对应函数的数据)</code>。</li>
 <li>配置定时器成员，如<code>gpio_keys_100ask[i].key_timer.expires = ~0;	/* 先设置超时时间为最大值 */</code>。</li>
@@ -738,7 +738,7 @@ s1=contianer_of(add,struct stu,b);
 	} while (0)
 #endif
 </code></pre>
-<figure data-type="image" tabindex="13"><img src="http://localhost:4000/post-images/1602504809148.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://CDJ-happier.github.io/post-images/1602504809148.png" alt="" loading="lazy"></figure>
 <h2 id="内部工作机制">内部工作机制</h2>
 <p>比较复杂，暂且不分析</p>
 <h2 id="使用步骤-2">使用步骤</h2>
@@ -782,7 +782,7 @@ static void key_work_func(struct work_struct *work)
 <h2 id="内部机制-2">内部机制</h2>
 <p>暂不分析</p>
 <h2 id="相关函数-3">相关函数</h2>
-<figure data-type="image" tabindex="14"><img src="http://localhost:4000/post-images/1602504787811.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="14"><img src="https://CDJ-happier.github.io/post-images/1602504787811.png" alt="" loading="lazy"></figure>
 <pre><code class="language-c">/* 参考：kernel/irq/manage.c */
 int request_threaded_irq(
 		unsigned int irq, 		/* 那个中断 */
@@ -852,7 +852,7 @@ free_irq(gpio_keys_100ask[i].irq, &amp;gpio_keys_100ask[i]);
 <li>设置vma的一些属性，比如是否使用cache、buffer</li>
 <li>然后映射</li>
 </ul>
-<figure data-type="image" tabindex="15"><img src="http://localhost:4000/post-images/1602504757673.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://CDJ-happier.github.io/post-images/1602504757673.png" alt="" loading="lazy"></figure>
 <pre><code class="language-c">int main(int argc, char **argv)
 {
 	int fd;
@@ -918,7 +918,7 @@ free_irq(gpio_keys_100ask[i].irq, &amp;gpio_keys_100ask[i]);
 </code></pre>
 <h2 id="说明">说明</h2>
 <p>应用程序调用mmap后，会通过驱动中的drv_mmap把buf_user映射到物理内存phy</p>
-<figure data-type="image" tabindex="16"><img src="http://localhost:4000/post-images/1602504743293.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="https://CDJ-happier.github.io/post-images/1602504743293.png" alt="" loading="lazy"></figure>
 
               </div>
               <div class="toc-container">
@@ -1008,7 +1008,7 @@ free_irq(gpio_keys_100ask[i].irq, &amp;gpio_keys_100ask[i]);
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="http://localhost:4000/post/ebLinux-relaAPI/">
+            <a href="https://CDJ-happier.github.io/post/ebLinux-relaAPI/">
               <h3 class="post-title">
                 嵌入式Linux驱动开发相关API
               </h3>
@@ -1046,7 +1046,7 @@ free_irq(gpio_keys_100ask[i].irq, &amp;gpio_keys_100ask[i]);
 
         <div class="site-footer">
   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>
