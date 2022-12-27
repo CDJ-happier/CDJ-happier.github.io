@@ -3,10 +3,10 @@
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>AlphaLinux开发板使用 | DJCai</title>
-<link rel="shortcut icon" href="http://localhost:4000/favicon.ico?v=1672124238720">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1672124238757">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
-<link rel="stylesheet" href="http://localhost:4000/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="AlphaLinux开发板使用 | DJCai - Atom Feed" href="http://localhost:4000/atom.xml">
+<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="AlphaLinux开发板使用 | DJCai - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
@@ -26,8 +26,8 @@
     <div class="main">
       <div class="main-content">
         <div class="site-header">
-  <a href="http://localhost:4000">
-  <img class="avatar" src="http://localhost:4000/images/avatar.png?v=1672124238720" alt="">
+  <a href="https://CDJ-happier.github.io">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1672124238757" alt="">
   </a>
   <h1 class="site-title">
     DJCai
@@ -38,25 +38,25 @@
   <div class="menu-container">
     
       
-        <a href="http://localhost:4000" class="menu">
+        <a href="https://CDJ-happier.github.io" class="menu">
           首页
         </a>
       
     
       
-        <a href="http://localhost:4000/archives" class="menu">
+        <a href="https://CDJ-happier.github.io/archives" class="menu">
           归档
         </a>
       
     
       
-        <a href="http://localhost:4000/tags" class="menu">
+        <a href="https://CDJ-happier.github.io/tags" class="menu">
           标签
         </a>
       
     
       
-        <a href="http://localhost:4000/post/about" class="menu">
+        <a href="https://CDJ-happier.github.io/post/about" class="menu">
           关于
         </a>
       
@@ -90,13 +90,13 @@
                 14 min read
               </span>
               
-                <a href="http://localhost:4000/tag/KThzdm7dh/" class="post-tag">
+                <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/" class="post-tag">
                   # 嵌入式Linux
                 </a>
               
             </div>
             
-              <img class="post-feature-image" src="http://localhost:4000/post-images/alphaBoard-use.png" alt="">
+              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/alphaBoard-use.png" alt="">
             
             <div class="post-content-wrapper">
               <div class="post-content">
@@ -117,22 +117,22 @@
 </li>
 <li>
 <p>选择对应的vbs脚本<br>
-<img src="http://localhost:4000/post-images/1602504257657.png" alt="" loading="lazy"><br>
-<img src="http://localhost:4000/post-images/1602504279379.png" alt="" loading="lazy"><br>
-<img src="http://localhost:4000/post-images/1602504330198.png" alt="" loading="lazy"></p>
+<img src="https://CDJ-happier.github.io/post-images/1602504257657.png" alt="" loading="lazy"><br>
+<img src="https://CDJ-happier.github.io/post-images/1602504279379.png" alt="" loading="lazy"><br>
+<img src="https://CDJ-happier.github.io/post-images/1602504330198.png" alt="" loading="lazy"></p>
 </li>
 <li>
 <p>设置为从SD卡启动系统</p>
 </li>
 </ol>
 <h3 id="12-固化到emmc">1.2 固化到eMMC</h3>
-<figure data-type="image" tabindex="1"><img src="http://localhost:4000/post-images/1602504375920.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="1"><img src="https://CDJ-happier.github.io/post-images/1602504375920.png" alt="" loading="lazy"></figure>
 <p>通过mfgtool将uboot、zImga、dtb固化到eMMC后，通过emmc方式启动可以观察这些文件在emmc中的位置，如下：</p>
-<figure data-type="image" tabindex="2"><img src="http://localhost:4000/post-images/1602504395968.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://CDJ-happier.github.io/post-images/1602504395968.png" alt="" loading="lazy"></figure>
 <p>mmc的分区0存放的是uboot，分区1是zimage和设备树，分区2是根文件系统，这些都是通过mfgtoo烧录进去的。mmc分区2的根文件系统可以通过``ext4ls mmc 1:2`进行查看，因为其是ext4类型的文件系统，如下：</p>
-<figure data-type="image" tabindex="3"><img src="http://localhost:4000/post-images/1602504545483.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://CDJ-happier.github.io/post-images/1602504545483.png" alt="" loading="lazy"></figure>
 <p><code>ext4ls mmc 1:2 dir</code>可查看mmc1的分区2的dir文件夹下的内容：</p>
-<figure data-type="image" tabindex="4"><img src="http://localhost:4000/post-images/1602504530164.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://CDJ-happier.github.io/post-images/1602504530164.png" alt="" loading="lazy"></figure>
 <h4 id="121-续">1.2.1 续</h4>
 <p>上面说明了通过mfgtool将固件烧录到emmc后的一些情况，比如mmc1的part0是存放的uboot。在后面讲Linux内核启动方式的时候和这里有关，所以就先说明一下，加强记忆。启动方式有sd卡、emmc/nand、网络启动，相关的uboot环境变量和命令有bootargs、bootcmd、run。</p>
 <p>bootargs环境变量中的console值指定所使用的终端，一般为<code>console=ttymxc0,115200</code>，root值指定根文件系统所在位置，该值根据不同需求需设置不同的值，如下：</p>
@@ -168,7 +168,7 @@ saveenv
 <ol>
 <li>
 <p>用<code>ls /run/media/mmcblk1p1</code>查看mmc1的分区1有那些设备树</p>
-<figure data-type="image" tabindex="5"><img src="http://localhost:4000/post-images/1602504562705.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://CDJ-happier.github.io/post-images/1602504562705.png" alt="" loading="lazy"></figure>
 </li>
 <li>
 <p>将对应的设备树拷贝到/run/media/mmcblk1p1 目录下，也可以把全部设备树拷贝。</p>
@@ -237,7 +237,7 @@ saveenv
 saveenv 
 </code></pre>
 <p>bootargs变量的<strong>console</strong>值表示所用的终端，<strong>root</strong>值代表根文件系统在哪里（上面表示的是根文件系统在emmc的块1分区2）。</p>
-<figure data-type="image" tabindex="6"><img src="http://localhost:4000/post-images/1602504585316.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://CDJ-happier.github.io/post-images/1602504585316.png" alt="" loading="lazy"></figure>
 <p>根据上面的格式 bootargs 环境变量的 <strong>root 值</strong>（告诉Linux内核根文件系统在Ubuntu主机中，即用nfs挂载根文件系统）如下：<a href="https://www.cnblogs.com/Mike2019/p/12890930.html">参见</a></p>
 <pre><code class="language-shell">root=/dev/nfs nfsroot=169.254.30.41:/home/cdj/Linux/nfs/rootfs,proto=tcp rw ip=169.254.30.42:169.254.30.41:169.254.1.1:255.255.0.0::eth0:off # 告诉内核根文件系统用nfs挂载，位置是xxx处的Ubuntu主机
 root=/dev/mmcblkp2 rootwait rw  # 告诉内核根文件系统在mmc1的分区2
@@ -274,8 +274,8 @@ scp file1 root@169.254.30.42:/home/root
 # 如：
 scp CReadme.md root@169.254.30.42:/home/root
 </code></pre>
-<figure data-type="image" tabindex="7"><img src="http://localhost:4000/post-images/1602504605088.png" alt="" loading="lazy"></figure>
-<figure data-type="image" tabindex="8"><img src="http://localhost:4000/post-images/1602504619052.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://CDJ-happier.github.io/post-images/1602504605088.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://CDJ-happier.github.io/post-images/1602504619052.png" alt="" loading="lazy"></figure>
 <h3 id="4-启动linux内核命令">4. 启动Linux内核命令</h3>
 <h4 id="41-bootz">4.1 bootz</h4>
 <p>bootz [addr [initrd[:size]] [fdt]] 命令 bootz 有三个参数，addr 是 Linux 镜像文件在 DRAM 中的位置，initrd 是 initrd 文件在 DRAM 中的地址，如果不使用 initrd 的话使用‘-’代替即可，fdt 就是设备树文件在 DRAM 中 的地址。</p>
@@ -459,7 +459,7 @@ psk=&quot;XXXXXXXX&quot;
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="http://localhost:4000/post/eblinux-relaStruct/">
+            <a href="https://CDJ-happier.github.io/post/eblinux-relaStruct/">
               <h3 class="post-title">
                 嵌入式Linux驱动开发相关结构体
               </h3>
@@ -497,7 +497,7 @@ psk=&quot;XXXXXXXX&quot;
 
         <div class="site-footer">
   Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="http://localhost:4000/atom.xml" target="_blank">
+  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
     <i class="ri-rss-line"></i> RSS
   </a>
 </div>
