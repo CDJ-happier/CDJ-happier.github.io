@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://CDJ-happier.github.io</id>
     <title>DJCai</title>
-    <updated>2023-01-11T04:27:22.982Z</updated>
+    <updated>2023-01-11T04:38:13.826Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://CDJ-happier.github.io"/>
     <link rel="self" href="https://CDJ-happier.github.io/atom.xml"/>
@@ -34,10 +34,11 @@
 <p>NGP MLP的大小：深度为3，宽度为64，有两个MLP</p>
 <p><strong>多分辨率哈希编码</strong></p>
 <figure data-type="image" tabindex="2"><img src="https://CDJ-happier.github.io/post-images/1673410931129.png" alt="" loading="lazy"></figure>
-<p>NGP参数：</p>
+<p>NGP参数：<br>
+<img src="https://CDJ-happier.github.io/post-images/1673411463367.png" alt="" loading="lazy"></p>
 <p>L是分为多少个等级（对应多少个hash table），T是指每个hash table的大小，F是每一个hash item的维度，Nl代表每一级的分辨率。</p>
-<p>视频解读：</p>
-<iframe src="//player.bilibili.com/player.html?aid=649814090&bvid=BV11e4y1V77L&cid=952140187&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>]]></content>
+<p>视频解读：<a href="https://www.bilibili.com/video/BV11e4y1V77L/?share_source=copy_web&amp;vd_source=176031ee180f24c7c2bf77674d87df06">instant-ngp：多分辨率哈希编码思路理解</a></p>
+<iframe src="//player.bilibili.com/player.html?aid=649814090&bvid=BV11e4y1V77L&cid=952140187&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true", width="1024", height="800"> </iframe>]]></content>
     </entry>
     <entry>
         <title type="html"><![CDATA[Nerfies：Deformable NeRF]]></title>
