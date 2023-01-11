@@ -2,14 +2,43 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://CDJ-happier.github.io</id>
     <title>DJCai</title>
-    <updated>2022-12-27T07:00:07.808Z</updated>
+    <updated>2023-01-11T04:24:51.098Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://CDJ-happier.github.io"/>
     <link rel="self" href="https://CDJ-happier.github.io/atom.xml"/>
     <subtitle>The more disciplined, the more free</subtitle>
     <logo>https://CDJ-happier.github.io/images/avatar.png</logo>
     <icon>https://CDJ-happier.github.io/favicon.ico</icon>
-    <rights>All rights reserved 2022, DJCai</rights>
+    <rights>All rights reserved 2023, DJCai</rights>
+    <entry>
+        <title type="html"><![CDATA[Instant-NGP：多分辨率哈希编码]]></title>
+        <id>https://CDJ-happier.github.io/post/instant-ngp/</id>
+        <link href="https://CDJ-happier.github.io/post/instant-ngp/">
+        </link>
+        <updated>2023-01-05T04:17:10.000Z</updated>
+        <summary type="html"><![CDATA[<p>原始NeRF不管是训练速度还是推理速度都十分的慢，NVIDIA针对这个问题提出了instant-ngp，实现了训练5min就能得到和NeRF相当的结果。论文全称：Instant Neural Graphics Primitives with a Multiresolution Hash Encoding，主要的思路是：减小MLP的大小；为了保证性能，给MLP的输入是具有特征的向量，而不是单纯的位置加方向（或positional encoding）。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>原始NeRF不管是训练速度还是推理速度都十分的慢，NVIDIA针对这个问题提出了instant-ngp，实现了训练5min就能得到和NeRF相当的结果。论文全称：Instant Neural Graphics Primitives with a Multiresolution Hash Encoding，主要的思路是：减小MLP的大小；为了保证性能，给MLP的输入是具有特征的向量，而不是单纯的位置加方向（或positional encoding）。</p>
+<!-- more -->
+<p>提出一种任务无关的通用高效编码方法-多分辨率哈希编码，在4种任务上验证此方法的优越性。</p>
+<ol>
+<li>Gigapixel image：MLP将高分辨率图像的2D坐标转换为RGB；</li>
+<li>Neural signed distance functions(SDF)：MLP学习将3D坐标映射为到表面的距离；</li>
+<li>Neural radiance caching(NRC)：MLP从蒙特卡洛路径跟踪器学习给定场景的5D光场；</li>
+<li>NeRF：MLP学习从5D位置＋方向到3D-radiance和1D-density的映射；</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://CDJ-happier.github.io/post-images/1673410923250.png" alt="" loading="lazy"></figure>
+<p>上面的任务都是用了MLP学习一个映射，训练的瓶颈也在于MLP的大小。比如NeRF，在渲染一个pixel时，会使用ray marching，采样数以百计的点，也就是一个pixel需要数以百次的MLP evaluation，非常耗时。</p>
+<p>本文的一个想法是将MLP model变小，使一次MLP evaluation几乎不耗时，同时不降低性能。于是，提出多分辨率哈希编码，将大部分特征存储在哈希表中，减小MLP的大小。</p>
+<p>NeRF MLP的大小：深度为8，宽度为256，有两个MLP</p>
+<p>NGP MLP的大小：深度为3，宽度为64，有两个MLP</p>
+<p><strong>多分辨率哈希编码</strong></p>
+<figure data-type="image" tabindex="2"><img src="https://CDJ-happier.github.io/post-images/1673410931129.png" alt="" loading="lazy"></figure>
+<p>NGP参数：</p>
+<p>L是分为多少个等级（对应多少个hash table），T是指每个hash table的大小，F是每一个hash item的维度，Nl代表每一级的分辨率。</p>
+<p>视频解读：</p>
+<iframe src="//player.bilibili.com/player.html?aid=649814090&bvid=BV11e4y1V77L&cid=952140187&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Nerfies：Deformable NeRF]]></title>
         <id>https://CDJ-happier.github.io/post/nerfiesdeformable-nerf/</id>
@@ -636,78 +665,6 @@ TPAMI 2020 香港城市大学</p>
 <h2 id="result">result</h2>
 <figure data-type="image" tabindex="6"><img src="https://CDJ-happier.github.io/post-images/1671437282679.png" alt="" loading="lazy"></figure>
 <p>ablation study：第四行不包含“blur-deblur”步骤，直接用CNN预测残差。可以发现，“blur-deblur”对表现的提升非常大，证明了“blur-deblur”的有效，即有效解决了information asymmetry所引起的ghosting effect。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[IBRNet：基于IBR的NeRF]]></title>
-        <id>https://CDJ-happier.github.io/post/ibrnetji-yu-ibr-de-nerf/</id>
-        <link href="https://CDJ-happier.github.io/post/ibrnetji-yu-ibr-de-nerf/">
-        </link>
-        <updated>2022-09-30T07:42:40.000Z</updated>
-        <summary type="html"><![CDATA[<p>渲染某个target view时，会使用与其在空间位置上相邻的N个input views作为参考。另外还使用了Transformer Ray，即将cast ray上的采样点视为序列点。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>渲染某个target view时，会使用与其在空间位置上相邻的N个input views作为参考。另外还使用了Transformer Ray，即将cast ray上的采样点视为序列点。</p>
-<!-- more -->
-<h1 id="ibrnet-learning-multi-view-image-based-rendering">IBRNet: Learning Multi-View Image-Based Rendering</h1>
-<p>针对问题：使NeRF具有泛化能力</p>
-<p>如何做：主要还是针对颜色和密度的预测进行改进（三维重建部分），和NeRF一样，使用的是volume rendering（渲染部分）。</p>
-<p>原始NeRF：<br>
-<img src="https://CDJ-happier.github.io/post-images/1671435803136.jpg" alt="" loading="lazy"></p>
-<p>IBRNet：<br>
-<img src="https://CDJ-happier.github.io/post-images/1671435811231.png" alt="" loading="lazy"></p>
-<p>密度和颜色的预测<br>
-<img src="https://CDJ-happier.github.io/post-images/1671435821866.png" alt="" loading="lazy"></p>
-<p>成果：</p>
-<ol>
-<li>Unlike neural scene representation work that optimizes per-scene functions for rendering, we learn a generic view interpolation function that generalizes to novel scenes. 原始NeRF针对每个scene都需要优化（重头训练），而本文方法学习一个通用的view插值函数能够泛化到新的scenes。</li>
-<li>Experiments show that our method outperforms recent novel view synthesis methods that also seek to generalize to novel scenes. Further, if fine-tuned on each scene, our method is competitive with state-of-the-art single-scene neural rendering methods. 实验表明，在寻求泛化到新scenes时，我们的方法比其它好。更进一步，如果fine-tuned每一个scene，可以实现和目前SOTA的NVS任务相当的表现。</li>
-</ol>
-<p>主要：</p>
-<ol>
-<li>还是使用volume rendering。即通过网络预测出颜色和密度，再通过体渲染。</li>
-<li>在Volume density prediction时，将每条ray上的多个sampled point视为一个序列，然后使用自注意力机制预测最终的density（Ray Transformer）。好处：可以利用long-range contextual information。Ray Transformer的输入是density features序列（density features可以认为是PE的结果，类比）</li>
-<li>用source views预测target view的颜色时，不是使用source views的绝对方向，而是与target view的差值，即Δd，源于这样的事实：d 和 di 之间较小差异通常意味着目标视图处的颜色与视图 i 处的相应颜色相似的可能性更大，反之亦然。所以使用Δd。</li>
-</ol>
-<p>steps：</p>
-<ol>
-<li>
-<p>对于一个target view，会找到与其在空间上最邻近的N个source views（在一个大的source views pool中随机选取N个）；</p>
-<p>同时，通过ResUNet网络得出source views的特征Fi∈(Hi,Wi,d)</p>
-</li>
-<li>
-<p>target view的每一个像素发出一条射线<code>r(t)=o+td</code>，且在射线上有一些采样点</p>
-</li>
-<li>
-<p>对于每个query point，计算出其在N个source views上的投影点，并通过双线性插值【因为投影到source views时可能没在一个完整的像素点，可能在相邻点的中间，这时就需要用插值的方法得出投影点的Ci和fi】计算出投影点的颜色Ci和特征fi，fi∈Fi，i=1-N。</p>
-</li>
-<li>
-<p>计算fi的均值和方差，拼接后(1x3d)输入到MLP中得到fi‘和wi。注：此处是为了check consistency，论文中的Multi-view feature aggregation这一小节有说到。</p>
-</li>
-<li>
-<p>fi'和wi输入到MLP得到fδ，通过Ray transformer预测得到density δ</p>
-<p>fi’和Δdi拼接后输入到MLP中预测Ci的权重w_i^c，Ci和W_ic的加权得出query point的最终颜色</p>
-</li>
-<li>
-<p>利用volume density，渲染得到该ray对应的像素颜色。</p>
-</li>
-</ol>
-<p>网络结构：</p>
-<p>ResUNet用于提取Fi</p>
-<p>IBRNet用于预测density δ和color c。（IBRNet包括一个Ray transformer）<br>
-<img src="https://CDJ-happier.github.io/post-images/1671435833873.png" alt="" loading="lazy"></p>
-<p>原始NeRF对每个scene都需要重新优化建模，即一个scene对应一个模型，没有泛化能力，该篇论文提出的IBRNet就是解决NeRF的泛化问题，实现在一些训练集上训练得到的模型，能够直接应用到其它scene上。并且还可以通过fine-tuned实现更好的结果。</p>
-<p>原始NeRF可大致分为2个步骤：三维重建（2D-3D的建模过程，用MLP隐式表达scene），渲染（3D-2D，volume rendering）</p>
-<p>原始NeRF为什么不具泛化性：个人认为是在三维重建时没有充分利用信息（渲染view时，都是孤立的点，且与其它view没有联系），直接从5D到颜色和透明度的映射。</p>
-<p>IBRNet的工作主要针对三维重建这一步，即5D映射到颜色和透明度这一步。</p>
-<p>渲染target view时，</p>
-<ol>
-<li>会基于与自己相邻的N个source views，</li>
-<li>充分利用信息，包括image color，view direction，image feature</li>
-<li>相邻view在scene表面更光滑，所以使用Δd作为view direction</li>
-<li>预测density时，不是孤立的点，而是将ray上的所有sampled point视为一个序列，使用transformer的self-attention预测density，利用空间信息；</li>
-<li>图像特征用UNet提取，骨干网络使用ResNet</li>
-<li>用类似PointNet检验图像特征一致性</li>
-</ol>
 ]]></content>
     </entry>
 </feed>
