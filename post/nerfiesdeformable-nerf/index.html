@@ -1,100 +1,111 @@
+
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Nerfies：Deformable NeRF | DJCai</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680696852108">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+    
+<meta charset="utf-8" >
+
+<title>Nerfies：Deformable NeRF | Welcome to CDJ&#39;s Page</title>
+<meta name="description" content="The more disciplined, the more free">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698480146">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Nerfies：Deformable NeRF | DJCai - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
 
 
 
-    <meta name="description" content="NeRF只能对static scene学习，因此，为了同大多数dynamic NeRF一样，本文也是增加一个deformation field将observation frames先转换到canonical frames，然后再使用NeRF..." />
-    <meta name="keywords" content="NeRF" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680696852108" alt="">
-  </a>
-  <h1 class="site-title">
-    DJCai
-  </h1>
-  <p class="site-description">
-    The more disciplined, the more free
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="https://CDJ-happier.github.io" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/archives" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/about" class="menu">
-          关于
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://CDJ-happier.github.io">
+        <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698480146" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://CDJ-happier.github.io">
+        <h1 class="site-title">Welcome to CDJ&#39;s Page</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
   </div>
 </div>
 
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="https://CDJ-happier.github.io" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="https://CDJ-happier.github.io/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="https://CDJ-happier.github.io/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://CDJ-happier.github.io/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
         <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              Nerfies：Deformable NeRF
-            </h2>
-            <div class="post-info">
-              <span>
-                2022-12-14
-              </span>
-              <span>
-                5 min read
-              </span>
-              
-                <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
-                  # NeRF
-                </a>
-              
+          
+            <div class="feature-container" style="background-image: url('https://CDJ-happier.github.io/post-images/nerfiesdeformable-nerf.png')">
             </div>
+          
+          <h2 class="post-title">Nerfies：Deformable NeRF</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2022-12-14</span>
             
-              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/nerfiesdeformable-nerf.png" alt="">
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/">
+                    NeRF
+                    
+                  </a>
+                
+              </span>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <p>NeRF只能对static scene学习，因此，为了同大多数dynamic NeRF一样，本文也是增加一个deformation field将observation frames先转换到canonical frames，然后再使用NeRF进行学习重建。</p>
+          </div>
+          <div class="post-content">
+            <p>NeRF只能对static scene学习，因此，为了同大多数dynamic NeRF一样，本文也是增加一个deformation field将observation frames先转换到canonical frames，然后再使用NeRF进行学习重建。</p>
 <!-- more -->
 <p><ul class="markdownIt-TOC">
 <li>
@@ -154,112 +165,86 @@
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mstyle mathsize="1.44em"><msub><mi>L</mi><mrow><mi>t</mi><mi>o</mi><mi>t</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>=</mo><msub><mi>L</mi><mrow><mi>r</mi><mi>g</mi><mi>b</mi></mrow></msub><mo>+</mo><mi>λ</mi><msub><mi>L</mi><mrow><mi>e</mi><mi>l</mi><mi>a</mi><mi>s</mi><mi>t</mi><mi>i</mi><mi>c</mi><mo>−</mo><mi>r</mi></mrow></msub><mo>+</mo><mi>μ</mi><msub><mi>L</mi><mrow><mi>b</mi><mi>g</mi></mrow></msub></mstyle></mrow><annotation encoding="application/x-tex">\Large L_{total} = L_{rgb} + {\lambda}L_{elastic-r} + {\mu}L_{bg}
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1999952em;vertical-align:-0.216em;"></span><span class="mord sizing reset-size6 size8"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33224999999999993em;"><span style="top:-2.85em;margin-left:0em;margin-right:0.034722222222222224em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size8 size6 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight">t</span><span class="mord mathdefault mtight">a</span><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel sizing reset-size6 size8">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.3944352em;vertical-align:-0.41043999999999997em;"></span><span class="mord sizing reset-size6 size8"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33224999999999993em;"><span style="top:-2.85em;margin-left:0em;margin-right:0.034722222222222224em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size8 size6 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span><span class="mord mathdefault mtight">b</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.28502777777777777em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin sizing reset-size6 size8">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.2993236em;vertical-align:-0.29933em;"></span><span class="mord sizing reset-size6 size8"><span class="mord mathdefault">λ</span></span><span class="mord sizing reset-size6 size8"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33224999999999993em;"><span style="top:-2.85em;margin-left:0em;margin-right:0.034722222222222224em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size8 size6 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">e</span><span class="mord mathdefault mtight" style="margin-right:0.01968em;">l</span><span class="mord mathdefault mtight">a</span><span class="mord mathdefault mtight">s</span><span class="mord mathdefault mtight">t</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">c</span><span class="mbin mtight">−</span><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.20786805555555554em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin sizing reset-size6 size8">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.3944352em;vertical-align:-0.41043999999999997em;"></span><span class="mord sizing reset-size6 size8"><span class="mord mathdefault">μ</span></span><span class="mord sizing reset-size6 size8"><span class="mord mathdefault">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33224999999999993em;"><span style="top:-2.85em;margin-left:0em;margin-right:0.034722222222222224em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size8 size6 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">b</span><span class="mord mathdefault mtight" style="margin-right:0.03588em;">g</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.28502777777777777em;"><span></span></span></span></span></span></span></span></span></span></span></p>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#problem">Problem</a></li>
-<li><a href="#solution-deformation-field">Solution-Deformation Field</a></li>
-<li><a href="#background-regularization">Background Regularization</a></li>
-<li><a href="#coarse-to-fine-deformation-regularization">Coarse-to-Fine Deformation Regularization</a></li>
-</ul>
-</li>
-</ul>
-
-              </div>
-            </div>
-          </article>
+          </div>
         </div>
 
         
           <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://CDJ-happier.github.io/post/learning-neural-light-fields-with-ray-space-embedding/">
+            <a class="purple-link" href="https://CDJ-happier.github.io/post/learning-neural-light-fields-with-ray-space-embedding/">
               <h3 class="post-title">
-                Learning Neural Light Fields with Ray-Space Embedding
+                下一篇：Learning Neural Light Fields with Ray-Space Embedding
               </h3>
             </a>
           </div>
-        
-
-        
           
-            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+      </div>
 
-<div id="gitalk-container"></div>
+      
+        
+          <div id="gitalk-container"></div>
+        
 
-<script>
+        
+      
 
-  var gitalk = new Gitalk({
-    clientID: '977674602169f3a5fb6d',
-    clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
-    repo: 'CDJ-happier.github.io',
-    owner: 'CDJ-happier',
-    admin: ['CDJ-happier'],
-    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-    distractionFreeMode: false  // Facebook-like distraction free mode
-  })
+      <div class="site-footer">
+  <div class="slogan">The more disciplined, the more free</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">RSS</a>
+</div>
 
-  gitalk.render('gitalk-container')
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
 
 </script>
 
-          
 
-          
-        
 
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
-</div>
-
-      </div>
-    </div>
-
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
-      hljs.initHighlightingOnLoad()
 
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+      var gitalk = new Gitalk({
+        clientID: '977674602169f3a5fb6d',
+        clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
+        repo: 'CDJ-happier.github.io',
+        owner: 'CDJ-happier',
+        admin: ['CDJ-happier'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
 
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
-
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
-
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
+      gitalk.render('gitalk-container')
 
     </script>
+  
+
+  
+
+
+
+
   </body>
 </html>

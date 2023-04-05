@@ -1,58 +1,379 @@
+
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>DJCai</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680696852108">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+    
+<meta charset="utf-8" >
+
+<title>Welcome to CDJ&#39;s Page</title>
+<meta name="description" content="The more disciplined, the more free">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698480146">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="DJCai - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="The more disciplined, the more free" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680696852108" alt="">
-  </a>
-  <h1 class="site-title">
-    DJCai
-  </h1>
-  <p class="site-description">
-    The more disciplined, the more free
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="https://CDJ-happier.github.io" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/archives" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/about" class="menu">
-          关于
-        </a>
-      
-    
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://CDJ-happier.github.io">
+        <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698480146" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://CDJ-happier.github.io">
+        <h1 class="site-title">Welcome to CDJ&#39;s Page</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
   </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="https://CDJ-happier.github.io" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="https://CDJ-happier.github.io/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="https://CDJ-happier.github.io/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://CDJ-happier.github.io/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        
+        
+<section class="post-item">
+    <div class="content">
+      <a href="https://CDJ-happier.github.io/post/alphaBoard-use/">
+        <h2 class="post-title">AlphaLinux开发板使用</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-10-12</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/">
+                嵌入式Linux
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+      <a href="https://CDJ-happier.github.io/post/alphaBoard-use/">
+        <div class="feature-container" style="background-image: url('https://CDJ-happier.github.io/post-images/alphaBoard-use.png')">
+        </div>
+      </a>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://CDJ-happier.github.io/post/eblinux-relaStruct/">
+        <h2 class="post-title">嵌入式Linux驱动开发相关结构体</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-10-12</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/">
+                嵌入式Linux
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://CDJ-happier.github.io/post/TeleTransTheory/">
+        <h2 class="post-title">电信传输理论</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-10-11</span>
+        
+      </div>
+    </div>
+    
+      <a href="https://CDJ-happier.github.io/post/TeleTransTheory/">
+        <div class="feature-container" style="background-image: url('https://CDJ-happier.github.io/post-images/TeleTransTheory.png')">
+        </div>
+      </a>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://CDJ-happier.github.io/post/lcd_framebuffer-use/">
+        <h2 class="post-title">lcd_framebuffer使用</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-10-06</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://CDJ-happier.github.io/tag/BqSYYs6a7/">
+                嵌入式
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+      <a href="https://CDJ-happier.github.io/post/lcd_framebuffer-use/">
+        <div class="feature-container" style="background-image: url('https://CDJ-happier.github.io/post-images/lcd_framebuffer-use.png')">
+        </div>
+      </a>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://CDJ-happier.github.io/post/driverbase/">
+        <h2 class="post-title">驱动程序基石</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-09-29</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/">
+                嵌入式Linux
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://CDJ-happier.github.io/post/ebLinux-relaAPI/">
+        <h2 class="post-title">嵌入式Linux驱动开发相关API</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-09-22</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/">
+                嵌入式Linux
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+      <a href="https://CDJ-happier.github.io/post/ebLinux-relaAPI/">
+        <div class="feature-container" style="background-image: url('https://CDJ-happier.github.io/post-images/ebLinux-relaAPI.png')">
+        </div>
+      </a>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://CDJ-happier.github.io/post/kalmanFilter/">
+        <h2 class="post-title">卡尔曼滤波</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-08-31</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://CDJ-happier.github.io/tag/TrRIqGItK/">
+                DSP
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+      <a href="https://CDJ-happier.github.io/post/kalmanFilter/">
+        <div class="feature-container" style="background-image: url('https://CDJ-happier.github.io/post-images/kalmanFilter.png')">
+        </div>
+      </a>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://CDJ-happier.github.io/post/ebLinux-wds/">
+        <h2 class="post-title">嵌入式Linux驱动开发框架-韦东山</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-08-24</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/">
+                嵌入式Linux
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://CDJ-happier.github.io/post/cpuStart/">
+        <h2 class="post-title">CPU上电如何启动的</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-08-14</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://CDJ-happier.github.io/tag/BqSYYs6a7/">
+                嵌入式
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+  </section>
+
+<section class="post-item">
+    <div class="content">
+      <a href="https://CDJ-happier.github.io/post/quickSort/">
+        <h2 class="post-title">快速排序-C语言实现</h2>
+      </a>
+      <div class="post-abstract">
+        
+      </div>
+      <div class="post-info">
+        <span><i class="icon icon-calendar-outline"></i> 2020-08-14</span>
+        
+          <span>
+            <i class="icon icon-pricetags-outline"></i>
+            
+              <a href="https://CDJ-happier.github.io/tag/-lWbWODrq/">
+                C语言
+                
+              </a>
+            
+          </span>
+        
+      </div>
+    </div>
+    
+      <a href="https://CDJ-happier.github.io/post/quickSort/">
+        <div class="feature-container" style="background-image: url('https://CDJ-happier.github.io/post-images/quickSort.png')">
+        </div>
+      </a>
+    
+  </section>
+
+
+<div class="pagination-container">
+  
+    <a href="https://CDJ-happier.github.io/page/3/" class="prev"><i class="icon-arrow-ios-back-outline"></i> 上一页</a>
+  
+  
+    <a href="https://CDJ-happier.github.io/page/5/" class="next">下一页 <i class="icon-arrow-ios-forward-outline"></i></a>
+  
+</div>
+
+
+      </div>
+
+      <div class="site-footer">
+  <div class="slogan">The more disciplined, the more free</div>
   <div class="social-container">
     
       
@@ -66,276 +387,26 @@
       
     
   </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">RSS</a>
 </div>
 
-    
-        <div class="post-container">
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/alphaBoard-use/">
-        <h2 class="post-title">AlphaLinux开发板使用</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2020-10-12
-        </span>
-        <span>
-          14 min read
-        </span>
-        
-          <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/" class="post-tag">
-            # 嵌入式Linux
-          </a>
-        
-      </div>
-      
-        <a href="https://CDJ-happier.github.io/post/alphaBoard-use/" class="post-feature-image" style="background-image: url('https://CDJ-happier.github.io/post-images/alphaBoard-use.png')">
-        </a>
-      
-      <div class="post-abstract">
-        
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/eblinux-relaStruct/">
-        <h2 class="post-title">嵌入式Linux驱动开发相关结构体</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2020-10-12
-        </span>
-        <span>
-          8 min read
-        </span>
-        
-          <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/" class="post-tag">
-            # 嵌入式Linux
-          </a>
-        
-      </div>
-      
-      <div class="post-abstract">
-        
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/TeleTransTheory/">
-        <h2 class="post-title">电信传输理论</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2020-10-11
-        </span>
-        <span>
-          10 min read
-        </span>
-        
-      </div>
-      
-        <a href="https://CDJ-happier.github.io/post/TeleTransTheory/" class="post-feature-image" style="background-image: url('https://CDJ-happier.github.io/post-images/TeleTransTheory.png')">
-        </a>
-      
-      <div class="post-abstract">
-        
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/lcd_framebuffer-use/">
-        <h2 class="post-title">lcd_framebuffer使用</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2020-10-06
-        </span>
-        <span>
-          4 min read
-        </span>
-        
-          <a href="https://CDJ-happier.github.io/tag/BqSYYs6a7/" class="post-tag">
-            # 嵌入式
-          </a>
-        
-      </div>
-      
-        <a href="https://CDJ-happier.github.io/post/lcd_framebuffer-use/" class="post-feature-image" style="background-image: url('https://CDJ-happier.github.io/post-images/lcd_framebuffer-use.png')">
-        </a>
-      
-      <div class="post-abstract">
-        
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/driverbase/">
-        <h2 class="post-title">驱动程序基石</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2020-09-29
-        </span>
-        <span>
-          25 min read
-        </span>
-        
-          <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/" class="post-tag">
-            # 嵌入式Linux
-          </a>
-        
-      </div>
-      
-      <div class="post-abstract">
-        
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/ebLinux-relaAPI/">
-        <h2 class="post-title">嵌入式Linux驱动开发相关API</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2020-09-22
-        </span>
-        <span>
-          13 min read
-        </span>
-        
-          <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/" class="post-tag">
-            # 嵌入式Linux
-          </a>
-        
-      </div>
-      
-        <a href="https://CDJ-happier.github.io/post/ebLinux-relaAPI/" class="post-feature-image" style="background-image: url('https://CDJ-happier.github.io/post-images/ebLinux-relaAPI.png')">
-        </a>
-      
-      <div class="post-abstract">
-        
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/kalmanFilter/">
-        <h2 class="post-title">卡尔曼滤波</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2020-08-31
-        </span>
-        <span>
-          25 min read
-        </span>
-        
-          <a href="https://CDJ-happier.github.io/tag/TrRIqGItK/" class="post-tag">
-            # DSP
-          </a>
-        
-      </div>
-      
-        <a href="https://CDJ-happier.github.io/post/kalmanFilter/" class="post-feature-image" style="background-image: url('https://CDJ-happier.github.io/post-images/kalmanFilter.png')">
-        </a>
-      
-      <div class="post-abstract">
-        
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/ebLinux-wds/">
-        <h2 class="post-title">嵌入式Linux驱动开发框架-韦东山</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2020-08-24
-        </span>
-        <span>
-          9 min read
-        </span>
-        
-          <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/" class="post-tag">
-            # 嵌入式Linux
-          </a>
-        
-      </div>
-      
-      <div class="post-abstract">
-        
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/cpuStart/">
-        <h2 class="post-title">CPU上电如何启动的</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2020-08-14
-        </span>
-        <span>
-          3 min read
-        </span>
-        
-          <a href="https://CDJ-happier.github.io/tag/BqSYYs6a7/" class="post-tag">
-            # 嵌入式
-          </a>
-        
-      </div>
-      
-      <div class="post-abstract">
-        
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/quickSort/">
-        <h2 class="post-title">快速排序-C语言实现</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2020-08-14
-        </span>
-        <span>
-          4 min read
-        </span>
-        
-          <a href="https://CDJ-happier.github.io/tag/-lWbWODrq/" class="post-tag">
-            # C语言
-          </a>
-        
-      </div>
-      
-        <a href="https://CDJ-happier.github.io/post/quickSort/" class="post-feature-image" style="background-image: url('https://CDJ-happier.github.io/post-images/quickSort.png')">
-        </a>
-      
-      <div class="post-abstract">
-        
-      </div>
-    </article>
-  
-</div>
 
-    
-        <div class="pagination-container">
-  
-    <a href="https://CDJ-happier.github.io/page/3/" class="prev-page">上一页</a>
-  
-  
-    <a href="https://CDJ-happier.github.io/page/5/" class="next-page">下一页</a>
-  
-</div>
-
-    
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
-</div>
-
-      </div>
     </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
   </body>
 </html>

@@ -1,123 +1,118 @@
+
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CMake的使用及pcre2 | DJCai</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680696852108">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+    
+<meta charset="utf-8" >
+
+<title>CMake的使用及pcre2 | Welcome to CDJ&#39;s Page</title>
+<meta name="description" content="The more disciplined, the more free">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698480146">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="CMake的使用及pcre2 | DJCai - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
 
 
 
-    <meta name="description" content="
-
-
-
-
-使用CMake对pcre进行编译
-如何在工程中使用
-测试代码
-错误记录
-附
-小记
-补：对jpeg开源库进行编译
-
-
-
-
-
-
-使用CMake对pcre进行编译
-在学习python中的正则表达式后，百度了一下看有没有C语言实现的正则表..." />
-    <meta name="keywords" content="Tools,嵌入式" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680696852108" alt="">
-  </a>
-  <h1 class="site-title">
-    DJCai
-  </h1>
-  <p class="site-description">
-    The more disciplined, the more free
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="https://CDJ-happier.github.io" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/archives" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/about" class="menu">
-          关于
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://CDJ-happier.github.io">
+        <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698480146" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://CDJ-happier.github.io">
+        <h1 class="site-title">Welcome to CDJ&#39;s Page</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
   </div>
 </div>
 
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="https://CDJ-happier.github.io" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="https://CDJ-happier.github.io/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="https://CDJ-happier.github.io/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://CDJ-happier.github.io/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
         <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              CMake的使用及pcre2
-            </h2>
-            <div class="post-info">
-              <span>
-                2021-01-20
-              </span>
-              <span>
-                17 min read
-              </span>
-              
-                <a href="https://CDJ-happier.github.io/tag/3RgVl6bYZ/" class="post-tag">
-                  # Tools
-                </a>
-              
-                <a href="https://CDJ-happier.github.io/tag/BqSYYs6a7/" class="post-tag">
-                  # 嵌入式
-                </a>
-              
+          
+            <div class="feature-container" style="background-image: url('https://CDJ-happier.github.io/post-images/cmake-use-with-pcre2.png')">
             </div>
+          
+          <h2 class="post-title">CMake的使用及pcre2</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2021-01-20</span>
             
-              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/cmake-use-with-pcre2.png" alt="">
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://CDJ-happier.github.io/tag/3RgVl6bYZ/">
+                    Tools
+                    
+                      ，
+                    
+                  </a>
+                
+                  <a href="https://CDJ-happier.github.io/tag/BqSYYs6a7/">
+                    嵌入式
+                    
+                  </a>
+                
+              </span>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <p><ul class="markdownIt-TOC">
+          </div>
+          <div class="post-content">
+            <p><ul class="markdownIt-TOC">
 <li>
 <ul>
 <li>
@@ -530,119 +525,86 @@ Report bugs to the package provider.
 <li><code>CPPFLAGS=-I /home/include</code></li>
 </ol>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#%E4%BD%BF%E7%94%A8cmake%E5%AF%B9pcre%E8%BF%9B%E8%A1%8C%E7%BC%96%E8%AF%91">使用CMake对pcre进行编译</a></li>
-<li><a href="#%E5%A6%82%E4%BD%95%E5%9C%A8%E5%B7%A5%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8">如何在工程中使用</a></li>
-<li><a href="#%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81">测试代码</a></li>
-<li><a href="#%E9%94%99%E8%AF%AF%E8%AE%B0%E5%BD%95">错误记录</a></li>
-<li><a href="#%E9%99%84">附</a></li>
-<li><a href="#%E5%B0%8F%E8%AE%B0">小记</a></li>
-<li><a href="#%E8%A1%A5%E5%AF%B9jpeg%E5%BC%80%E6%BA%90%E5%BA%93%E8%BF%9B%E8%A1%8C%E7%BC%96%E8%AF%91">补：对jpeg开源库进行编译</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-              </div>
-            </div>
-          </article>
+          </div>
         </div>
 
         
           <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://CDJ-happier.github.io/post/c-xor4findvalue/">
+            <a class="purple-link" href="https://CDJ-happier.github.io/post/c-xor4findvalue/">
               <h3 class="post-title">
-                【C语言】【算法】利用异或找不同单一数据
+                下一篇：【C语言】【算法】利用异或找不同单一数据
               </h3>
             </a>
           </div>
-        
-
-        
           
-            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+      </div>
 
-<div id="gitalk-container"></div>
+      
+        
+          <div id="gitalk-container"></div>
+        
 
-<script>
+        
+      
 
-  var gitalk = new Gitalk({
-    clientID: '977674602169f3a5fb6d',
-    clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
-    repo: 'CDJ-happier.github.io',
-    owner: 'CDJ-happier',
-    admin: ['CDJ-happier'],
-    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-    distractionFreeMode: false  // Facebook-like distraction free mode
-  })
+      <div class="site-footer">
+  <div class="slogan">The more disciplined, the more free</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">RSS</a>
+</div>
 
-  gitalk.render('gitalk-container')
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
 
 </script>
 
-          
 
-          
-        
 
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
-</div>
-
-      </div>
-    </div>
-
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
-      hljs.initHighlightingOnLoad()
 
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+      var gitalk = new Gitalk({
+        clientID: '977674602169f3a5fb6d',
+        clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
+        repo: 'CDJ-happier.github.io',
+        owner: 'CDJ-happier',
+        admin: ['CDJ-happier'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
 
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
-
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
-
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
+      gitalk.render('gitalk-container')
 
     </script>
+  
+
+  
+
+
+
+
   </body>
 </html>

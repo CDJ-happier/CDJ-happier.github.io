@@ -1,98 +1,98 @@
+
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>通信原理-数字基带传输 | DJCai</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680696852108">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+    
+<meta charset="utf-8" >
+
+<title>通信原理-数字基带传输 | Welcome to CDJ&#39;s Page</title>
+<meta name="description" content="The more disciplined, the more free">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698480146">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="通信原理-数字基带传输 | DJCai - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
 
 
 
-    <meta name="description" content="将数字基带信号通过基带信道进行传输，则称此传输系统为数字基带传输系统，需要考虑的有：
-
-数字信号的功率谱特性是否和匹配信道的传输特性；
-是否便于接收端提取符号同步信号
-在规定的传输速率下，如何在抽样判决时刻使码间干扰和信道噪声对系统性能影响..." />
-    <meta name="keywords" content="" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680696852108" alt="">
-  </a>
-  <h1 class="site-title">
-    DJCai
-  </h1>
-  <p class="site-description">
-    The more disciplined, the more free
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="https://CDJ-happier.github.io" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/archives" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/about" class="menu">
-          关于
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://CDJ-happier.github.io">
+        <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698480146" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://CDJ-happier.github.io">
+        <h1 class="site-title">Welcome to CDJ&#39;s Page</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
   </div>
 </div>
 
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="https://CDJ-happier.github.io" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="https://CDJ-happier.github.io/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="https://CDJ-happier.github.io/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://CDJ-happier.github.io/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
         <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              通信原理-数字基带传输
-            </h2>
-            <div class="post-info">
-              <span>
-                2020-11-30
-              </span>
-              <span>
-                31 min read
-              </span>
-              
-            </div>
+          
+          <h2 class="post-title">通信原理-数字基带传输</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2020-11-30</span>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <p>将<strong>数字基带信号</strong>通过<strong>基带信道</strong>进行传输，则称此传输系统为数字基带传输系统，需要考虑的有：</p>
+          </div>
+          <div class="post-content">
+            <p>将<strong>数字基带信号</strong>通过<strong>基带信道</strong>进行传输，则称此传输系统为数字基带传输系统，需要考虑的有：</p>
 <ol>
 <li>数字信号的功率谱特性是否和匹配信道的传输特性；</li>
 <li>是否便于接收端提取符号同步信号</li>
@@ -480,147 +480,86 @@ c-8,0,-12,-0.7,-12,-2z M1001 80H400000v40H1014z'/></svg></span></span></span><sp
 <p>为了实现无码间干扰，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>X</mi><mo>(</mo><mi>f</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">X(f)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.07847em;">X</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mclose">)</span></span></span></span>要求被设计为理想低通或者滚降特性，理想低通物理不可实现，而且第一个零点后的尾巴振幅大、收敛慢，而滚降特性虽然“尾巴“振幅减小了，但是需要的带宽更多，那么有没有一种频带利用率既高、“尾巴”衰减又大、收敛又快的传输波形呢？</p>
 <p>部分响应系统就解决了这个问题，它利用了<strong>相关编码</strong>引入<strong>受控码间干扰</strong>的基带传输系统，该系统所形成的波形称为部分响应波形。</p>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E6%95%B0%E5%AD%97%E5%9F%BA%E5%B8%A6%E4%BC%A0%E8%BE%93%E7%B3%BB%E7%BB%9F%E6%A8%A1%E5%9E%8B">数字基带传输系统模型</a></li>
-<li><a href="#%E6%95%B0%E5%AD%97%E5%9F%BA%E5%B8%A6pam%E4%BF%A1%E5%8F%B7%E6%B3%A2%E5%BD%A2%E5%8F%8A%E5%85%B6%E5%8A%9F%E7%8E%87%E8%B0%B1%E5%AF%86%E5%BA%A6">数字基带PAM信号波形及其功率谱密度</a>
-<ul>
-<li><a href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E6%95%B0%E5%AD%97pam">常用的数字PAM</a>
-<ul>
-<li><a href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0%E5%AD%97pam%E4%BF%A1%E5%8F%B7">二进制数字PAM信号</a></li>
-<li><a href="#%E5%A4%9A%E7%94%B5%E5%B9%B3%E7%9A%84pam%E4%BF%A1%E5%8F%B7mpam%E4%BF%A1%E5%8F%B7">多电平的PAM信号（MPAM信号）</a></li>
-</ul>
-</li>
-<li><a href="#%E6%95%B0%E5%AD%97pam%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%8A%9F%E7%8E%87%E8%B0%B1%E5%AF%86%E5%BA%A6">数字PAM信号的功率谱密度</a>
-<ul>
-<li><a href="#%E5%90%84%E7%AC%A6%E5%8F%B7%E4%BA%92%E4%B8%8D%E7%9B%B8%E5%85%B3%E6%97%B6%E7%9A%84%E6%95%B0%E5%AD%97pam%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%8A%9F%E7%8E%87%E8%B0%B1%E5%AF%86%E5%BA%A6">各符号互不相关时的数字PAM信号的功率谱密度</a></li>
-</ul>
-</li>
-<li><a href="#%E7%BA%BF%E8%B7%AF%E7%A0%81%E5%9E%8B">线路码型</a>
-<ul>
-<li><a href="#ami%E7%A0%81">AMI码</a></li>
-</ul>
-</li>
-<li><a href="#%E8%84%89%E5%86%B2%E6%B3%A2%E5%BD%A2">脉冲波形</a></li>
-</ul>
-</li>
-<li><a href="#awgn%E4%BF%A1%E9%81%93%E4%B8%8B%E7%9A%842pam%E6%95%B0%E5%AD%97%E5%9F%BA%E5%B8%A6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%8A%97%E5%99%AA%E5%A3%B0%E6%80%A7%E8%83%BD">AWGN信道下的2PAM数字基带系统的抗噪声性能</a>
-<ul>
-<li><a href="#%E5%8D%95%E5%8F%8C%E6%9E%81%E6%80%A72pam%E6%95%B0%E5%AD%97%E5%9F%BA%E5%B8%A6%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%AF%AF%E6%AF%94%E7%89%B9%E7%8E%87%E5%88%86%E6%9E%90">（单）双极性2PAM数字基带系统的误比特率分析</a></li>
-<li><a href="#%E5%88%A9%E7%94%A8%E5%8C%B9%E9%85%8D%E6%BB%A4%E6%B3%A2%E5%99%A8%E8%BF%9B%E8%A1%8C%E6%9C%80%E4%BD%B3%E6%8E%A5%E6%94%B6%E7%9A%84%E8%AF%AF%E6%AF%94%E7%89%B9%E7%8E%87">利用匹配滤波器进行最佳接收的误比特率</a></li>
-</ul>
-</li>
-<li><a href="#%E9%99%90%E5%B8%A6%E4%BF%A1%E9%81%93%E4%B8%AD%E6%95%B0%E5%AD%97pam%E4%BF%A1%E5%8F%B7%E7%9A%84%E6%97%A0%E7%A0%81%E9%97%B4%E5%B9%B2%E6%89%B0%E5%9F%BA%E5%B8%A6%E4%BC%A0%E8%BE%93">限带信道中数字PAM信号的无码间干扰基带传输</a></li>
-<li><a href="#%E7%90%86%E6%83%B3%E5%B8%A6%E9%99%90awgn%E4%BF%A1%E9%81%93%E6%9D%A1%E4%BB%B6%E4%B8%8B%E7%9A%84%E6%95%B0%E5%AD%97pam%E4%BF%A1%E5%8F%B7%E7%9A%84%E6%9C%80%E4%BD%B3%E5%9F%BA%E5%B8%A6%E4%BC%A0%E8%BE%93">理想带限AWGN信道条件下的数字PAM信号的最佳基带传输</a>
-<ul>
-<li><a href="#%E6%97%A0%E7%A0%81%E9%97%B4%E5%B9%B2%E6%89%B0%E7%9A%84%E8%AE%BE%E8%AE%A1">无码间干扰的设计</a></li>
-<li><a href="#%E6%9C%80%E5%B0%8F%E9%94%99%E8%AF%AF%E6%A6%82%E7%8E%87%E8%AE%BE%E8%AE%A1">最小错误概率设计</a></li>
-<li><a href="#%E6%95%B4%E5%90%88">整合</a></li>
-</ul>
-</li>
-<li><a href="#%E4%BF%A1%E9%81%93%E5%9D%87%E8%A1%A1">信道均衡</a></li>
-<li><a href="#%E7%9C%BC%E5%9B%BE">眼图</a></li>
-<li><a href="#%E9%83%A8%E5%88%86%E5%93%8D%E5%BA%94%E7%B3%BB%E7%BB%9F">部分响应系统</a></li>
-</ul>
-</li>
-</ul>
-
-              </div>
-            </div>
-          </article>
+          </div>
         </div>
 
         
           <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://CDJ-happier.github.io/post/cpu-cache/">
+            <a class="purple-link" href="https://CDJ-happier.github.io/post/cpu-cache/">
               <h3 class="post-title">
-                CPU Cache一探究竟
+                下一篇：CPU Cache一探究竟
               </h3>
             </a>
           </div>
-        
-
-        
           
-            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+      </div>
 
-<div id="gitalk-container"></div>
+      
+        
+          <div id="gitalk-container"></div>
+        
 
-<script>
+        
+      
 
-  var gitalk = new Gitalk({
-    clientID: '977674602169f3a5fb6d',
-    clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
-    repo: 'CDJ-happier.github.io',
-    owner: 'CDJ-happier',
-    admin: ['CDJ-happier'],
-    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-    distractionFreeMode: false  // Facebook-like distraction free mode
-  })
+      <div class="site-footer">
+  <div class="slogan">The more disciplined, the more free</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">RSS</a>
+</div>
 
-  gitalk.render('gitalk-container')
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
 
 </script>
 
-          
 
-          
-        
 
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
-</div>
-
-      </div>
-    </div>
-
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
-      hljs.initHighlightingOnLoad()
 
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+      var gitalk = new Gitalk({
+        clientID: '977674602169f3a5fb6d',
+        clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
+        repo: 'CDJ-happier.github.io',
+        owner: 'CDJ-happier',
+        admin: ['CDJ-happier'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
 
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
-
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
-
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
+      gitalk.render('gitalk-container')
 
     </script>
+  
+
+  
+
+
+
+
   </body>
 </html>
