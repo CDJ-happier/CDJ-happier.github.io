@@ -1,111 +1,115 @@
-
-<!DOCTYPE html>
 <html>
   <head>
-    
-<meta charset="utf-8" >
-
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>卡尔曼滤波 | Welcome to CDJ&#39;s Page</title>
-<meta name="description" content="The more disciplined, the more free">
-
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698480146">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698645565">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-
-
-  
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
-  
-
-  
-
-
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<link rel="alternate" type="application/atom+xml" title="卡尔曼滤波 | Welcome to CDJ&#39;s Page - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
+    <meta name="description" content="
+Author🚹:CofCai
+personal page🏠
+CSDN page🏠
+Email✉️:cai.dongjun@nexuslink.cn
+
+References
+How a Kalman filter works, in ..." />
+    <meta name="keywords" content="DSP" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div id="app" class="main">
-      <div class="site-header-container">
-  <div class="site-header">
-    <div class="left">
-      <a href="https://CDJ-happier.github.io">
-        <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698480146" alt="" width="32px" height="32px">
-      </a>
-      <a href="https://CDJ-happier.github.io">
-        <h1 class="site-title">Welcome to CDJ&#39;s Page</h1>
-      </a>
-    </div>
-    <div class="right">
-      <transition name="fade">
-        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
-      </transition>
-    </div>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://CDJ-happier.github.io">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698645565" alt="">
+  </a>
+  <h1 class="site-title">
+    Welcome to CDJ&#39;s Page
+  </h1>
+  <p class="site-description">
+    The more disciplined, the more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://CDJ-happier.github.io" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/CDJ-happier" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/cai_dongjun" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
   </div>
 </div>
 
-<transition name="fade">
-  <div class="menu-container" style="display: none;" v-show="menuVisible">
-    <div class="menu-list">
-      
-        
-          <a href="https://CDJ-happier.github.io" class="menu purple-link">
-            首页
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/archives" class="menu purple-link">
-            归档
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/tags" class="menu purple-link">
-            标签
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/post/about" class="menu purple-link">
-            关于
-          </a>
-        
-      
-    </div>
-  </div>
-</transition>
-
-
-      <div class="content-container">
         <div class="post-detail">
-          
-            <div class="feature-container" style="background-image: url('https://CDJ-happier.github.io/post-images/kalmanFilter.png')">
-            </div>
-          
-          <h2 class="post-title">卡尔曼滤波</h2>
-          <div class="post-info post-detail-info">
-            <span><i class="icon-calendar-outline"></i> 2020-08-31</span>
-            
+          <article class="post">
+            <h2 class="post-title">
+              卡尔曼滤波
+            </h2>
+            <div class="post-info">
               <span>
-                <i class="icon-pricetags-outline"></i>
-                
-                  <a href="https://CDJ-happier.github.io/tag/TrRIqGItK/">
-                    DSP
-                    
-                  </a>
-                
+                2020-08-31
               </span>
+              <span>
+                25 min read
+              </span>
+              
+                <a href="https://CDJ-happier.github.io/tag/TrRIqGItK/" class="post-tag">
+                  # DSP
+                </a>
+              
+            </div>
             
-          </div>
-          <div class="post-content">
-            <blockquote>
+              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/kalmanFilter.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <blockquote>
 <p>Author🚹:CofCai<br>
 <a href="https://cxx7ud.coding-pages.com/">personal page</a>🏠<br>
 <a href="https://blog.csdn.net/weixin_44360592?spm=1011.2124.3001.5113">CSDN page</a>🏠<br>
@@ -464,86 +468,148 @@ tr(K_kHP_k^-) = tr(K_kHP_k^{-T})
 <p>其中，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>F</mi><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">F_{k-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.891661em;vertical-align:-0.208331em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>H</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">H_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.08125em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>分别表示函数<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo>(</mo><mi>θ</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">f(\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>h</mi><mo>(</mo><mi>θ</mi><mo>)</mo></mrow><annotation encoding="application/x-tex">h(\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">h</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span>在<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>&lt;</mo><msub><mi>θ</mi><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">&lt;\theta_{k-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.902771em;vertical-align:-0.208331em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span></span></span></span>和<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>θ</mi><mi>k</mi><mo mathvariant="normal">′</mo></msubsup></mrow><annotation encoding="application/x-tex">\theta_k&#x27;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.035em;vertical-align:-0.2831079999999999em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-2.4168920000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2831079999999999em;"><span></span></span></span></span></span></span></span></span></span>处的雅可比矩阵。</p>
 <p>注：这里对泰勒展开式只保留到一阶导，二阶导数以上的都舍去，噪声假设均为加性高斯噪声。</p>
 
-          </div>
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#references">References</a></li>
+<li><a href="#%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E7%9A%84%E4%BD%9C%E7%94%A8">卡尔曼滤波的作用</a>
+<ul>
+<li><a href="#%E4%B8%96%E7%95%8C%E4%B8%AD%E5%85%85%E6%BB%A1%E7%9D%80%E4%B8%8D%E7%A1%AE%E5%AE%9A%E6%80%A7">世界中充满着不确定性</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9C%A8%E5%B7%A5%E7%A8%8B%E4%B8%AD">在工程中</a></li>
+<li><a href="#%E6%95%B4%E4%BD%93%E6%84%9F%E5%8F%97">整体感受</a>
+<ul>
+<li><a href="#%E7%8A%B6%E6%80%81%E7%A9%BA%E9%97%B4%E6%96%B9%E7%A8%8B">状态空间方程</a></li>
+<li><a href="#%E7%BB%93%E5%90%88%E4%BE%8B%E5%AD%90%E7%90%86%E8%A7%A3%E5%85%AC%E5%BC%8F">结合例子理解公式</a>
+<ul>
+<li><a href="#%E5%85%AC%E5%BC%8F6-1%E8%AF%B4%E6%98%8E">公式6-1说明</a></li>
+<li><a href="#%E5%85%AC%E5%BC%8F6-2%E8%AF%B4%E6%98%8E">公式6-2说明</a></li>
+<li><a href="#%E5%8F%82%E6%95%B0h%E7%9A%84%E6%84%8F%E4%B9%89">参数H的意义</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%8E%E4%B9%88%E8%9E%8D%E5%90%88">怎么融合？</a>
+<ul>
+<li><a href="#%E4%BB%8E%E7%AE%80%E5%8D%95%E7%9A%84%E4%BE%8B%E5%AD%90%E5%85%A5%E6%89%8B-%E6%B5%8B%E9%87%8F%E4%B8%80%E6%9E%9A%E7%A1%AC%E5%B8%81%E7%9A%84%E7%9B%B4%E5%BE%84">从简单的例子入手-测量一枚硬币的直径</a></li>
+<li><a href="#%E8%9E%8D%E5%90%88%E5%AE%9E%E4%BE%8B">融合实例</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8D%A1%E5%B0%94%E6%9B%BC%E5%85%AC%E5%BC%8F%E8%AF%A6%E7%BB%86%E6%8E%A8%E5%AF%BC">卡尔曼公式详细推导</a>
+<ul>
+<li><a href="#%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5">协方差矩阵</a></li>
+<li><a href="#%E5%8D%A1%E5%B0%94%E6%9B%BC%E5%A2%9E%E7%9B%8A%E7%9A%84%E6%8E%A8%E5%AF%BC">卡尔曼增益的推导</a>
+<ul>
+<li><a href="#%E8%AF%A6%E7%BB%86%E6%8E%A8%E5%AF%BC">详细推导</a></li>
+</ul>
+</li>
+<li><a href="#%E8%AF%AF%E5%B7%AE%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5p_k-">误差协方差矩阵<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>P</mi><mi>k</mi><mo>−</mo></msubsup></mrow><annotation encoding="application/x-tex">P_k^-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1127699999999998em;vertical-align:-0.3013079999999999em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.811462em;"><span style="top:-2.3986920000000005em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span><span style="top:-3.1031310000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">−</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3013079999999999em;"><span></span></span></span></span></span></span></span></span></span></a></li>
+<li><a href="#%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E7%9A%845%E4%B8%AA%E5%85%AC%E5%BC%8F">卡尔曼滤波的5个公式</a></li>
+</ul>
+</li>
+<li><a href="#%E6%89%A9%E5%B1%95%E7%9A%84%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2">扩展的卡尔曼滤波</a>
+<ul>
+<li><a href="#%E7%BA%BF%E6%80%A7%E5%8C%96">线性化</a></li>
+<li><a href="#%E7%BA%BF%E6%80%A7%E5%8C%96%E8%A7%A3%E5%86%B3ekf">线性化解决EKF</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
         </div>
 
         
           <div class="next-post">
-            <a class="purple-link" href="https://CDJ-happier.github.io/post/ebLinux-wds/">
+            <div class="next">下一篇</div>
+            <a href="https://CDJ-happier.github.io/post/ebLinux-wds/">
               <h3 class="post-title">
-                下一篇：嵌入式Linux驱动开发框架-韦东山
+                嵌入式Linux驱动开发框架-韦东山
               </h3>
             </a>
           </div>
+        
+
+        
           
-      </div>
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
 
-      
-        
-          <div id="gitalk-container"></div>
-        
+<div id="gitalk-container"></div>
 
-        
-      
+<script>
 
-      <div class="site-footer">
-  <div class="slogan">The more disciplined, the more free</div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  </div>
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">RSS</a>
-</div>
+  var gitalk = new Gitalk({
+    clientID: '977674602169f3a5fb6d',
+    clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
+    repo: 'CDJ-happier.github.io',
+    owner: 'CDJ-happier',
+    admin: ['CDJ-happier'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
 
-
-    </div>
-    <script type="application/javascript">
-
-hljs.initHighlightingOnLoad()
-
-var app = new Vue({
-  el: '#app',
-  data: {
-    menuVisible: false,
-  },
-})
+  gitalk.render('gitalk-container')
 
 </script>
 
+          
 
+          
+        
 
-  
-    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
     <script>
+      hljs.initHighlightingOnLoad()
 
-      var gitalk = new Gitalk({
-        clientID: '977674602169f3a5fb6d',
-        clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
-        repo: 'CDJ-happier.github.io',
-        owner: 'CDJ-happier',
-        admin: ['CDJ-happier'],
-        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-        distractionFreeMode: false  // Facebook-like distraction free mode
-      })
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-      gitalk.render('gitalk-container')
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
 
     </script>
-  
-
-  
-
-
-
-
   </body>
 </html>

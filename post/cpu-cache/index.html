@@ -1,118 +1,135 @@
-
-<!DOCTYPE html>
 <html>
   <head>
-    
-<meta charset="utf-8" >
-
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>CPU Cache一探究竟 | Welcome to CDJ&#39;s Page</title>
-<meta name="description" content="The more disciplined, the more free">
-
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698480146">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698645565">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-
-
-  
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
-  
-
-  
-
-
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<link rel="alternate" type="application/atom+xml" title="CPU Cache一探究竟 | Welcome to CDJ&#39;s Page - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
+    <meta name="description" content="
+References
+程序局部性原理
+
+时间局部性
+空间局部性
+
+
+一致性原理
+
+写入策略
+
+直写模式(WriteThrough)
+回写模式(WriteBack)
+
+
+一致性
+
+
+主存与Cache的映射关系
+
+直接映射
+全相连映射
+组相连..." />
+    <meta name="keywords" content="C语言,嵌入式" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div id="app" class="main">
-      <div class="site-header-container">
-  <div class="site-header">
-    <div class="left">
-      <a href="https://CDJ-happier.github.io">
-        <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698480146" alt="" width="32px" height="32px">
-      </a>
-      <a href="https://CDJ-happier.github.io">
-        <h1 class="site-title">Welcome to CDJ&#39;s Page</h1>
-      </a>
-    </div>
-    <div class="right">
-      <transition name="fade">
-        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
-      </transition>
-    </div>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://CDJ-happier.github.io">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698645565" alt="">
+  </a>
+  <h1 class="site-title">
+    Welcome to CDJ&#39;s Page
+  </h1>
+  <p class="site-description">
+    The more disciplined, the more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://CDJ-happier.github.io" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/CDJ-happier" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/cai_dongjun" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
   </div>
 </div>
 
-<transition name="fade">
-  <div class="menu-container" style="display: none;" v-show="menuVisible">
-    <div class="menu-list">
-      
-        
-          <a href="https://CDJ-happier.github.io" class="menu purple-link">
-            首页
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/archives" class="menu purple-link">
-            归档
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/tags" class="menu purple-link">
-            标签
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/post/about" class="menu purple-link">
-            关于
-          </a>
-        
-      
-    </div>
-  </div>
-</transition>
-
-
-      <div class="content-container">
         <div class="post-detail">
-          
-            <div class="feature-container" style="background-image: url('https://CDJ-happier.github.io/post-images/cpu-cache.png')">
-            </div>
-          
-          <h2 class="post-title">CPU Cache一探究竟</h2>
-          <div class="post-info post-detail-info">
-            <span><i class="icon-calendar-outline"></i> 2020-11-15</span>
-            
+          <article class="post">
+            <h2 class="post-title">
+              CPU Cache一探究竟
+            </h2>
+            <div class="post-info">
               <span>
-                <i class="icon-pricetags-outline"></i>
-                
-                  <a href="https://CDJ-happier.github.io/tag/-lWbWODrq/">
-                    C语言
-                    
-                      ，
-                    
-                  </a>
-                
-                  <a href="https://CDJ-happier.github.io/tag/BqSYYs6a7/">
-                    嵌入式
-                    
-                  </a>
-                
+                2020-11-15
               </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://CDJ-happier.github.io/tag/-lWbWODrq/" class="post-tag">
+                  # C语言
+                </a>
+              
+                <a href="https://CDJ-happier.github.io/tag/BqSYYs6a7/" class="post-tag">
+                  # 嵌入式
+                </a>
+              
+            </div>
             
-          </div>
-          <div class="post-content">
-            <p><ul class="markdownIt-TOC">
+              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/cpu-cache.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p><ul class="markdownIt-TOC">
 <li><a href="#references">References</a></li>
 <li><a href="#%E7%A8%8B%E5%BA%8F%E5%B1%80%E9%83%A8%E6%80%A7%E5%8E%9F%E7%90%86">程序局部性原理</a>
 <ul>
@@ -285,86 +302,131 @@ double test()
 }
 </code></pre>
 
-          </div>
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#references">References</a></li>
+<li><a href="#%E7%A8%8B%E5%BA%8F%E5%B1%80%E9%83%A8%E6%80%A7%E5%8E%9F%E7%90%86">程序局部性原理</a>
+<ul>
+<li><a href="#%E6%97%B6%E9%97%B4%E5%B1%80%E9%83%A8%E6%80%A7">时间局部性</a></li>
+<li><a href="#%E7%A9%BA%E9%97%B4%E5%B1%80%E9%83%A8%E6%80%A7">空间局部性</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%80%E8%87%B4%E6%80%A7%E5%8E%9F%E7%90%86">一致性原理</a>
+<ul>
+<li><a href="#%E5%86%99%E5%85%A5%E7%AD%96%E7%95%A5">写入策略</a>
+<ul>
+<li><a href="#%E7%9B%B4%E5%86%99%E6%A8%A1%E5%BC%8Fwritethrough">直写模式(WriteThrough)</a></li>
+<li><a href="#%E5%9B%9E%E5%86%99%E6%A8%A1%E5%BC%8Fwriteback">回写模式(WriteBack)</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%80%E8%87%B4%E6%80%A7">一致性</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%BB%E5%AD%98%E4%B8%8Ecache%E7%9A%84%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB">主存与Cache的映射关系</a>
+<ul>
+<li><a href="#%E7%9B%B4%E6%8E%A5%E6%98%A0%E5%B0%84">直接映射</a></li>
+<li><a href="#%E5%85%A8%E7%9B%B8%E8%BF%9E%E6%98%A0%E5%B0%84">全相连映射</a></li>
+<li><a href="#%E7%BB%84%E7%9B%B8%E8%BF%9E%E6%98%A0%E5%B0%84">组相连映射</a></li>
+</ul>
+</li>
+<li><a href="#cache%E7%9A%84%E6%9B%BF%E6%8D%A2%E7%AD%96%E7%95%A5">Cache的替换策略</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90">代码分析</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
         </div>
 
         
           <div class="next-post">
-            <a class="purple-link" href="https://CDJ-happier.github.io/post/DSP/">
+            <div class="next">下一篇</div>
+            <a href="https://CDJ-happier.github.io/post/DSP/">
               <h3 class="post-title">
-                下一篇：数字滤波器的设计
+                数字滤波器的设计
               </h3>
             </a>
           </div>
+        
+
+        
           
-      </div>
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
 
-      
-        
-          <div id="gitalk-container"></div>
-        
+<div id="gitalk-container"></div>
 
-        
-      
+<script>
 
-      <div class="site-footer">
-  <div class="slogan">The more disciplined, the more free</div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  </div>
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">RSS</a>
-</div>
+  var gitalk = new Gitalk({
+    clientID: '977674602169f3a5fb6d',
+    clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
+    repo: 'CDJ-happier.github.io',
+    owner: 'CDJ-happier',
+    admin: ['CDJ-happier'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
 
-
-    </div>
-    <script type="application/javascript">
-
-hljs.initHighlightingOnLoad()
-
-var app = new Vue({
-  el: '#app',
-  data: {
-    menuVisible: false,
-  },
-})
+  gitalk.render('gitalk-container')
 
 </script>
 
+          
 
+          
+        
 
-  
-    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
     <script>
+      hljs.initHighlightingOnLoad()
 
-      var gitalk = new Gitalk({
-        clientID: '977674602169f3a5fb6d',
-        clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
-        repo: 'CDJ-happier.github.io',
-        owner: 'CDJ-happier',
-        admin: ['CDJ-happier'],
-        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-        distractionFreeMode: false  // Facebook-like distraction free mode
-      })
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-      gitalk.render('gitalk-container')
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
 
     </script>
-  
-
-  
-
-
-
-
   </body>
 </html>

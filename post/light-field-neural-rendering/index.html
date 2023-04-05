@@ -1,111 +1,109 @@
-
-<!DOCTYPE html>
 <html>
   <head>
-    
-<meta charset="utf-8" >
-
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Light Field Neural Rendering | Welcome to CDJ&#39;s Page</title>
-<meta name="description" content="The more disciplined, the more free">
-
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698480146">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698645565">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-
-
-  
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
-  
-
-  
-
-
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<link rel="alternate" type="application/atom+xml" title="Light Field Neural Rendering | Welcome to CDJ&#39;s Page - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
+    <meta name="description" content="CVPR 2022 best paper finalist
+本文与IBRNet很相似，基于IBR（但是加入了对极几何约束）。另外，也是使用了类似于像素对其特征进行融合，只不过各个point&amp;view融合的权重是由self-atten..." />
+    <meta name="keywords" content="NeRF" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div id="app" class="main">
-      <div class="site-header-container">
-  <div class="site-header">
-    <div class="left">
-      <a href="https://CDJ-happier.github.io">
-        <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698480146" alt="" width="32px" height="32px">
-      </a>
-      <a href="https://CDJ-happier.github.io">
-        <h1 class="site-title">Welcome to CDJ&#39;s Page</h1>
-      </a>
-    </div>
-    <div class="right">
-      <transition name="fade">
-        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
-      </transition>
-    </div>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://CDJ-happier.github.io">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698645565" alt="">
+  </a>
+  <h1 class="site-title">
+    Welcome to CDJ&#39;s Page
+  </h1>
+  <p class="site-description">
+    The more disciplined, the more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://CDJ-happier.github.io" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/CDJ-happier" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/cai_dongjun" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
   </div>
 </div>
 
-<transition name="fade">
-  <div class="menu-container" style="display: none;" v-show="menuVisible">
-    <div class="menu-list">
-      
-        
-          <a href="https://CDJ-happier.github.io" class="menu purple-link">
-            首页
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/archives" class="menu purple-link">
-            归档
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/tags" class="menu purple-link">
-            标签
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/post/about" class="menu purple-link">
-            关于
-          </a>
-        
-      
-    </div>
-  </div>
-</transition>
-
-
-      <div class="content-container">
         <div class="post-detail">
-          
-            <div class="feature-container" style="background-image: url('https://CDJ-happier.github.io/post-images/light-field-neural-rendering.png')">
-            </div>
-          
-          <h2 class="post-title">Light Field Neural Rendering</h2>
-          <div class="post-info post-detail-info">
-            <span><i class="icon-calendar-outline"></i> 2022-11-30</span>
-            
+          <article class="post">
+            <h2 class="post-title">
+              Light Field Neural Rendering
+            </h2>
+            <div class="post-info">
               <span>
-                <i class="icon-pricetags-outline"></i>
-                
-                  <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/">
-                    NeRF
-                    
-                  </a>
-                
+                2022-11-30
               </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
+                  # NeRF
+                </a>
+              
+            </div>
             
-          </div>
-          <div class="post-content">
-            <p>CVPR 2022 best paper finalist<br>
+              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/light-field-neural-rendering.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>CVPR 2022 best paper finalist<br>
 本文与IBRNet很相似，基于IBR（但是加入了对极几何约束）。另外，也是使用了类似于像素对其特征进行融合，只不过各个point&amp;view融合的权重是由self-attention计算的。</p>
 <!-- more -->
 <p><ul class="markdownIt-TOC">
@@ -153,86 +151,113 @@
 <p>因此，<strong>在某种意义上</strong>，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>α</mi><mi>i</mi><mi>j</mi></msubsup></mrow><annotation encoding="application/x-tex">\alpha_i^j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.219436em;vertical-align:-0.276864em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.942572em;"><span style="top:-2.4231360000000004em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.276864em;"><span></span></span></span></span></span></span></span></span></span>越大，说明（极点<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msubsup><mi>x</mi><mi>i</mi><mi>j</mi></msubsup></mrow><annotation encoding="application/x-tex">x_i^j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.219436em;vertical-align:-0.276864em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.942572em;"><span style="top:-2.4231360000000004em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span><span style="top:-3.1809080000000005em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.276864em;"><span></span></span></span></span></span></span></span></span></span>）与target pixel的匹配越好，在计算时权重就大点。<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>β</mi><mi>j</mi></msup></mrow><annotation encoding="application/x-tex">\beta^j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.019104em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.05278em;">β</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.824664em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span></span></span></span></span></span></span>越小，就说明该视图j存在遮挡，对target pixel的贡献更少。</p>
 <p>与像素对齐特征pixel-aligned feature（见论文KeypointNeRF）很类似（都是投影到另一类平面，只不过一个是view，一个是feature maps），只不过PAF是将点投影到特征平面（用CNN或其它方式得到的），不属于IBR，因为特征平面是一张图经过多种方式得到多个特征平面。</p>
 
-          </div>
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#prerequisites-%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95%E7%BA%A6%E6%9D%9F">prerequisites-对极几何约束</a></li>
+<li><a href="#model-overview">Model Overview</a></li>
+<li><a href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0">损失函数</a></li>
+<li><a href="#%E6%84%9F%E6%82%9F">感悟！！！</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
         </div>
 
         
           <div class="next-post">
-            <a class="purple-link" href="https://CDJ-happier.github.io/post/mip-nerfduo-chi-du-kang-hun-die-nerf/">
+            <div class="next">下一篇</div>
+            <a href="https://CDJ-happier.github.io/post/mip-nerfduo-chi-du-kang-hun-die-nerf/">
               <h3 class="post-title">
-                下一篇：Mip-NeRF：多尺度、抗混叠NeRF
+                Mip-NeRF：多尺度、抗混叠NeRF
               </h3>
             </a>
           </div>
+        
+
+        
           
-      </div>
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
 
-      
-        
-          <div id="gitalk-container"></div>
-        
+<div id="gitalk-container"></div>
 
-        
-      
+<script>
 
-      <div class="site-footer">
-  <div class="slogan">The more disciplined, the more free</div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  </div>
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">RSS</a>
-</div>
+  var gitalk = new Gitalk({
+    clientID: '977674602169f3a5fb6d',
+    clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
+    repo: 'CDJ-happier.github.io',
+    owner: 'CDJ-happier',
+    admin: ['CDJ-happier'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
 
-
-    </div>
-    <script type="application/javascript">
-
-hljs.initHighlightingOnLoad()
-
-var app = new Vue({
-  el: '#app',
-  data: {
-    menuVisible: false,
-  },
-})
+  gitalk.render('gitalk-container')
 
 </script>
 
+          
 
+          
+        
 
-  
-    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
     <script>
+      hljs.initHighlightingOnLoad()
 
-      var gitalk = new Gitalk({
-        clientID: '977674602169f3a5fb6d',
-        clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
-        repo: 'CDJ-happier.github.io',
-        owner: 'CDJ-happier',
-        admin: ['CDJ-happier'],
-        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-        distractionFreeMode: false  // Facebook-like distraction free mode
-      })
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-      gitalk.render('gitalk-container')
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
 
     </script>
-  
-
-  
-
-
-
-
   </body>
 </html>

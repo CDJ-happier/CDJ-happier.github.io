@@ -1,111 +1,110 @@
-
-<!DOCTYPE html>
 <html>
   <head>
-    
-<meta charset="utf-8" >
-
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>嵌入式Linux驱动开发相关API | Welcome to CDJ&#39;s Page</title>
-<meta name="description" content="The more disciplined, the more free">
-
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698480146">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698645565">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-
-
-  
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
-  
-
-  
-
-
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<link rel="alternate" type="application/atom+xml" title="嵌入式Linux驱动开发相关API | Welcome to CDJ&#39;s Page - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
+    <meta name="description" content="1. 字符设备注册与注销
+static inline int register_chrdev(unsigned int major, const char *name,const struct file_operations *fops)
+..." />
+    <meta name="keywords" content="嵌入式Linux" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div id="app" class="main">
-      <div class="site-header-container">
-  <div class="site-header">
-    <div class="left">
-      <a href="https://CDJ-happier.github.io">
-        <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698480146" alt="" width="32px" height="32px">
-      </a>
-      <a href="https://CDJ-happier.github.io">
-        <h1 class="site-title">Welcome to CDJ&#39;s Page</h1>
-      </a>
-    </div>
-    <div class="right">
-      <transition name="fade">
-        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
-      </transition>
-    </div>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://CDJ-happier.github.io">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698645565" alt="">
+  </a>
+  <h1 class="site-title">
+    Welcome to CDJ&#39;s Page
+  </h1>
+  <p class="site-description">
+    The more disciplined, the more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://CDJ-happier.github.io" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/CDJ-happier" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/cai_dongjun" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
   </div>
 </div>
 
-<transition name="fade">
-  <div class="menu-container" style="display: none;" v-show="menuVisible">
-    <div class="menu-list">
-      
-        
-          <a href="https://CDJ-happier.github.io" class="menu purple-link">
-            首页
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/archives" class="menu purple-link">
-            归档
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/tags" class="menu purple-link">
-            标签
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/post/about" class="menu purple-link">
-            关于
-          </a>
-        
-      
-    </div>
-  </div>
-</transition>
-
-
-      <div class="content-container">
         <div class="post-detail">
-          
-            <div class="feature-container" style="background-image: url('https://CDJ-happier.github.io/post-images/ebLinux-relaAPI.png')">
-            </div>
-          
-          <h2 class="post-title">嵌入式Linux驱动开发相关API</h2>
-          <div class="post-info post-detail-info">
-            <span><i class="icon-calendar-outline"></i> 2020-09-22</span>
-            
+          <article class="post">
+            <h2 class="post-title">
+              嵌入式Linux驱动开发相关API
+            </h2>
+            <div class="post-info">
               <span>
-                <i class="icon-pricetags-outline"></i>
-                
-                  <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/">
-                    嵌入式Linux
-                    
-                  </a>
-                
+                2020-09-22
               </span>
+              <span>
+                13 min read
+              </span>
+              
+                <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/" class="post-tag">
+                  # 嵌入式Linux
+                </a>
+              
+            </div>
             
-          </div>
-          <div class="post-content">
-            <h2 id="1-字符设备注册与注销">1. 字符设备注册与注销</h2>
+              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/ebLinux-relaAPI.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="1-字符设备注册与注销">1. 字符设备注册与注销</h2>
 <pre><code class="language-c">static inline int register_chrdev(unsigned int major, const char *name,const struct file_operations *fops)
 // 返回值：
 // major 值为 0（自动分配） ，正常的话返回申请到的主设备号，失败返回-EBUSY。
@@ -500,86 +499,128 @@ static int DTS_demo_probe(struct platform_device *pdev)
 </code></pre>
 <p>解释：full-name对于node来说，就是自己的结点名；而对于其子节点来说，full-name则是父节点名字/自己的名字，如上面的结果``/DTS_demo&quot;'s child: &quot;/DTS_demo/child0`。</p>
 
-          </div>
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E6%B3%A8%E5%86%8C%E4%B8%8E%E6%B3%A8%E9%94%80">1. 字符设备注册与注销</a></li>
+<li><a href="#device_createclass_create">device_create()/class_create()</a></li>
+</ul>
+</li>
+<li><a href="#of%E5%87%BD%E6%95%B0-%E8%8E%B7%E5%8F%96%E8%AE%BE%E5%A4%87%E6%A0%91%E4%B8%AD%E7%9A%84%E4%BF%A1%E6%81%AF">of函数-获取设备树中的信息</a>
+<ul>
+<li><a href="#%E8%8E%B7%E5%8F%96%E8%AE%BE%E5%A4%87%E6%A0%91%E4%B8%ADgpio%E7%9A%84%E4%B8%AA%E6%95%B0%E5%8F%8A%E7%BC%96%E5%8F%B7api">获取设备树中gpio的个数及编号api</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E8%AE%BE%E5%A4%87%E6%A0%91%E4%B8%ADgpio%E7%9A%84%E6%8F%8F%E8%BF%B0%E7%AC%A6">获取设备树中gpio的描述符</a></li>
+</ul>
+</li>
+<li><a href="#gpio%E5%AD%90%E7%B3%BB%E7%BB%9Fapi">gpio子系统API</a>
+<ul>
+<li><a href="#2-gpiod_get">2. gpiod_get()</a></li>
+<li><a href="#gpiod_put">gpiod_put()</a></li>
+<li><a href="#request_irq">request_irq</a></li>
+<li><a href="#of_get_next_child">of_get_next_child</a>
+<ul>
+<li><a href="#%E5%AE%9E%E4%BE%8B">实例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
         </div>
 
         
           <div class="next-post">
-            <a class="purple-link" href="https://CDJ-happier.github.io/post/kalmanFilter/">
+            <div class="next">下一篇</div>
+            <a href="https://CDJ-happier.github.io/post/kalmanFilter/">
               <h3 class="post-title">
-                下一篇：卡尔曼滤波
+                卡尔曼滤波
               </h3>
             </a>
           </div>
+        
+
+        
           
-      </div>
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
 
-      
-        
-          <div id="gitalk-container"></div>
-        
+<div id="gitalk-container"></div>
 
-        
-      
+<script>
 
-      <div class="site-footer">
-  <div class="slogan">The more disciplined, the more free</div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  </div>
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">RSS</a>
-</div>
+  var gitalk = new Gitalk({
+    clientID: '977674602169f3a5fb6d',
+    clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
+    repo: 'CDJ-happier.github.io',
+    owner: 'CDJ-happier',
+    admin: ['CDJ-happier'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
 
-
-    </div>
-    <script type="application/javascript">
-
-hljs.initHighlightingOnLoad()
-
-var app = new Vue({
-  el: '#app',
-  data: {
-    menuVisible: false,
-  },
-})
+  gitalk.render('gitalk-container')
 
 </script>
 
+          
 
+          
+        
 
-  
-    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
     <script>
+      hljs.initHighlightingOnLoad()
 
-      var gitalk = new Gitalk({
-        clientID: '977674602169f3a5fb6d',
-        clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
-        repo: 'CDJ-happier.github.io',
-        owner: 'CDJ-happier',
-        admin: ['CDJ-happier'],
-        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-        distractionFreeMode: false  // Facebook-like distraction free mode
-      })
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-      gitalk.render('gitalk-container')
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
 
     </script>
-  
-
-  
-
-
-
-
   </body>
 </html>

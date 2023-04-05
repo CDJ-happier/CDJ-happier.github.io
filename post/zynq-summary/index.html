@@ -1,118 +1,116 @@
-
-<!DOCTYPE html>
 <html>
   <head>
-    
-<meta charset="utf-8" >
-
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>zynq学习总结 | Welcome to CDJ&#39;s Page</title>
-<meta name="description" content="The more disciplined, the more free">
-
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698480146">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698645565">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-
-
-  
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
-  
-
-  
-
-
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<link rel="alternate" type="application/atom+xml" title="zynq学习总结 | Welcome to CDJ&#39;s Page - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
+    <meta name="description" content="总结zynq的开发流程，以及矿板eabz4205的相关操作。
+
+zynq学习总结
+zynq7000系列包含2个ARM Coretex A9和Artix 7系列的FPGA，分别称为PS、PL。
+ebaz4205是矿板，板上有xc7z010芯片..." />
+    <meta name="keywords" content="嵌入式Linux,嵌入式" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div id="app" class="main">
-      <div class="site-header-container">
-  <div class="site-header">
-    <div class="left">
-      <a href="https://CDJ-happier.github.io">
-        <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698480146" alt="" width="32px" height="32px">
-      </a>
-      <a href="https://CDJ-happier.github.io">
-        <h1 class="site-title">Welcome to CDJ&#39;s Page</h1>
-      </a>
-    </div>
-    <div class="right">
-      <transition name="fade">
-        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
-      </transition>
-    </div>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://CDJ-happier.github.io">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698645565" alt="">
+  </a>
+  <h1 class="site-title">
+    Welcome to CDJ&#39;s Page
+  </h1>
+  <p class="site-description">
+    The more disciplined, the more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://CDJ-happier.github.io" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/CDJ-happier" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/cai_dongjun" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
   </div>
 </div>
 
-<transition name="fade">
-  <div class="menu-container" style="display: none;" v-show="menuVisible">
-    <div class="menu-list">
-      
-        
-          <a href="https://CDJ-happier.github.io" class="menu purple-link">
-            首页
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/archives" class="menu purple-link">
-            归档
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/tags" class="menu purple-link">
-            标签
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/post/about" class="menu purple-link">
-            关于
-          </a>
-        
-      
-    </div>
-  </div>
-</transition>
-
-
-      <div class="content-container">
         <div class="post-detail">
-          
-            <div class="feature-container" style="background-image: url('https://th.bing.com/th/id/OIP.gxjrOXJKsrl2ydmBQfUrBwHaFj?w=252&amp;h=189&amp;c=7&amp;r=0&amp;o=5&amp;dpr=1.5&amp;pid=1.7')">
-            </div>
-          
-          <h2 class="post-title">zynq学习总结</h2>
-          <div class="post-info post-detail-info">
-            <span><i class="icon-calendar-outline"></i> 2022-07-12</span>
-            
+          <article class="post">
+            <h2 class="post-title">
+              zynq学习总结
+            </h2>
+            <div class="post-info">
               <span>
-                <i class="icon-pricetags-outline"></i>
-                
-                  <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/">
-                    嵌入式Linux
-                    
-                      ，
-                    
-                  </a>
-                
-                  <a href="https://CDJ-happier.github.io/tag/BqSYYs6a7/">
-                    嵌入式
-                    
-                  </a>
-                
+                2022-07-12
               </span>
+              <span>
+                10 min read
+              </span>
+              
+                <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/" class="post-tag">
+                  # 嵌入式Linux
+                </a>
+              
+                <a href="https://CDJ-happier.github.io/tag/BqSYYs6a7/" class="post-tag">
+                  # 嵌入式
+                </a>
+              
+            </div>
             
-          </div>
-          <div class="post-content">
-            <p>总结zynq的开发流程，以及矿板eabz4205的相关操作。</p>
+              <img class="post-feature-image" src="https://th.bing.com/th/id/OIP.gxjrOXJKsrl2ydmBQfUrBwHaFj?w=252&amp;h=189&amp;c=7&amp;r=0&amp;o=5&amp;dpr=1.5&amp;pid=1.7" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>总结zynq的开发流程，以及矿板eabz4205的相关操作。</p>
 <!-- more -->
 <h1 id="zynq学习总结">zynq学习总结</h1>
 <p>zynq7000系列包含2个ARM Coretex A9和Artix 7系列的FPGA，分别称为PS、PL。</p>
@@ -263,86 +261,126 @@ tar -xvf /rootfs.tar.gz -C /mnt  mnt为你挂载tf卡第二个ext4分区的路�
 </ol>
 <p>end</p>
 
-          </div>
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#zynq%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93">zynq学习总结</a>
+<ul>
+<li><a href="#%E5%90%AF%E5%8A%A8%E5%BC%80%E5%8F%91%E6%9D%BF-%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F">启动开发板-启动模式</a></li>
+<li><a href="#pl%E9%83%A8%E5%88%86%E7%9A%84%E5%BC%80%E5%8F%91">PL部分的开发</a></li>
+<li><a href="#ps%E9%83%A8%E5%88%86%E7%9A%84%E5%BC%80%E5%8F%91">PS部分的开发</a></li>
+<li><a href="#ps-pl%E7%9A%84%E8%81%94%E5%8A%A8-axi">PS、PL的联动-AXI</a>
+<ul>
+<li><a href="#mio">MIO</a></li>
+<li><a href="#emio">EMIO</a></li>
+<li><a href="#axi-gpio-ip%E6%A0%B8">AXI GPIO IP核</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BAaxi%E7%B1%BB%E5%9E%8B%E7%9A%84ip%E6%A0%B8">创建AXI类型的IP核</a></li>
+</ul>
+</li>
+<li><a href="#mio-emio-axi-gpio%E7%9A%84%E7%90%86%E8%A7%A3">MIO、EMIO、AXI GPIO的理解</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%98%AFps%E6%88%96pl%E5%8D%95%E7%8B%AC%E8%BF%90%E8%A1%8C">如何保证是PS或PL单独运行</a></li>
+<li><a href="#%E7%96%91%E6%83%91">疑惑</a>
+<ul>
+<li><a href="#%E7%94%A8%E7%A1%AC%E4%BB%B6spi%E9%A9%B1%E5%8A%A8lcd%E7%9A%84%E5%BC%95%E8%84%9A%E7%BA%A6%E6%9D%9F%E9%97%AE%E9%A2%98">用硬件SPI驱动LCD的引脚约束问题</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
         </div>
 
         
           <div class="next-post">
-            <a class="purple-link" href="https://CDJ-happier.github.io/post/pytorch-ru-men-jiao-cheng/">
+            <div class="next">下一篇</div>
+            <a href="https://CDJ-happier.github.io/post/pytorch-ru-men-jiao-cheng/">
               <h3 class="post-title">
-                下一篇：pytorch入门教程
+                pytorch入门教程
               </h3>
             </a>
           </div>
+        
+
+        
           
-      </div>
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
 
-      
-        
-          <div id="gitalk-container"></div>
-        
+<div id="gitalk-container"></div>
 
-        
-      
+<script>
 
-      <div class="site-footer">
-  <div class="slogan">The more disciplined, the more free</div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  </div>
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">RSS</a>
-</div>
+  var gitalk = new Gitalk({
+    clientID: '977674602169f3a5fb6d',
+    clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
+    repo: 'CDJ-happier.github.io',
+    owner: 'CDJ-happier',
+    admin: ['CDJ-happier'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
 
-
-    </div>
-    <script type="application/javascript">
-
-hljs.initHighlightingOnLoad()
-
-var app = new Vue({
-  el: '#app',
-  data: {
-    menuVisible: false,
-  },
-})
+  gitalk.render('gitalk-container')
 
 </script>
 
+          
 
+          
+        
 
-  
-    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
     <script>
+      hljs.initHighlightingOnLoad()
 
-      var gitalk = new Gitalk({
-        clientID: '977674602169f3a5fb6d',
-        clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
-        repo: 'CDJ-happier.github.io',
-        owner: 'CDJ-happier',
-        admin: ['CDJ-happier'],
-        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-        distractionFreeMode: false  // Facebook-like distraction free mode
-      })
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-      gitalk.render('gitalk-container')
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
 
     </script>
-  
-
-  
-
-
-
-
   </body>
 </html>

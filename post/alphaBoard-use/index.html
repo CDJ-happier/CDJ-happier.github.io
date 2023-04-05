@@ -1,111 +1,114 @@
-
-<!DOCTYPE html>
 <html>
   <head>
-    
-<meta charset="utf-8" >
-
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>AlphaLinux开发板使用 | Welcome to CDJ&#39;s Page</title>
-<meta name="description" content="The more disciplined, the more free">
-
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698480146">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698645565">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-
-
-  
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
-  
-
-  
-
-
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<link rel="alternate" type="application/atom+xml" title="AlphaLinux开发板使用 | Welcome to CDJ&#39;s Page - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
+    <meta name="description" content="开发板使用步骤
+交叉编译器
+一、固化系统
+
+参考用户快速体验，也可参考“开发板与pc传输文件、单步更新固件xxxx”。
+
+可以只更新uboot、zImage、设备树或根文件系统中的一个，即单步更新。其实单步更新的原理就是改变emmc中的ub..." />
+    <meta name="keywords" content="嵌入式Linux" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div id="app" class="main">
-      <div class="site-header-container">
-  <div class="site-header">
-    <div class="left">
-      <a href="https://CDJ-happier.github.io">
-        <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698480146" alt="" width="32px" height="32px">
-      </a>
-      <a href="https://CDJ-happier.github.io">
-        <h1 class="site-title">Welcome to CDJ&#39;s Page</h1>
-      </a>
-    </div>
-    <div class="right">
-      <transition name="fade">
-        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
-      </transition>
-    </div>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://CDJ-happier.github.io">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698645565" alt="">
+  </a>
+  <h1 class="site-title">
+    Welcome to CDJ&#39;s Page
+  </h1>
+  <p class="site-description">
+    The more disciplined, the more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://CDJ-happier.github.io" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/CDJ-happier" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/cai_dongjun" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
   </div>
 </div>
 
-<transition name="fade">
-  <div class="menu-container" style="display: none;" v-show="menuVisible">
-    <div class="menu-list">
-      
-        
-          <a href="https://CDJ-happier.github.io" class="menu purple-link">
-            首页
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/archives" class="menu purple-link">
-            归档
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/tags" class="menu purple-link">
-            标签
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/post/about" class="menu purple-link">
-            关于
-          </a>
-        
-      
-    </div>
-  </div>
-</transition>
-
-
-      <div class="content-container">
         <div class="post-detail">
-          
-            <div class="feature-container" style="background-image: url('https://CDJ-happier.github.io/post-images/alphaBoard-use.png')">
-            </div>
-          
-          <h2 class="post-title">AlphaLinux开发板使用</h2>
-          <div class="post-info post-detail-info">
-            <span><i class="icon-calendar-outline"></i> 2020-10-12</span>
-            
+          <article class="post">
+            <h2 class="post-title">
+              AlphaLinux开发板使用
+            </h2>
+            <div class="post-info">
               <span>
-                <i class="icon-pricetags-outline"></i>
-                
-                  <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/">
-                    嵌入式Linux
-                    
-                  </a>
-                
+                2020-10-12
               </span>
+              <span>
+                14 min read
+              </span>
+              
+                <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/" class="post-tag">
+                  # 嵌入式Linux
+                </a>
+              
+            </div>
             
-          </div>
-          <div class="post-content">
-            <h1 id="开发板使用步骤">开发板使用步骤</h1>
+              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/alphaBoard-use.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="开发板使用步骤">开发板使用步骤</h1>
 <p>交叉编译器</p>
 <h2 id="一-固化系统">一、固化系统</h2>
 <blockquote>
@@ -387,86 +390,168 @@ psk=&quot;XXXXXXXX&quot;
 </li>
 </ol>
 
-          </div>
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%BC%80%E5%8F%91%E6%9D%BF%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4">开发板使用步骤</a>
+<ul>
+<li><a href="#%E4%B8%80-%E5%9B%BA%E5%8C%96%E7%B3%BB%E7%BB%9F">一、固化系统</a>
+<ul>
+<li><a href="#1-%E4%BD%BF%E7%94%A8mfgtool%E4%B8%8A%E4%BD%8D%E6%9C%BA%E5%9B%BA%E5%8C%96%E7%B3%BB%E7%BB%9Fotg%E6%96%B9%E5%BC%8F">1. 使用mfgtool上位机固化系统（OTG方式）</a>
+<ul>
+<li><a href="#11-%E5%9B%BA%E5%8C%96%E5%88%B0sd%E5%8D%A1">1.1 固化到SD卡</a></li>
+</ul>
+</li>
+<li><a href="#12-%E5%9B%BA%E5%8C%96%E5%88%B0emmc">1.2 固化到eMMC</a>
+<ul>
+<li><a href="#121-%E7%BB%AD">1.2.1 续</a></li>
+</ul>
+</li>
+<li><a href="#2-%E4%BD%BF%E7%94%A8%E8%84%9A%E6%9C%AC%E5%9B%BA%E5%8C%96%E7%B3%BB%E7%BB%9F">2. 使用脚本固化系统</a></li>
+<li><a href="#3-%E5%8D%95%E6%AD%A5%E6%9B%B4%E6%96%B0">3. 单步更新</a>
+<ul>
+<li><a href="#31-%E5%8D%95%E6%AD%A5%E6%9B%B4%E6%96%B0uboot%E5%88%B0emmc">3.1 单步更新uboot到emmc</a></li>
+<li><a href="#32-%E5%8D%95%E6%AD%A5%E6%9B%B4%E6%96%B0%E8%AE%BE%E5%A4%87%E6%A0%91%E5%88%B0emmc%E4%B8%AD">3.2 单步更新设备树到emmc中</a></li>
+<li><a href="#33-%E5%8D%95%E6%AD%A5%E6%9B%B4%E6%96%B0%E5%86%85%E6%A0%B8%E5%88%B0emmc">3.3 单步更新内核到emmc</a></li>
+<li><a href="#34-%E5%8D%95%E6%AD%A5%E6%9B%B4%E6%96%B0%E6%A0%B9%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%88%B0emmc">3.4  单步更新根文件系统到emmc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-usb-wifi-%E6%B5%8B%E8%AF%95">二、USB WIFI 测试</a>
+<ul>
+<li><a href="#1-station%E4%B8%8A%E7%BD%91%E6%A8%A1%E5%BC%8F">1. Station（上网）模式</a></li>
+<li><a href="#2-softap%E7%83%AD%E7%82%B9%E6%A8%A1%E5%BC%8F">2. SoftAP（热点）模式</a></li>
+<li><a href="#3-bridge%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F">3. Bridge（桥接）模式</a></li>
+</ul>
+</li>
+<li><a href="#3-uboot%E7%9B%B8%E5%85%B3%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F">3. uboot相关环境变量</a>
+<ul>
+<li><a href="#1-%E8%87%AA%E5%90%AF%E5%8A%A8%E6%97%B6%E9%97%B4-bootdelay">1. 自启动时间-bootdelay</a></li>
+<li><a href="#2-%E5%90%AF%E5%8A%A8linux%E5%86%85%E6%A0%B8%E7%9A%84%E5%8F%82%E6%95%B0-bootargs">2. 启动Linux内核的参数-bootargs</a></li>
+<li><a href="#3-%E7%BD%91%E7%BB%9C%E6%93%8D%E4%BD%9C">3. 网络操作</a>
+<ul>
+<li><a href="#31-%E8%AE%BE%E7%BD%AE%E5%BC%80%E5%8F%91%E6%9D%BFip">3.1 设置开发板ip</a></li>
+<li><a href="#32-nfs%E5%91%BD%E4%BB%A4">3.2 nfs命令</a></li>
+<li><a href="#33-tftp%E5%91%BD%E4%BB%A4">3.3 tftp命令</a></li>
+<li><a href="#33-scp%E6%8B%B7%E8%B4%9D%E5%91%BD%E4%BB%A4">3.3 scp拷贝命令</a></li>
+</ul>
+</li>
+<li><a href="#4-%E5%90%AF%E5%8A%A8linux%E5%86%85%E6%A0%B8%E5%91%BD%E4%BB%A4">4. 启动Linux内核命令</a>
+<ul>
+<li><a href="#41-bootz">4.1 bootz</a></li>
+<li><a href="#41-boot">4.1 boot</a>
+<ul>
+<li><a href="#411-%E6%AF%94%E5%A6%82%E6%88%91%E4%BB%AC%E6%83%B3%E4%BD%BF%E7%94%A8tftp%E5%91%BD%E4%BB%A4%E4%BB%8E%E7%BD%91%E7%BB%9C%E5%90%AF%E5%8A%A8linux">4.1.1 比如我们想使用tftp命令从网络启动Linux</a></li>
+<li><a href="#412-%E6%83%B3%E4%BB%8Eemmc%E5%90%AF%E5%8A%A8">4.1.2 想从emmc启动</a></li>
+<li><a href="#5-uboot%E4%B8%AD%E7%9A%84run%E5%91%BD%E4%BB%A4">5. uboot中的run命令</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89-uboot%E7%A7%BB%E6%A4%8D">三、uboot移植</a></li>
+<li><a href="#%E5%9B%9B-linux%E5%86%85%E6%A0%B8%E7%A7%BB%E6%A4%8D">四、Linux内核移植</a></li>
+<li><a href="#%E4%BA%94-%E6%A0%B9%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%9E%84%E5%BB%BA">五、根文件系统构建</a></li>
+<li><a href="#%E5%85%AD-%E6%A8%A1%E5%9D%97%E9%A9%B1%E5%8A%A8">六、模块驱动</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
         </div>
 
         
           <div class="next-post">
-            <a class="purple-link" href="https://CDJ-happier.github.io/post/eblinux-relaStruct/">
+            <div class="next">下一篇</div>
+            <a href="https://CDJ-happier.github.io/post/eblinux-relaStruct/">
               <h3 class="post-title">
-                下一篇：嵌入式Linux驱动开发相关结构体
+                嵌入式Linux驱动开发相关结构体
               </h3>
             </a>
           </div>
+        
+
+        
           
-      </div>
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
 
-      
-        
-          <div id="gitalk-container"></div>
-        
+<div id="gitalk-container"></div>
 
-        
-      
+<script>
 
-      <div class="site-footer">
-  <div class="slogan">The more disciplined, the more free</div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  </div>
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">RSS</a>
-</div>
+  var gitalk = new Gitalk({
+    clientID: '977674602169f3a5fb6d',
+    clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
+    repo: 'CDJ-happier.github.io',
+    owner: 'CDJ-happier',
+    admin: ['CDJ-happier'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
 
-
-    </div>
-    <script type="application/javascript">
-
-hljs.initHighlightingOnLoad()
-
-var app = new Vue({
-  el: '#app',
-  data: {
-    menuVisible: false,
-  },
-})
+  gitalk.render('gitalk-container')
 
 </script>
 
+          
 
+          
+        
 
-  
-    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
     <script>
+      hljs.initHighlightingOnLoad()
 
-      var gitalk = new Gitalk({
-        clientID: '977674602169f3a5fb6d',
-        clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
-        repo: 'CDJ-happier.github.io',
-        owner: 'CDJ-happier',
-        admin: ['CDJ-happier'],
-        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-        distractionFreeMode: false  // Facebook-like distraction free mode
-      })
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-      gitalk.render('gitalk-container')
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
 
     </script>
-  
-
-  
-
-
-
-
   </body>
 </html>

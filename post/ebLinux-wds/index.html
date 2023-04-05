@@ -1,108 +1,111 @@
-
-<!DOCTYPE html>
 <html>
   <head>
-    
-<meta charset="utf-8" >
-
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>嵌入式Linux驱动开发框架-韦东山 | Welcome to CDJ&#39;s Page</title>
-<meta name="description" content="The more disciplined, the more free">
-
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
-
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698480146">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698645565">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-
-
-  
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
-  
-
-  
-
-
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<link rel="alternate" type="application/atom+xml" title="嵌入式Linux驱动开发框架-韦东山 | Welcome to CDJ&#39;s Page - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
+    <meta name="description" content="嵌入式Linux驱动开发的最终目的
+从裸机开发经历来看
+从C51到STM32开发的经历来看，最终都是操作寄存器以达到某些目的。
+正点原子的嵌入式Linux教程也是从裸机开发开始的
+汇编点灯
+/************************..." />
+    <meta name="keywords" content="嵌入式Linux" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div id="app" class="main">
-      <div class="site-header-container">
-  <div class="site-header">
-    <div class="left">
-      <a href="https://CDJ-happier.github.io">
-        <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698480146" alt="" width="32px" height="32px">
-      </a>
-      <a href="https://CDJ-happier.github.io">
-        <h1 class="site-title">Welcome to CDJ&#39;s Page</h1>
-      </a>
-    </div>
-    <div class="right">
-      <transition name="fade">
-        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
-      </transition>
-    </div>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://CDJ-happier.github.io">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698645565" alt="">
+  </a>
+  <h1 class="site-title">
+    Welcome to CDJ&#39;s Page
+  </h1>
+  <p class="site-description">
+    The more disciplined, the more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://CDJ-happier.github.io" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/CDJ-happier" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://twitter.com/cai_dongjun" target="_blank">
+          <i class="ri-twitter-line"></i>
+        </a>
+      
+    
+      
+    
+      
+    
+      
+    
   </div>
 </div>
 
-<transition name="fade">
-  <div class="menu-container" style="display: none;" v-show="menuVisible">
-    <div class="menu-list">
-      
-        
-          <a href="https://CDJ-happier.github.io" class="menu purple-link">
-            首页
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/archives" class="menu purple-link">
-            归档
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/tags" class="menu purple-link">
-            标签
-          </a>
-        
-      
-        
-          <a href="https://CDJ-happier.github.io/post/about" class="menu purple-link">
-            关于
-          </a>
-        
-      
-    </div>
-  </div>
-</transition>
-
-
-      <div class="content-container">
         <div class="post-detail">
-          
-          <h2 class="post-title">嵌入式Linux驱动开发框架-韦东山</h2>
-          <div class="post-info post-detail-info">
-            <span><i class="icon-calendar-outline"></i> 2020-08-24</span>
-            
+          <article class="post">
+            <h2 class="post-title">
+              嵌入式Linux驱动开发框架-韦东山
+            </h2>
+            <div class="post-info">
               <span>
-                <i class="icon-pricetags-outline"></i>
-                
-                  <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/">
-                    嵌入式Linux
-                    
-                  </a>
-                
+                2020-08-24
               </span>
+              <span>
+                9 min read
+              </span>
+              
+                <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/" class="post-tag">
+                  # 嵌入式Linux
+                </a>
+              
+            </div>
             
-          </div>
-          <div class="post-content">
-            <h1 id="嵌入式linux驱动开发的最终目的">嵌入式Linux驱动开发的最终目的</h1>
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="嵌入式linux驱动开发的最终目的">嵌入式Linux驱动开发的最终目的</h1>
 <h2 id="从裸机开发经历来看">从裸机开发经历来看</h2>
 <p>从C51到STM32开发的经历来看，最终<strong>都是操作寄存器</strong>以达到某些目的。</p>
 <h2 id="正点原子的嵌入式linux教程也是从裸机开发开始的">正点原子的嵌入式Linux教程也是从裸机开发开始的</h2>
@@ -234,86 +237,135 @@ device_node --部分--&gt; platform_device
 <p>和上面一样，只不过platform_device写入到设备树中去了（前面说过，设备树中的结点会被内核解析成device_node，某些device_node被解析成platform_device）。然后platform_driver可以和驱动框架写一块。最终的文件只含：</p>
 <p>所含文件：app.c、driver.c(platform_driver)、设备树.dts</p>
 
-          </div>
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%B5%8C%E5%85%A5%E5%BC%8Flinux%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E7%9A%84%E6%9C%80%E7%BB%88%E7%9B%AE%E7%9A%84">嵌入式Linux驱动开发的最终目的</a>
+<ul>
+<li><a href="#%E4%BB%8E%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%E7%BB%8F%E5%8E%86%E6%9D%A5%E7%9C%8B">从裸机开发经历来看</a></li>
+<li><a href="#%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90%E7%9A%84%E5%B5%8C%E5%85%A5%E5%BC%8Flinux%E6%95%99%E7%A8%8B%E4%B9%9F%E6%98%AF%E4%BB%8E%E8%A3%B8%E6%9C%BA%E5%BC%80%E5%8F%91%E5%BC%80%E5%A7%8B%E7%9A%84">正点原子的嵌入式Linux教程也是从裸机开发开始的</a></li>
+<li><a href="#%E6%B1%87%E7%BC%96%E7%82%B9%E7%81%AF">汇编点灯</a></li>
+<li><a href="#%E5%B5%8C%E5%85%A5%E5%BC%8Flinux%E9%A9%B1%E5%8A%A8%E7%9A%84%E7%9B%AE%E7%9A%84">嵌入式Linux驱动的目的</a></li>
+</ul>
+</li>
+<li><a href="#%E9%9F%A6%E4%B8%9C%E5%B1%B1%E8%80%81%E5%B8%88%E7%9A%84%E6%95%99%E5%AD%A6%E8%B7%AF%E7%BA%BF">韦东山老师的教学路线</a>
+<ul>
+<li><a href="#%E5%AE%9E%E7%8E%B0%E6%9C%80%E5%9F%BA%E6%9C%AC%E7%9A%84%E9%9C%80%E6%B1%82">实现最基本的需求</a>
+<ul>
+<li><a href="#%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E9%83%A8%E5%88%86">应用程序部分</a></li>
+<li><a href="#%E9%A9%B1%E5%8A%A8%E7%A8%8B%E5%BA%8F%E9%83%A8%E5%88%86">驱动程序部分</a></li>
+</ul>
+</li>
+<li><a href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%80%9D%E6%83%B3">面向对象的思想</a></li>
+<li><a href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E6%9B%B4%E8%BF%9B%E4%B8%80%E6%AD%A5">面向对象更进一步</a></li>
+<li><a href="#%E6%9B%B4%E8%BF%9B%E4%B8%80%E6%AD%A5%E6%80%BB%E7%BA%BF%E9%A9%B1%E5%8A%A8">更进一步/总线驱动</a></li>
+<li><a href="#%E8%AE%BE%E5%A4%87%E6%A0%91%E7%9A%84%E5%BC%95%E5%85%A5">设备树的引入</a></li>
+<li><a href="#%E6%9C%80%E7%BB%88%E6%80%BB%E7%BB%93">最终总结</a>
+<ul>
+<li><a href="#%E5%BA%94%E7%94%A8%E9%A9%B1%E5%8A%A8">应用+驱动</a></li>
+<li><a href="#%E5%BA%94%E7%94%A8%E9%A9%B1%E5%8A%A8%E6%A1%86%E6%9E%B6led_opr">应用+驱动框架+led_opr</a></li>
+<li><a href="#%E5%BA%94%E7%94%A8%E9%A9%B1%E5%8A%A8%E6%A1%86%E6%9E%B6led_resourcechip_gpio">应用+驱动框架+led_resource+chip_gpio</a></li>
+<li><a href="#%E5%BA%94%E7%94%A8%E9%A9%B1%E5%8A%A8%E6%A1%86%E6%9E%B6platform_deviceplatform_driver">应用+驱动框架+platform_device+platform_driver</a></li>
+<li><a href="#%E5%BA%94%E7%94%A8%E9%A9%B1%E5%8A%A8%E6%A1%86%E6%9E%B6%E8%AE%BE%E5%A4%87%E6%A0%91platform_driver">应用+驱动框架+设备树+platform_driver</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
         </div>
 
         
           <div class="next-post">
-            <a class="purple-link" href="https://CDJ-happier.github.io/post/cpuStart/">
+            <div class="next">下一篇</div>
+            <a href="https://CDJ-happier.github.io/post/cpuStart/">
               <h3 class="post-title">
-                下一篇：CPU上电如何启动的
+                CPU上电如何启动的
               </h3>
             </a>
           </div>
+        
+
+        
           
-      </div>
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
 
-      
-        
-          <div id="gitalk-container"></div>
-        
+<div id="gitalk-container"></div>
 
-        
-      
+<script>
 
-      <div class="site-footer">
-  <div class="slogan">The more disciplined, the more free</div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  </div>
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">RSS</a>
-</div>
+  var gitalk = new Gitalk({
+    clientID: '977674602169f3a5fb6d',
+    clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
+    repo: 'CDJ-happier.github.io',
+    owner: 'CDJ-happier',
+    admin: ['CDJ-happier'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
 
-
-    </div>
-    <script type="application/javascript">
-
-hljs.initHighlightingOnLoad()
-
-var app = new Vue({
-  el: '#app',
-  data: {
-    menuVisible: false,
-  },
-})
+  gitalk.render('gitalk-container')
 
 </script>
 
+          
 
+          
+        
 
-  
-    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
     <script>
+      hljs.initHighlightingOnLoad()
 
-      var gitalk = new Gitalk({
-        clientID: '977674602169f3a5fb6d',
-        clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
-        repo: 'CDJ-happier.github.io',
-        owner: 'CDJ-happier',
-        admin: ['CDJ-happier'],
-        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-        distractionFreeMode: false  // Facebook-like distraction free mode
-      })
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
 
-      gitalk.render('gitalk-container')
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
 
     </script>
-  
-
-  
-
-
-
-
   </body>
 </html>
