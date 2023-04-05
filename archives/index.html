@@ -1,790 +1,944 @@
 <html>
-  <head>
+<head>
     <meta charset="utf-8" />
+<meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Welcome to CDJ&#39;s Page</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698645565">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+
+<title>归档 | Welcome to CDJ&#39;s Page</title>
+
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680706547518">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Welcome to CDJ&#39;s Page - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages//dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
 
 
 
-    <meta name="description" content="The more disciplined, the more free" />
-  </head>
-  <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698645565" alt="">
-  </a>
-  <h1 class="site-title">
-    Welcome to CDJ&#39;s Page
-  </h1>
-  <p class="site-description">
-    The more disciplined, the more free
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="https://CDJ-happier.github.io" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/archives" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/about" class="menu">
-          关于
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-        <a href="https://github.com/CDJ-happier" target="_blank">
-          <i class="ri-github-line"></i>
-        </a>
-      
-    
-      
-        <a href="https://twitter.com/cai_dongjun" target="_blank">
-          <i class="ri-twitter-line"></i>
-        </a>
-      
-    
-      
-    
-      
-    
-      
-    
-  </div>
-</div>
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <div class="main-content">
+        <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Welcome to CDJ&#39;s Page
+        </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="https://CDJ-happier.github.io" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="https://CDJ-happier.github.io/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="https://CDJ-happier.github.io/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="https://CDJ-happier.github.io/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/friends" class="menu gt-a-link">
+                    友链
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1680706547518"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
 
-    
+        <div class="post-container">
+            <div class="post-detail gt-bg-theme-color-first">
+                <article class="gt-post-content">
+                    <h2 class="post-title">归档</h2>
         
 
 <div class="archives-container">
-  
-    <h2 class="year">2023</h2>
     
-      
-        <a href="https://CDJ-happier.github.io/post/instant-ngp/" class="post">
-          <h2 class="post-title">
-            Instant-NGP：多分辨率哈希编码
-          </h2>
-          <div class="time">2023-01-05</div>
-        </a>
-      
+        <h2 class="year gt-c-cotent-color-first">2023</h2>
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/instant-ngp/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2023-01-05&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            Instant-NGP：多分辨率哈希编码
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        <h2 class="year gt-c-cotent-color-first">2022</h2>
+        
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/nerfiesdeformable-nerf/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-12-14&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            Nerfies：Deformable NeRF
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/learning-neural-light-fields-with-ray-space-embedding/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-12-05&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            Learning Neural Light Fields with Ray-Space Embedding
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/neural-rays-for-occlusion-aware-image-based-rendering/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-12-01&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            Neural Rays for Occlusion-aware Image-based Rendering
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/light-field-neural-rendering/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-11-30&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            Light Field Neural Rendering
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/mip-nerfduo-chi-du-kang-hun-die-nerf/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-11-25&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            Mip-NeRF：多尺度、抗混叠NeRF
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/keypointnerf3d-head-de-chong-jian/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-11-23&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            KeypointNeRF：3D head的重建
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/deep-coarse-to-fine-dense-light-field-reconstruction-with-flexible-sampling-and-geometry-aware-fusion/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-11-04&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            Deep Coarse-to-fine Dense Light Field Reconstruction with Flexible Sampling and Geometry-aware Fusion
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/learning-light-field-angular-super-resolution-via-a-geometry-aware-network/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-10-27&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            Learning Light Field Angular Super-Resolution via a Geometry-Aware Network
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/shearedepi-blur-deblur/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-10-21&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            ShearedEPI blur-deblur
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/ibrnetji-yu-ibr-de-nerf/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-09-30&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            IBRNet：基于IBR的NeRF
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/nerfshen-jing-fu-she-chang/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-09-20&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            NeRF：神经辐射场
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/zynq-summary/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-07-12&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            zynq学习总结
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/pytorch-ru-men-jiao-cheng/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-06-15&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            pytorch入门教程
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/jpeg-zhi-shi-ji-tinyjpegh-xue-xi/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-05-03&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            JPEG知识及tinyjpeg.h学习
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/qiu-zhi-bi-shi-ti-ruan-jian-kai-fa-lei/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-03-09&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            求职笔试题-软件开发类
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/pandasda-shu-ju-chu-li/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-03-04&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            Pandas：大数据处理
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/linux-gao-xing-neng-fu-wu-qi-she-ji/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2022-01-25&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            Linux高性能服务器设计
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        <h2 class="year gt-c-cotent-color-first">2021</h2>
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/FFT-TIF/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2021-01-20&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            FFT之蝶形运算
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/cmake-use-with-pcre2/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2021-01-20&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            CMake的使用及pcre2
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/c-xor4findvalue/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2021-01-19&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            【C语言】【算法】利用异或找不同单一数据
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    
+        <h2 class="year gt-c-cotent-color-first">2020</h2>
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/c-yu-yan-biao-zhun-ku-de-kuai-pai-he-er-fen-cha-zhao/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-12-02&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            C语言标准库的快排和二分查找
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/tong-xin-yuan-li-shu-zi-ji-dai-chuan-shu/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-11-30&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            通信原理-数字基带传输
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/cpu-cache/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-11-15&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            CPU Cache一探究竟
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/DSP/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-10-30&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            数字滤波器的设计
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/DSP-base2/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-10-25&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            数字信号处理-基础二
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/DSP-base1/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-10-19&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            数字信号处理-基础一
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/Comprinciple/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-10-13&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            通信原理
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/alphaLinux-learningcut/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-10-12&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            AlphaLinux学习笔记
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/sublime-compiler/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-10-12&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            sublime配置编译系统
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/alphaBoard-use/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-10-12&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            AlphaLinux开发板使用
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/eblinux-relaStruct/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-10-12&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            嵌入式Linux驱动开发相关结构体
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/TeleTransTheory/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-10-11&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            电信传输理论
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/lcd_framebuffer-use/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-10-06&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            lcd_framebuffer使用
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/driverbase/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-09-29&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            驱动程序基石
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/ebLinux-relaAPI/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-09-22&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            嵌入式Linux驱动开发相关API
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/kalmanFilter/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-08-31&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            卡尔曼滤波
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/ebLinux-wds/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-08-24&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            嵌入式Linux驱动开发框架-韦东山
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/cpuStart/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-08-14&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            CPU上电如何启动的
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/quickSort/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-08-14&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            快速排序-C语言实现
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/matlab-CYHS/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-08-07&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            matlab常用函数
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/sublime-zhong-de-hong/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-08-04&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            sublime中的宏
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/sublime-snippet/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-07-28&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            sublime中的snippet和DocBlocker插件
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/sublime-sftp-compier/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-04-14&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            sublime配置sftp及添加编译系统
+                        </div>
+                    </a>
+                </article>
+            
+        
+            
+                <article class="post">
+                    <a href="https://CDJ-happier.github.io/post/sublime-REPL/">
+                        <div class="post-title gt-c-content-color-first">
+                            <small><b>2020-04-05&nbsp;&nbsp;·&nbsp;&nbsp;</b></small>
+                            sublime创建交互式python环境及调试
+                        </div>
+                    </a>
+                </article>
+            
+        
     
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  
-    <h2 class="year">2022</h2>
-    
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/nerfiesdeformable-nerf/" class="post">
-          <h2 class="post-title">
-            Nerfies：Deformable NeRF
-          </h2>
-          <div class="time">2022-12-14</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/learning-neural-light-fields-with-ray-space-embedding/" class="post">
-          <h2 class="post-title">
-            Learning Neural Light Fields with Ray-Space Embedding
-          </h2>
-          <div class="time">2022-12-05</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/neural-rays-for-occlusion-aware-image-based-rendering/" class="post">
-          <h2 class="post-title">
-            Neural Rays for Occlusion-aware Image-based Rendering
-          </h2>
-          <div class="time">2022-12-01</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/light-field-neural-rendering/" class="post">
-          <h2 class="post-title">
-            Light Field Neural Rendering
-          </h2>
-          <div class="time">2022-11-30</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/mip-nerfduo-chi-du-kang-hun-die-nerf/" class="post">
-          <h2 class="post-title">
-            Mip-NeRF：多尺度、抗混叠NeRF
-          </h2>
-          <div class="time">2022-11-25</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/keypointnerf3d-head-de-chong-jian/" class="post">
-          <h2 class="post-title">
-            KeypointNeRF：3D head的重建
-          </h2>
-          <div class="time">2022-11-23</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/deep-coarse-to-fine-dense-light-field-reconstruction-with-flexible-sampling-and-geometry-aware-fusion/" class="post">
-          <h2 class="post-title">
-            Deep Coarse-to-fine Dense Light Field Reconstruction with Flexible Sampling and Geometry-aware Fusion
-          </h2>
-          <div class="time">2022-11-04</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/learning-light-field-angular-super-resolution-via-a-geometry-aware-network/" class="post">
-          <h2 class="post-title">
-            Learning Light Field Angular Super-Resolution via a Geometry-Aware Network
-          </h2>
-          <div class="time">2022-10-27</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/shearedepi-blur-deblur/" class="post">
-          <h2 class="post-title">
-            ShearedEPI blur-deblur
-          </h2>
-          <div class="time">2022-10-21</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/ibrnetji-yu-ibr-de-nerf/" class="post">
-          <h2 class="post-title">
-            IBRNet：基于IBR的NeRF
-          </h2>
-          <div class="time">2022-09-30</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/nerfshen-jing-fu-she-chang/" class="post">
-          <h2 class="post-title">
-            NeRF：神经辐射场
-          </h2>
-          <div class="time">2022-09-20</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/zynq-summary/" class="post">
-          <h2 class="post-title">
-            zynq学习总结
-          </h2>
-          <div class="time">2022-07-12</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/pytorch-ru-men-jiao-cheng/" class="post">
-          <h2 class="post-title">
-            pytorch入门教程
-          </h2>
-          <div class="time">2022-06-15</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/jpeg-zhi-shi-ji-tinyjpegh-xue-xi/" class="post">
-          <h2 class="post-title">
-            JPEG知识及tinyjpeg.h学习
-          </h2>
-          <div class="time">2022-05-03</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/qiu-zhi-bi-shi-ti-ruan-jian-kai-fa-lei/" class="post">
-          <h2 class="post-title">
-            求职笔试题-软件开发类
-          </h2>
-          <div class="time">2022-03-09</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/pandasda-shu-ju-chu-li/" class="post">
-          <h2 class="post-title">
-            Pandas：大数据处理
-          </h2>
-          <div class="time">2022-03-04</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/linux-gao-xing-neng-fu-wu-qi-she-ji/" class="post">
-          <h2 class="post-title">
-            Linux高性能服务器设计
-          </h2>
-          <div class="time">2022-01-25</div>
-        </a>
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  
-    <h2 class="year">2021</h2>
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/FFT-TIF/" class="post">
-          <h2 class="post-title">
-            FFT之蝶形运算
-          </h2>
-          <div class="time">2021-01-20</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/cmake-use-with-pcre2/" class="post">
-          <h2 class="post-title">
-            CMake的使用及pcre2
-          </h2>
-          <div class="time">2021-01-20</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/c-xor4findvalue/" class="post">
-          <h2 class="post-title">
-            【C语言】【算法】利用异或找不同单一数据
-          </h2>
-          <div class="time">2021-01-19</div>
-        </a>
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  
-    <h2 class="year">2020</h2>
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/c-yu-yan-biao-zhun-ku-de-kuai-pai-he-er-fen-cha-zhao/" class="post">
-          <h2 class="post-title">
-            C语言标准库的快排和二分查找
-          </h2>
-          <div class="time">2020-12-02</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/tong-xin-yuan-li-shu-zi-ji-dai-chuan-shu/" class="post">
-          <h2 class="post-title">
-            通信原理-数字基带传输
-          </h2>
-          <div class="time">2020-11-30</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/cpu-cache/" class="post">
-          <h2 class="post-title">
-            CPU Cache一探究竟
-          </h2>
-          <div class="time">2020-11-15</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/DSP/" class="post">
-          <h2 class="post-title">
-            数字滤波器的设计
-          </h2>
-          <div class="time">2020-10-30</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/DSP-base2/" class="post">
-          <h2 class="post-title">
-            数字信号处理-基础二
-          </h2>
-          <div class="time">2020-10-25</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/DSP-base1/" class="post">
-          <h2 class="post-title">
-            数字信号处理-基础一
-          </h2>
-          <div class="time">2020-10-19</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/Comprinciple/" class="post">
-          <h2 class="post-title">
-            通信原理
-          </h2>
-          <div class="time">2020-10-13</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/alphaLinux-learningcut/" class="post">
-          <h2 class="post-title">
-            AlphaLinux学习笔记
-          </h2>
-          <div class="time">2020-10-12</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/sublime-compiler/" class="post">
-          <h2 class="post-title">
-            sublime配置编译系统
-          </h2>
-          <div class="time">2020-10-12</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/alphaBoard-use/" class="post">
-          <h2 class="post-title">
-            AlphaLinux开发板使用
-          </h2>
-          <div class="time">2020-10-12</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/eblinux-relaStruct/" class="post">
-          <h2 class="post-title">
-            嵌入式Linux驱动开发相关结构体
-          </h2>
-          <div class="time">2020-10-12</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/TeleTransTheory/" class="post">
-          <h2 class="post-title">
-            电信传输理论
-          </h2>
-          <div class="time">2020-10-11</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/lcd_framebuffer-use/" class="post">
-          <h2 class="post-title">
-            lcd_framebuffer使用
-          </h2>
-          <div class="time">2020-10-06</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/driverbase/" class="post">
-          <h2 class="post-title">
-            驱动程序基石
-          </h2>
-          <div class="time">2020-09-29</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/ebLinux-relaAPI/" class="post">
-          <h2 class="post-title">
-            嵌入式Linux驱动开发相关API
-          </h2>
-          <div class="time">2020-09-22</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/kalmanFilter/" class="post">
-          <h2 class="post-title">
-            卡尔曼滤波
-          </h2>
-          <div class="time">2020-08-31</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/ebLinux-wds/" class="post">
-          <h2 class="post-title">
-            嵌入式Linux驱动开发框架-韦东山
-          </h2>
-          <div class="time">2020-08-24</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/cpuStart/" class="post">
-          <h2 class="post-title">
-            CPU上电如何启动的
-          </h2>
-          <div class="time">2020-08-14</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/quickSort/" class="post">
-          <h2 class="post-title">
-            快速排序-C语言实现
-          </h2>
-          <div class="time">2020-08-14</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/matlab-CYHS/" class="post">
-          <h2 class="post-title">
-            matlab常用函数
-          </h2>
-          <div class="time">2020-08-07</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/sublime-zhong-de-hong/" class="post">
-          <h2 class="post-title">
-            sublime中的宏
-          </h2>
-          <div class="time">2020-08-04</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/sublime-snippet/" class="post">
-          <h2 class="post-title">
-            sublime中的snippet和DocBlocker插件
-          </h2>
-          <div class="time">2020-07-28</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/sublime-sftp-compier/" class="post">
-          <h2 class="post-title">
-            sublime配置sftp及添加编译系统
-          </h2>
-          <div class="time">2020-04-14</div>
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/sublime-REPL/" class="post">
-          <h2 class="post-title">
-            sublime创建交互式python环境及调试
-          </h2>
-          <div class="time">2020-04-05</div>
-        </a>
-      
-    
-  
 </div>
 
-    
         <div class="pagination-container">
-  
-  
-</div>
-
     
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
+    
 </div>
 
-      </div>
+    </article>
+</div>
+</div>
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">The more disciplined, the more free</div>
+    <div class="social-container">
+        
+            
+                <a href="https://github.com/CDJ-happier" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+                <a href="https://twitter.com/cai_dongjun" target="_blank">
+                    <i class="fab fa-twitter gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
     </div>
-  </body>
+    <div class="footer-info">
+        Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme <a href="https://github.com/imhanjie/gridea-theme-pure" target="_blank">Pure</a>, Powered by <a
+                href="https://gridea.dev" target="_blank">Gridea</a> | <a href="https://CDJ-happier.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
 </html>

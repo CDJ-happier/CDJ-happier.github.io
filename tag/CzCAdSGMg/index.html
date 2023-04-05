@@ -1,348 +1,436 @@
 <html>
-  <head>
-  <meta charset="utf-8" />
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+
 <title>NeRF | Welcome to CDJ&#39;s Page</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698645565">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680706547518">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="NeRF | Welcome to CDJ&#39;s Page - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages//dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
 
 
 
-  <meta name="description" content="The more disciplined, the more free" />
-  </head>
-  <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698645565" alt="">
-  </a>
-  <h1 class="site-title">
-    Welcome to CDJ&#39;s Page
-  </h1>
-  <p class="site-description">
-    The more disciplined, the more free
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="https://CDJ-happier.github.io" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/archives" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/about" class="menu">
-          关于
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-        <a href="https://github.com/CDJ-happier" target="_blank">
-          <i class="ri-github-line"></i>
-        </a>
-      
-    
-      
-        <a href="https://twitter.com/cai_dongjun" target="_blank">
-          <i class="ri-twitter-line"></i>
-        </a>
-      
-    
-      
-    
-      
-    
-      
-    
-  </div>
-</div>
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <div class="main-content">
+        <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Welcome to CDJ&#39;s Page
+        </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="https://CDJ-happier.github.io" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="https://CDJ-happier.github.io/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="https://CDJ-happier.github.io/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="https://CDJ-happier.github.io/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/friends" class="menu gt-a-link">
+                    友链
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1680706547518"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
 
         <div class="current-tag-container">
-            <h2 class="title">
-                标签：# NeRF
-            </h2> 
+            <h2 class="title gt-c-content-color-first">
+                #NeRF
+            </h2>
         </div>
-        <div class="post-container">
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/instant-ngp/">
-        <h2 class="post-title">Instant-NGP：多分辨率哈希编码</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2023-01-05
-        </span>
-        <span>
-          2 min read
-        </span>
+        <div class="post-list-container">
+    <div class="post-inner">
         
-          <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
-            # NeRF
-          </a>
-        
-      </div>
-      
-        <a href="https://CDJ-happier.github.io/post/instant-ngp/" class="post-feature-image" style="background-image: url('https://CDJ-happier.github.io/post-images/instant-ngp.png')">
-        </a>
-      
-      <div class="post-abstract">
-        <p>原始NeRF不管是训练速度还是推理速度都十分的慢，NVIDIA针对这个问题提出了instant-ngp，实现了训练5min就能得到和NeRF相当的结果。论文全称：Instant Neural Graphics Primitives with a Multiresolution Hash Encoding，主要的思路是：减小MLP的大小；为了保证性能，给MLP的输入是具有特征的向量，而不是单纯的位置加方向（或positional encoding）。</p>
+            <div class="post gt-bg-theme-color-second">
+                <div class="post-left">
+                    <div>
+                        
+                        <a href="https://CDJ-happier.github.io/post/instant-ngp/">
+                            <span class="post-title gt-c-content-color-first">Instant-NGP：多分辨率哈希编码</span>
+                        </a>
+                    </div>
+                    <div class="gt-post-content post-abstract gt-c-content-color-second">
+                        原始NeRF不管是训练速度还是推理速度都十分的慢，NVIDIA针对这个问题提出了instant-ngp，实现了训练5min就能得到和NeRF相当的结果。论文全称：Instant Neural Graphics Primitives with a Multiresolution Hash Encoding，主要的思路是：减小MLP的大小；为了保证性能，给MLP的输入是具有特征的向量，而不是单纯的位置加方向（或positional encoding）。
 
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/nerfiesdeformable-nerf/">
-        <h2 class="post-title">Nerfies：Deformable NeRF</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2022-12-14
-        </span>
-        <span>
-          5 min read
-        </span>
+                    </div>
+                    <div class="post-info">
+                        <time class="post-time gt-c-content-color-first">
+                            发布于 · 2023-01-05 ·
+                        </time>
+                        
+                            <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
+                                # NeRF
+                            </a>
+                        
+                    </div>
+                </div>
+                
+                    <a href="https://CDJ-happier.github.io/post/instant-ngp/" class="post-feature-image"
+                       style="background-image: url('https://CDJ-happier.github.io/post-images/instant-ngp.png')">
+                    </a>
+                
+            </div>
         
-          <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
-            # NeRF
-          </a>
-        
-      </div>
-      
-        <a href="https://CDJ-happier.github.io/post/nerfiesdeformable-nerf/" class="post-feature-image" style="background-image: url('https://CDJ-happier.github.io/post-images/nerfiesdeformable-nerf.png')">
-        </a>
-      
-      <div class="post-abstract">
-        <p>NeRF只能对static scene学习，因此，为了同大多数dynamic NeRF一样，本文也是增加一个deformation field将observation frames先转换到canonical frames，然后再使用NeRF进行学习重建。</p>
+            <div class="post gt-bg-theme-color-second">
+                <div class="post-left">
+                    <div>
+                        
+                        <a href="https://CDJ-happier.github.io/post/nerfiesdeformable-nerf/">
+                            <span class="post-title gt-c-content-color-first">Nerfies：Deformable NeRF</span>
+                        </a>
+                    </div>
+                    <div class="gt-post-content post-abstract gt-c-content-color-second">
+                        NeRF只能对static scene学习，因此，为了同大多数dynamic NeRF一样，本文也是增加一个deformation field将observation frames先转换到canonical frames，然后再使用NeRF进行学习重建。
 
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/learning-neural-light-fields-with-ray-space-embedding/">
-        <h2 class="post-title">Learning Neural Light Fields with Ray-Space Embedding</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2022-12-05
-        </span>
-        <span>
-          7 min read
-        </span>
+                    </div>
+                    <div class="post-info">
+                        <time class="post-time gt-c-content-color-first">
+                            发布于 · 2022-12-14 ·
+                        </time>
+                        
+                            <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
+                                # NeRF
+                            </a>
+                        
+                    </div>
+                </div>
+                
+                    <a href="https://CDJ-happier.github.io/post/nerfiesdeformable-nerf/" class="post-feature-image"
+                       style="background-image: url('https://CDJ-happier.github.io/post-images/nerfiesdeformable-nerf.png')">
+                    </a>
+                
+            </div>
         
-          <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
-            # NeRF
-          </a>
-        
-      </div>
-      
-        <a href="https://CDJ-happier.github.io/post/learning-neural-light-fields-with-ray-space-embedding/" class="post-feature-image" style="background-image: url('https://CDJ-happier.github.io/post-images/learning-neural-light-fields-with-ray-space-embedding.png')">
-        </a>
-      
-      <div class="post-abstract">
-        <p>本文使用的是4D LF表达方式。可直接从(x,y,u,v)得到color+density，而不用像NeRF那样需要hundreds of sampled point。</p>
+            <div class="post gt-bg-theme-color-second">
+                <div class="post-left">
+                    <div>
+                        
+                        <a href="https://CDJ-happier.github.io/post/learning-neural-light-fields-with-ray-space-embedding/">
+                            <span class="post-title gt-c-content-color-first">Learning Neural Light Fields with Ray-Space Embedding</span>
+                        </a>
+                    </div>
+                    <div class="gt-post-content post-abstract gt-c-content-color-second">
+                        本文使用的是4D LF表达方式。可直接从(x,y,u,v)得到color+density，而不用像NeRF那样需要hundreds of sampled point。
 
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/neural-rays-for-occlusion-aware-image-based-rendering/">
-        <h2 class="post-title">Neural Rays for Occlusion-aware Image-based Rendering</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2022-12-01
-        </span>
-        <span>
-          4 min read
-        </span>
+                    </div>
+                    <div class="post-info">
+                        <time class="post-time gt-c-content-color-first">
+                            发布于 · 2022-12-05 ·
+                        </time>
+                        
+                            <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
+                                # NeRF
+                            </a>
+                        
+                    </div>
+                </div>
+                
+                    <a href="https://CDJ-happier.github.io/post/learning-neural-light-fields-with-ray-space-embedding/" class="post-feature-image"
+                       style="background-image: url('https://CDJ-happier.github.io/post-images/learning-neural-light-fields-with-ray-space-embedding.png')">
+                    </a>
+                
+            </div>
         
-          <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
-            # NeRF
-          </a>
-        
-      </div>
-      
-        <a href="https://CDJ-happier.github.io/post/neural-rays-for-occlusion-aware-image-based-rendering/" class="post-feature-image" style="background-image: url('https://CDJ-happier.github.io/post-images/neural-rays-for-occlusion-aware-image-based-rendering.png')">
-        </a>
-      
-      <div class="post-abstract">
-        <p>本文如果没有可见性<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>v</mi><mrow><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">v_{i,j}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>向量，那么就是最基本的IBR渲染，即将图像的特征输入NeRF进行学习。但本文还额外增加了一个可见性向量，用于表示当前input view上的点对target view的重要性。</p>
+            <div class="post gt-bg-theme-color-second">
+                <div class="post-left">
+                    <div>
+                        
+                        <a href="https://CDJ-happier.github.io/post/neural-rays-for-occlusion-aware-image-based-rendering/">
+                            <span class="post-title gt-c-content-color-first">Neural Rays for Occlusion-aware Image-based Rendering</span>
+                        </a>
+                    </div>
+                    <div class="gt-post-content post-abstract gt-c-content-color-second">
+                        本文如果没有可见性vi,jv_{i,j}vi,j​向量，那么就是最基本的IBR渲染，即将图像的特征输入NeRF进行学习。但本文还额外增加了一个可见性向量，用于表示当前input view上的点对target view的重要性。
 
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/light-field-neural-rendering/">
-        <h2 class="post-title">Light Field Neural Rendering</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2022-11-30
-        </span>
-        <span>
-          5 min read
-        </span>
+                    </div>
+                    <div class="post-info">
+                        <time class="post-time gt-c-content-color-first">
+                            发布于 · 2022-12-01 ·
+                        </time>
+                        
+                            <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
+                                # NeRF
+                            </a>
+                        
+                    </div>
+                </div>
+                
+                    <a href="https://CDJ-happier.github.io/post/neural-rays-for-occlusion-aware-image-based-rendering/" class="post-feature-image"
+                       style="background-image: url('https://CDJ-happier.github.io/post-images/neural-rays-for-occlusion-aware-image-based-rendering.png')">
+                    </a>
+                
+            </div>
         
-          <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
-            # NeRF
-          </a>
-        
-      </div>
-      
-        <a href="https://CDJ-happier.github.io/post/light-field-neural-rendering/" class="post-feature-image" style="background-image: url('https://CDJ-happier.github.io/post-images/light-field-neural-rendering.png')">
-        </a>
-      
-      <div class="post-abstract">
-        <p>CVPR 2022 best paper finalist<br>
-本文与IBRNet很相似，基于IBR（但是加入了对极几何约束）。另外，也是使用了类似于像素对其特征进行融合，只不过各个point&amp;view融合的权重是由self-attention计算的。</p>
+            <div class="post gt-bg-theme-color-second">
+                <div class="post-left">
+                    <div>
+                        
+                        <a href="https://CDJ-happier.github.io/post/light-field-neural-rendering/">
+                            <span class="post-title gt-c-content-color-first">Light Field Neural Rendering</span>
+                        </a>
+                    </div>
+                    <div class="gt-post-content post-abstract gt-c-content-color-second">
+                        CVPR 2022 best paper finalist
+本文与IBRNet很相似，基于IBR（但是加入了对极几何约束）。另外，也是使用了类似于像素对其特征进行融合，只不过各个point&amp;view融合的权重是由self-attention计算的。
 
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/mip-nerfduo-chi-du-kang-hun-die-nerf/">
-        <h2 class="post-title">Mip-NeRF：多尺度、抗混叠NeRF</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2022-11-25
-        </span>
-        <span>
-          5 min read
-        </span>
+                    </div>
+                    <div class="post-info">
+                        <time class="post-time gt-c-content-color-first">
+                            发布于 · 2022-11-30 ·
+                        </time>
+                        
+                            <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
+                                # NeRF
+                            </a>
+                        
+                    </div>
+                </div>
+                
+                    <a href="https://CDJ-happier.github.io/post/light-field-neural-rendering/" class="post-feature-image"
+                       style="background-image: url('https://CDJ-happier.github.io/post-images/light-field-neural-rendering.png')">
+                    </a>
+                
+            </div>
         
-          <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
-            # NeRF
-          </a>
-        
-      </div>
-      
-        <a href="https://CDJ-happier.github.io/post/mip-nerfduo-chi-du-kang-hun-die-nerf/" class="post-feature-image" style="background-image: url('https://CDJ-happier.github.io/post-images/mip-nerfduo-chi-du-kang-hun-die-nerf.png')">
-        </a>
-      
-      <div class="post-abstract">
-        <p>主要是用cone tracing代替ray tracing，消除不确定性。使用多元高斯函数表示一段截头圆锥，并提出IPE(Integrated Positional Encoding)替代原始NeRF中的PE。</p>
+            <div class="post gt-bg-theme-color-second">
+                <div class="post-left">
+                    <div>
+                        
+                        <a href="https://CDJ-happier.github.io/post/mip-nerfduo-chi-du-kang-hun-die-nerf/">
+                            <span class="post-title gt-c-content-color-first">Mip-NeRF：多尺度、抗混叠NeRF</span>
+                        </a>
+                    </div>
+                    <div class="gt-post-content post-abstract gt-c-content-color-second">
+                        主要是用cone tracing代替ray tracing，消除不确定性。使用多元高斯函数表示一段截头圆锥，并提出IPE(Integrated Positional Encoding)替代原始NeRF中的PE。
 
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/keypointnerf3d-head-de-chong-jian/">
-        <h2 class="post-title">KeypointNeRF：3D head的重建</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2022-11-23
-        </span>
-        <span>
-          4 min read
-        </span>
+                    </div>
+                    <div class="post-info">
+                        <time class="post-time gt-c-content-color-first">
+                            发布于 · 2022-11-25 ·
+                        </time>
+                        
+                            <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
+                                # NeRF
+                            </a>
+                        
+                    </div>
+                </div>
+                
+                    <a href="https://CDJ-happier.github.io/post/mip-nerfduo-chi-du-kang-hun-die-nerf/" class="post-feature-image"
+                       style="background-image: url('https://CDJ-happier.github.io/post-images/mip-nerfduo-chi-du-kang-hun-die-nerf.png')">
+                    </a>
+                
+            </div>
         
-          <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
-            # NeRF
-          </a>
+            <div class="post gt-bg-theme-color-second">
+                <div class="post-left">
+                    <div>
+                        
+                        <a href="https://CDJ-happier.github.io/post/keypointnerf3d-head-de-chong-jian/">
+                            <span class="post-title gt-c-content-color-first">KeypointNeRF：3D head的重建</span>
+                        </a>
+                    </div>
+                    <div class="gt-post-content post-abstract gt-c-content-color-second">
+                        KeypointNeRF: Generalizing Image-based Volumetric Avatars using Relative Spatial Encoding of Keypoints
+通过用3D关键点对query point进行相对空间编码，解决全局编码对细节重建不好的缺点；以及使用pixel-aligned feature实现细节重建。
+
+                    </div>
+                    <div class="post-info">
+                        <time class="post-time gt-c-content-color-first">
+                            发布于 · 2022-11-23 ·
+                        </time>
+                        
+                            <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
+                                # NeRF
+                            </a>
+                        
+                    </div>
+                </div>
+                
+                    <a href="https://CDJ-happier.github.io/post/keypointnerf3d-head-de-chong-jian/" class="post-feature-image"
+                       style="background-image: url('https://CDJ-happier.github.io/post-images/keypointnerf3d-head-de-chong-jian.png')">
+                    </a>
+                
+            </div>
         
-      </div>
-      
-        <a href="https://CDJ-happier.github.io/post/keypointnerf3d-head-de-chong-jian/" class="post-feature-image" style="background-image: url('https://CDJ-happier.github.io/post-images/keypointnerf3d-head-de-chong-jian.png')">
-        </a>
-      
-      <div class="post-abstract">
-        <p>KeypointNeRF: Generalizing Image-based Volumetric Avatars using Relative Spatial Encoding of Keypoints<br>
-通过用3D关键点对query point进行相对空间编码，解决全局编码对细节重建不好的缺点；以及使用pixel-aligned feature实现细节重建。</p>
+            <div class="post gt-bg-theme-color-second">
+                <div class="post-left">
+                    <div>
+                        
+                        <a href="https://CDJ-happier.github.io/post/ibrnetji-yu-ibr-de-nerf/">
+                            <span class="post-title gt-c-content-color-first">IBRNet：基于IBR的NeRF</span>
+                        </a>
+                    </div>
+                    <div class="gt-post-content post-abstract gt-c-content-color-second">
+                        渲染某个target view时，会使用与其在空间位置上相邻的N个input views作为参考。另外还使用了Transformer Ray，即将cast ray上的采样点视为序列点。
 
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/ibrnetji-yu-ibr-de-nerf/">
-        <h2 class="post-title">IBRNet：基于IBR的NeRF</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2022-09-30
-        </span>
-        <span>
-          5 min read
-        </span>
+                    </div>
+                    <div class="post-info">
+                        <time class="post-time gt-c-content-color-first">
+                            发布于 · 2022-09-30 ·
+                        </time>
+                        
+                            <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
+                                # NeRF
+                            </a>
+                        
+                    </div>
+                </div>
+                
+                    <a href="https://CDJ-happier.github.io/post/ibrnetji-yu-ibr-de-nerf/" class="post-feature-image"
+                       style="background-image: url('https://CDJ-happier.github.io/post-images/ibrnetji-yu-ibr-de-nerf.png')">
+                    </a>
+                
+            </div>
         
-          <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
-            # NeRF
-          </a>
+            <div class="post gt-bg-theme-color-second">
+                <div class="post-left">
+                    <div>
+                        
+                        <a href="https://CDJ-happier.github.io/post/nerfshen-jing-fu-she-chang/">
+                            <span class="post-title gt-c-content-color-first">NeRF：神经辐射场</span>
+                        </a>
+                    </div>
+                    <div class="gt-post-content post-abstract gt-c-content-color-second">
+                        NeRF是实现新视角合成的新方法，能够实现photo-realistic的image
+
+                    </div>
+                    <div class="post-info">
+                        <time class="post-time gt-c-content-color-first">
+                            发布于 · 2022-09-20 ·
+                        </time>
+                        
+                            <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
+                                # NeRF
+                            </a>
+                        
+                    </div>
+                </div>
+                
+                    <a href="https://CDJ-happier.github.io/post/nerfshen-jing-fu-she-chang/" class="post-feature-image"
+                       style="background-image: url('https://CDJ-happier.github.io/post-images/nerfshen-jing-fu-she-chang.jpg')">
+                    </a>
+                
+            </div>
         
-      </div>
-      
-        <a href="https://CDJ-happier.github.io/post/ibrnetji-yu-ibr-de-nerf/" class="post-feature-image" style="background-image: url('https://CDJ-happier.github.io/post-images/ibrnetji-yu-ibr-de-nerf.png')">
-        </a>
-      
-      <div class="post-abstract">
-        <p>渲染某个target view时，会使用与其在空间位置上相邻的N个input views作为参考。另外还使用了Transformer Ray，即将cast ray上的采样点视为序列点。</p>
-
-      </div>
-    </article>
-  
-    <article class="post">
-      <a href="https://CDJ-happier.github.io/post/nerfshen-jing-fu-she-chang/">
-        <h2 class="post-title">NeRF：神经辐射场</h2>
-      </a>
-      <div class="post-info">
-        <span>
-          2022-09-20
-        </span>
-        <span>
-          3 min read
-        </span>
-        
-          <a href="https://CDJ-happier.github.io/tag/CzCAdSGMg/" class="post-tag">
-            # NeRF
-          </a>
-        
-      </div>
-      
-        <a href="https://CDJ-happier.github.io/post/nerfshen-jing-fu-she-chang/" class="post-feature-image" style="background-image: url('https://CDJ-happier.github.io/post-images/nerfshen-jing-fu-she-chang.jpg')">
-        </a>
-      
-      <div class="post-abstract">
-        <p>NeRF是实现新视角合成的新方法，能够实现photo-realistic的image</p>
-
-      </div>
-    </article>
-  
-</div>
-
-        <div class="pagination-container">
-  
-  
-</div>
-
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
-</div>
-
-      </div>
     </div>
-  </body>
+</div>
+        <div class="pagination-container">
+    
+    
+</div>
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">The more disciplined, the more free</div>
+    <div class="social-container">
+        
+            
+                <a href="https://github.com/CDJ-happier" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+                <a href="https://twitter.com/cai_dongjun" target="_blank">
+                    <i class="fab fa-twitter gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme <a href="https://github.com/imhanjie/gridea-theme-pure" target="_blank">Pure</a>, Powered by <a
+                href="https://gridea.dev" target="_blank">Gridea</a> | <a href="https://CDJ-happier.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
 </html>

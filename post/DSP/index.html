@@ -1,126 +1,132 @@
 <html>
-  <head>
+<head>
     <meta charset="utf-8" />
+<meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+
 <title>数字滤波器的设计 | Welcome to CDJ&#39;s Page</title>
-<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680698645565">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680706547518">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="数字滤波器的设计 | Welcome to CDJ&#39;s Page - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/9.12.0/languages//dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
 
 
 
-    <meta name="description" content="
-先导知识
-
-时频域互换
-什么是滤波器？
-如何设计滤波器？
-FT、LT、ZT之间的（映射）关系
-零、极点分布如何影响频率响应
-
-
-从均值滤波看滤波器及系统函数
-
-时域表达式
-频率表达式
-零极点分布图
-频率响应分析
-
-
-FIR和IIR滤波器的..." />
-    <meta name="keywords" content="DSP" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
-  </head>
-  <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://CDJ-happier.github.io">
-  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680698645565" alt="">
-  </a>
-  <h1 class="site-title">
-    Welcome to CDJ&#39;s Page
-  </h1>
-  <p class="site-description">
-    The more disciplined, the more free
-  </p>
-  <div class="menu-container">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
     
-      
-        <a href="https://CDJ-happier.github.io" class="menu">
-          首页
-        </a>
-      
+        <script src="https://cdn.jsdelivr.net/npm/mermaid@9.1.1/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script> 
     
-      
-        <a href="https://CDJ-happier.github.io/archives" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="https://CDJ-happier.github.io/post/about" class="menu">
-          关于
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-        <a href="https://github.com/CDJ-happier" target="_blank">
-          <i class="ri-github-line"></i>
-        </a>
-      
-    
-      
-        <a href="https://twitter.com/cai_dongjun" target="_blank">
-          <i class="ri-twitter-line"></i>
-        </a>
-      
-    
-      
-    
-      
-    
-      
-    
-  </div>
-</div>
-
-        <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              数字滤波器的设计
-            </h2>
-            <div class="post-info">
-              <span>
-                2020-10-30
-              </span>
-              <span>
-                56 min read
-              </span>
-              
-                <a href="https://CDJ-happier.github.io/tag/TrRIqGItK/" class="post-tag">
-                  # DSP
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand" href="/">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            Welcome to CDJ&#39;s Page
+        </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="https://CDJ-happier.github.io" class="menu gt-a-link">
+                    首页
                 </a>
-              
+                
             </div>
             
-              <img class="post-feature-image" src="https://CDJ-happier.github.io/post-images/DSP.jpg" alt="">
+            <div class="nav-item">
+                
+                <a href="https://CDJ-happier.github.io/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <p><ul class="markdownIt-TOC">
+            <div class="nav-item">
+                
+                <a href="https://CDJ-happier.github.io/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="https://CDJ-happier.github.io/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/friends" class="menu gt-a-link">
+                    友链
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1680706547518"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    数字滤波器的设计
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2020-10-30 ·
+                    </time>
+                    
+                        <a href="https://CDJ-happier.github.io/tag/TrRIqGItK/" class="post-tags">
+                            # DSP
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p><ul class="markdownIt-TOC">
 <li><a href="#%E5%85%88%E5%AF%BC%E7%9F%A5%E8%AF%86">先导知识</a>
 <ul>
 <li><a href="#%E6%97%B6%E9%A2%91%E5%9F%9F%E4%BA%92%E6%8D%A2">时频域互换</a></li>
@@ -997,132 +1003,47 @@ s-65,47,-65,47z M834 80H400000v40H845z'/></svg></span></span></span><span class=
 <figure data-type="image" tabindex="17"><img src="https://CDJ-happier.github.io/post-images/1605428054524.png" alt="" loading="lazy"></figure>
 <figure data-type="image" tabindex="18"><img src="https://CDJ-happier.github.io/post-images/1605428067169.jpg" alt="" loading="lazy"></figure>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li><a href="#%E5%85%88%E5%AF%BC%E7%9F%A5%E8%AF%86">先导知识</a>
-<ul>
-<li><a href="#%E6%97%B6%E9%A2%91%E5%9F%9F%E4%BA%92%E6%8D%A2">时频域互换</a></li>
-<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%BB%A4%E6%B3%A2%E5%99%A8">什么是滤波器？</a></li>
-<li><a href="#%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E6%BB%A4%E6%B3%A2%E5%99%A8">如何设计滤波器？</a></li>
-<li><a href="#ft-lt-zt%E4%B9%8B%E9%97%B4%E7%9A%84%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB">FT、LT、ZT之间的（映射）关系</a></li>
-<li><a href="#%E9%9B%B6-%E6%9E%81%E7%82%B9%E5%88%86%E5%B8%83%E5%A6%82%E4%BD%95%E5%BD%B1%E5%93%8D%E9%A2%91%E7%8E%87%E5%93%8D%E5%BA%94">零、极点分布如何影响频率响应</a></li>
-</ul>
-</li>
-<li><a href="#%E4%BB%8E%E5%9D%87%E5%80%BC%E6%BB%A4%E6%B3%A2%E7%9C%8B%E6%BB%A4%E6%B3%A2%E5%99%A8%E5%8F%8A%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0">从均值滤波看滤波器及系统函数</a>
-<ul>
-<li><a href="#%E6%97%B6%E5%9F%9F%E8%A1%A8%E8%BE%BE%E5%BC%8F">时域表达式</a></li>
-<li><a href="#%E9%A2%91%E7%8E%87%E8%A1%A8%E8%BE%BE%E5%BC%8F">频率表达式</a></li>
-<li><a href="#%E9%9B%B6%E6%9E%81%E7%82%B9%E5%88%86%E5%B8%83%E5%9B%BE">零极点分布图</a></li>
-<li><a href="#%E9%A2%91%E7%8E%87%E5%93%8D%E5%BA%94%E5%88%86%E6%9E%90">频率响应分析</a></li>
-</ul>
-</li>
-<li><a href="#fir%E5%92%8Ciir%E6%BB%A4%E6%B3%A2%E5%99%A8%E7%9A%84%E6%AF%94%E8%BE%83">FIR和IIR滤波器的比较</a>
-<ul>
-<li><a href="#%E6%80%A7%E8%83%BD%E4%B8%8A">性能上</a></li>
-<li><a href="#%E7%BB%93%E6%9E%84%E4%B8%8A">结构上</a></li>
-<li><a href="#%E8%AE%BE%E8%AE%A1%E5%B7%A5%E5%85%B7%E4%B8%8A">设计工具上</a></li>
-<li><a href="#%E6%95%88%E6%9E%9C%E4%B8%8A">效果上</a></li>
-</ul>
-</li>
-<li><a href="#fir%E6%BB%A4%E6%B3%A2%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1">FIR滤波器的设计</a>
-<ul>
-<li><a href="#%E5%9F%BA%E6%9C%AC%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF">基本设计思路</a></li>
-<li><a href="#%E7%AA%97%E5%87%BD%E6%95%B0%E6%B3%95">窗函数法</a></li>
-<li><a href="#%E9%A2%91%E7%8E%87%E9%87%87%E6%A0%B7%E6%B3%95">频率采样法</a></li>
-<li><a href="#%E5%93%8D%E5%BA%94%E6%9C%80%E4%BC%98%E6%B3%95">响应最优法</a>
-<ul>
-<li><a href="#%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95">最小二乘法</a></li>
-<li><a href="#%E5%88%87%E6%AF%94%E9%9B%AA%E5%A4%AB%E7%AD%89%E6%B3%A2%E7%BA%B9%E6%9C%80%E4%BD%B3%E9%80%BC%E8%BF%91%E6%B3%95">切比雪夫等波纹最佳逼近法</a></li>
-</ul>
-</li>
-<li><a href="#fir%E6%95%B0%E5%AD%97%E6%BB%A4%E6%B3%A2%E5%99%A8%E8%AE%BE%E8%AE%A1%E6%80%BB%E7%BB%93">FIR数字滤波器设计总结</a></li>
-</ul>
-</li>
-<li><a href="#iir%E6%BB%A4%E6%B3%A2%E5%99%A8%E8%AE%BE%E8%AE%A1">IIR滤波器设计</a>
-<ul>
-<li><a href="#%E5%9F%BA%E6%9C%AC%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF-2">基本设计思路</a></li>
-<li><a href="#%E5%85%B8%E5%9E%8B%E7%9A%84%E6%A8%A1%E6%8B%9F%E4%BD%8E%E9%80%9A%E6%BB%A4%E6%B3%A2%E5%99%A8">典型的模拟低通滤波器</a>
-<ul>
-<li><a href="#%E5%B7%B4%E7%89%B9%E6%B2%83%E6%96%AF%E6%BB%A4%E6%B3%A2%E5%99%A8">巴特沃斯滤波器</a>
-<ul>
-<li><a href="#%E5%A6%82%E4%BD%95%E6%A0%B9%E6%8D%AE%E6%8C%87%E6%A0%87%E6%B1%82%E5%87%BA%E6%BB%A4%E6%B3%A2%E5%99%A8%E9%98%B6%E6%95%B0n">如何根据指标求出滤波器阶数N</a></li>
-<li><a href="#%E4%BD%8E%E9%80%9A%E5%B7%B4%E7%89%B9%E6%B2%83%E6%96%AF%E6%BB%A4%E6%B3%A2%E5%99%A8%E8%AE%BE%E8%AE%A1%E6%AD%A5%E9%AA%A4">低通巴特沃斯滤波器设计步骤</a></li>
-<li><a href="#%E8%AE%BE%E8%AE%A1%E4%BD%8E%E9%80%9A%E5%B7%B4%E7%89%B9%E6%B2%83%E6%96%AF%E6%BB%A4%E6%B3%A2%E5%99%A8%E5%AE%9E%E4%BE%8B">设计低通巴特沃斯滤波器实例</a></li>
-</ul>
-</li>
-<li><a href="#%E5%88%87%E6%AF%94%E9%9B%AA%E5%A4%ABi%E5%9E%8B%E6%BB%A4%E6%B3%A2%E5%99%A8">切比雪夫I型滤波器</a></li>
-<li><a href="#%E6%A4%AD%E5%9C%86%E6%BB%A4%E6%B3%A2%E5%99%A8">椭圆滤波器</a></li>
-</ul>
-</li>
-<li><a href="#%E9%AB%98%E9%80%9A-%E5%B8%A6%E9%80%9A%E5%92%8C%E5%B8%A6%E9%98%BB%E6%BB%A4%E6%B3%A2%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1">高通、带通和带阻滤波器的设计</a>
-<ul>
-<li><a href="#%E5%BD%92%E4%B8%80%E5%8C%96%E4%BD%8E%E9%80%9A%E6%BB%A4%E6%B3%A2%E5%99%A8">归一化低通滤波器</a></li>
-<li><a href="#%E6%A8%A1%E6%8B%9F%E4%BD%8E%E9%80%9A%E5%88%B0%E9%AB%98%E9%80%9A%E7%9A%84%E9%A2%91%E7%8E%87%E8%BD%AC%E6%8D%A2">模拟低通到高通的频率转换</a></li>
-<li><a href="#%E6%A8%A1%E6%8B%9F%E4%BD%8E%E9%80%9A%E5%88%B0%E5%B8%A6%E9%80%9A%E7%9A%84%E9%A2%91%E7%8E%87%E8%BD%AC%E6%8D%A2">模拟低通到带通的频率转换</a></li>
-<li><a href="#%E6%A8%A1%E6%8B%9F%E4%BD%8E%E9%80%9A%E5%88%B0%E5%B8%A6%E9%98%BB%E7%9A%84%E9%A2%91%E7%8E%87%E8%BD%AC%E6%8D%A2">模拟低通到带阻的频率转换</a></li>
-<li><a href="#%E6%A8%A1%E6%8B%9F%E6%BB%A4%E6%B3%A2%E5%99%A8%E4%B8%80%E8%88%AC%E8%AE%BE%E8%AE%A1%E6%AD%A5%E9%AA%A4">模拟滤波器一般设计步骤</a></li>
-<li><a href="#%E4%B9%A6%E4%B8%8A%E7%9A%84%E9%A2%91%E7%8E%87%E5%8F%98%E6%8D%A2">书上的频率变换</a>
-<ul>
-<li><a href="#%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB">映射关系</a></li>
-<li><a href="#%E6%A8%A1%E6%8B%9F%E4%BD%8E%E9%80%9A%E5%88%B0%E9%AB%98%E9%80%9A">模拟低通到高通</a>
-<ul>
-<li><a href="#%E8%AE%BE%E8%AE%A1%E5%AE%9E%E4%BE%8B">设计实例</a></li>
-</ul>
-</li>
-<li><a href="#%E6%A8%A1%E6%8B%9F%E4%BD%8E%E9%80%9A%E5%88%B0%E5%B8%A6%E9%80%9A">模拟低通到带通</a>
-<ul>
-<li><a href="#%E8%AE%BE%E8%AE%A1%E5%AE%9E%E4%BE%8B-2">设计实例</a></li>
-</ul>
-</li>
-<li><a href="#%E6%A8%A1%E6%8B%9F%E4%BD%8E%E9%80%9A%E5%88%B0%E5%B8%A6%E9%98%BB">模拟低通到带阻</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li></li>
-<li><a href="#%E4%BB%8E%E6%A8%A1%E6%8B%9F%E5%88%B0%E6%95%B0%E5%AD%97%E7%9A%84%E8%BD%AC%E6%8D%A2%E6%96%B9%E6%B3%95">从模拟到数字的转换方法</a>
-<ul>
-<li><a href="#%E8%84%89%E5%86%B2%E5%93%8D%E5%BA%94%E4%B8%8D%E5%8F%98%E6%B3%95">脉冲响应不变法</a>
-<ul>
-<li><a href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF">基本思路</a></li>
-<li><a href="#%E6%8E%A8%E5%AF%BC%E8%BF%87%E7%A8%8B">推导过程</a></li>
-</ul>
-</li>
-<li><a href="#%E5%8F%8C%E7%BA%BF%E6%80%A7%E5%8F%98%E6%8D%A2%E6%B3%95">双线性变换法</a>
-<ul>
-<li><a href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E8%B7%AF-2">基本思路</a></li>
-<li><a href="#%E8%BD%AC%E6%8D%A2%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90">转换性能分析</a></li>
-<li><a href="#iir%E6%BB%A4%E6%B3%A2%E5%99%A8%E8%AE%BE%E8%AE%A1%E5%AE%9E%E4%BE%8B">IIR滤波器设计实例</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#iir%E6%95%B0%E5%AD%97%E6%BB%A4%E6%B3%A2%E5%99%A8%E8%AE%BE%E8%AE%A1%E6%80%BB%E7%BB%93">IIR数字滤波器设计总结</a></li>
-</ul>
-</li>
-</ul>
-
-              </div>
-            </div>
-          </article>
+                </div>
+            </article>
         </div>
 
         
-          <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://CDJ-happier.github.io/post/DSP-base2/">
-              <h3 class="post-title">
-                数字信号处理-基础二
-              </h3>
-            </a>
-          </div>
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://CDJ-happier.github.io/post/DSP-base2/" class="post-title gt-a-link">
+                    数字信号处理-基础二
+                </a>
+            </div>
         
 
         
-          
-            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+        
+            
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+<script>
+    // md5.min.js
+    !function(n){
+        "use strict";
+        function d(n,t){var r=(65535&n)+(65535&t);return(n>>16)+(t>>16)+(r>>16)<<16|65535&r}
+        function f(n,t,r,e,o,u){return d((c=d(d(t,n),d(e,u)))<<(f=o)|c>>>32-f,r);var c,f}
+        function l(n,t,r,e,o,u,c){return f(t&r|~t&e,n,t,o,u,c)}
+        function v(n,t,r,e,o,u,c){return f(t&e|r&~e,n,t,o,u,c)}
+        function g(n,t,r,e,o,u,c){return f(t^r^e,n,t,o,u,c)}
+        function m(n,t,r,e,o,u,c){return f(r^(t|~e),n,t,o,u,c)}
+        function i(n,t){var r,e,o,u,c;n[t>>5]|=128<<t%32,n[14+(t+64>>>9<<4)]=t;var f=1732584193,i=-271733879,a=-1732584194,h=271733878;for(r=0;r<n.length;r+=16)f=l(e=f,o=i,u=a,c=h,n[r],7,-680876936),h=l(h,f,i,a,n[r+1],12,-389564586),a=l(a,h,f,i,n[r+2],17,606105819),i=l(i,a,h,f,n[r+3],22,-1044525330),f=l(f,i,a,h,n[r+4],7,-176418897),h=l(h,f,i,a,n[r+5],12,1200080426),a=l(a,h,f,i,n[r+6],17,-1473231341),i=l(i,a,h,f,n[r+7],22,-45705983),f=l(f,i,a,h,n[r+8],7,1770035416),h=l(h,f,i,a,n[r+9],12,-1958414417),a=l(a,h,f,i,n[r+10],17,-42063),i=l(i,a,h,f,n[r+11],22,-1990404162),f=l(f,i,a,h,n[r+12],7,1804603682),h=l(h,f,i,a,n[r+13],12,-40341101),a=l(a,h,f,i,n[r+14],17,-1502002290),f=v(f,i=l(i,a,h,f,n[r+15],22,1236535329),a,h,n[r+1],5,-165796510),h=v(h,f,i,a,n[r+6],9,-1069501632),a=v(a,h,f,i,n[r+11],14,643717713),i=v(i,a,h,f,n[r],20,-373897302),f=v(f,i,a,h,n[r+5],5,-701558691),h=v(h,f,i,a,n[r+10],9,38016083),a=v(a,h,f,i,n[r+15],14,-660478335),i=v(i,a,h,f,n[r+4],20,-405537848),f=v(f,i,a,h,n[r+9],5,568446438),h=v(h,f,i,a,n[r+14],9,-1019803690),a=v(a,h,f,i,n[r+3],14,-187363961),i=v(i,a,h,f,n[r+8],20,1163531501),f=v(f,i,a,h,n[r+13],5,-1444681467),h=v(h,f,i,a,n[r+2],9,-51403784),a=v(a,h,f,i,n[r+7],14,1735328473),f=g(f,i=v(i,a,h,f,n[r+12],20,-1926607734),a,h,n[r+5],4,-378558),h=g(h,f,i,a,n[r+8],11,-2022574463),a=g(a,h,f,i,n[r+11],16,1839030562),i=g(i,a,h,f,n[r+14],23,-35309556),f=g(f,i,a,h,n[r+1],4,-1530992060),h=g(h,f,i,a,n[r+4],11,1272893353),a=g(a,h,f,i,n[r+7],16,-155497632),i=g(i,a,h,f,n[r+10],23,-1094730640),f=g(f,i,a,h,n[r+13],4,681279174),h=g(h,f,i,a,n[r],11,-358537222),a=g(a,h,f,i,n[r+3],16,-722521979),i=g(i,a,h,f,n[r+6],23,76029189),f=g(f,i,a,h,n[r+9],4,-640364487),h=g(h,f,i,a,n[r+12],11,-421815835),a=g(a,h,f,i,n[r+15],16,530742520),f=m(f,i=g(i,a,h,f,n[r+2],23,-995338651),a,h,n[r],6,-198630844),h=m(h,f,i,a,n[r+7],10,1126891415),a=m(a,h,f,i,n[r+14],15,-1416354905),i=m(i,a,h,f,n[r+5],21,-57434055),f=m(f,i,a,h,n[r+12],6,1700485571),h=m(h,f,i,a,n[r+3],10,-1894986606),a=m(a,h,f,i,n[r+10],15,-1051523),i=m(i,a,h,f,n[r+1],21,-2054922799),f=m(f,i,a,h,n[r+8],6,1873313359),h=m(h,f,i,a,n[r+15],10,-30611744),a=m(a,h,f,i,n[r+6],15,-1560198380),i=m(i,a,h,f,n[r+13],21,1309151649),f=m(f,i,a,h,n[r+4],6,-145523070),h=m(h,f,i,a,n[r+11],10,-1120210379),a=m(a,h,f,i,n[r+2],15,718787259),i=m(i,a,h,f,n[r+9],21,-343485551),f=d(f,e),i=d(i,o),a=d(a,u),h=d(h,c);return[f,i,a,h]}
+        function a(n){var t,r="",e=32*n.length;for(t=0;t<e;t+=8)r+=String.fromCharCode(n[t>>5]>>>t%32&255);return r}
+        function h(n){var t,r=[];for(r[(n.length>>2)-1]=void 0,t=0;t<r.length;t+=1)r[t]=0;var e=8*n.length;for(t=0;t<e;t+=8)r[t>>5]|=(255&n.charCodeAt(t/8))<<t%32;return r}
+        function e(n){var t,r,e="0123456789abcdef",o="";for(r=0;r<n.length;r+=1)t=n.charCodeAt(r),o+=e.charAt(t>>>4&15)+e.charAt(15&t);return o}
+        function r(n){return unescape(encodeURIComponent(n))}
+        function o(n){return a(i(h(t=r(n)),8*t.length));var t}
+        function u(n,t){return function(n,t){var r,e,o=h(n),u=[],c=[];for(u[15]=c[15]=void 0,16<o.length&&(o=i(o,8*n.length)),r=0;r<16;r+=1)u[r]=909522486^o[r],c[r]=1549556828^o[r];return e=i(u.concat(h(t)),512+8*t.length),a(i(c.concat(e),640))}(r(n),r(t))}
+        function t(n,t,r){return t?r?u(t,n):e(u(t,n)):r?o(n):e(o(n))}
+        "function"==typeof define&&define.amd?define(function(){return t}):"object"==typeof module&&module.exports?module.exports=t:n.md5=t;
+    }(this);
+</script>
+
 
 <div id="gitalk-container"></div>
 
@@ -1134,68 +1055,60 @@ s-65,47,-65,47z M834 80H400000v40H845z'/></svg></span></span></span><span class=
     repo: 'CDJ-happier.github.io',
     owner: 'CDJ-happier',
     admin: ['CDJ-happier'],
-    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-    distractionFreeMode: false  // Facebook-like distraction free mode
+    id: md5(location.pathname),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false       // Facebook-like distraction free mode
   })
 
   gitalk.render('gitalk-container')
 
 </script>
 
-          
+            
 
-          
+            
         
 
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">The more disciplined, the more free</div>
+    <div class="social-container">
+        
+            
+                <a href="https://github.com/CDJ-happier" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+                <a href="https://twitter.com/cai_dongjun" target="_blank">
+                    <i class="fab fa-twitter gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme <a href="https://github.com/imhanjie/gridea-theme-pure" target="_blank">Pure</a>, Powered by <a
+                href="https://gridea.dev" target="_blank">Gridea</a> | <a href="https://CDJ-happier.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
 </div>
 
-      </div>
+<script>
+  hljs.highlightAll()
+</script>
+
     </div>
-
-    <script>
-      hljs.initHighlightingOnLoad()
-
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
-
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
-
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
-
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
-
-    </script>
-  </body>
+</div>
+</body>
 </html>
