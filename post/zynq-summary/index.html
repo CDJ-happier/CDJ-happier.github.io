@@ -1,0 +1,377 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>zynq学习总结 | DJCai</title>
+<link rel="shortcut icon" href="https://CDJ-happier.github.io/favicon.ico?v=1680696852108">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://CDJ-happier.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="zynq学习总结 | DJCai - Atom Feed" href="https://CDJ-happier.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="zynq学习总结
+zynq7000系列包含2个ARM Coretex A9和Artix 7系列的FPGA，分别称为PS、PL。
+ebaz4205是矿板，板上有xc7z010芯片，因此可以玩ARM和FPGA，而且便宜。
+如何改造原始矿板网上有..." />
+    <meta name="keywords" content="嵌入式Linux,嵌入式" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://CDJ-happier.github.io">
+  <img class="avatar" src="https://CDJ-happier.github.io/images/avatar.png?v=1680696852108" alt="">
+  </a>
+  <h1 class="site-title">
+    DJCai
+  </h1>
+  <p class="site-description">
+    The more disciplined, the more free
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="https://CDJ-happier.github.io" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://CDJ-happier.github.io/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              zynq学习总结
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-07-12
+              </span>
+              <span>
+                10 min read
+              </span>
+              
+                <a href="https://CDJ-happier.github.io/tag/KThzdm7dh/" class="post-tag">
+                  # 嵌入式Linux
+                </a>
+              
+                <a href="https://CDJ-happier.github.io/tag/BqSYYs6a7/" class="post-tag">
+                  # 嵌入式
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://th.bing.com/th/id/OIP.gxjrOXJKsrl2ydmBQfUrBwHaFj?w=252&amp;h=189&amp;c=7&amp;r=0&amp;o=5&amp;dpr=1.5&amp;pid=1.7" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="zynq学习总结">zynq学习总结</h1>
+<p>zynq7000系列包含2个ARM Coretex A9和Artix 7系列的FPGA，分别称为PS、PL。</p>
+<p>ebaz4205是矿板，板上有xc7z010芯片，因此可以玩ARM和FPGA，而且便宜。</p>
+<p><a href="http://www.hellofpga.com/index.php/2021/07/16/ebaz4205_source/">如何改造原始矿板网上有教程</a>，不多说。我在咸鱼买了补焊后的矿板、扩展版、调试器。PS和PL是独立的两部分，我买的矿板为PL端补焊了50MHz的晶振。</p>
+<h2 id="启动开发板-启动模式">启动开发板-启动模式</h2>
+<p>不同芯片都有不同的<strong>启动模式</strong>，就像原来学习的STM32、IMX6ULL，可以从不同设备进行启动。下图分别时STM32和IMX6ULL的启动模式选择：</p>
+<center class="half">
+    <img src="E:\Embed\fpga\EBAZ原始资料\imgassets\STM32启动模式选择.png" width="600"/>
+    <img src="E:\Embed\fpga\EBAZ原始资料\imgassets\IMX6ULL启动模式选择.png" width="600"/>
+</center>
+<p>ebaz4205矿板默认从NAND flash启动（自带了linux系统，不过需要密码），如果要改为SD卡启动，则需要将矿板背面的电阻R4258移动到R4277，其实就是改变启动默认（通过电平）。</p>
+<ol>
+<li>自带的linux系统需要登陆用户名和密码，网上有相应的教程删除登陆用户名，但是我没成功（网络配置没成功，导致tftp不能用）；</li>
+<li>也可以通过自己做uboot、kernel、rootfs，然后烧写到SD卡中，调整矿板为从SD卡启动，但是需要改焊电阻，手上没工具，所以暂时失败；</li>
+<li>最后是通过jtag调试器，可以正常下载程序；</li>
+</ol>
+<p>上面方式1删除登陆用户名的基本方法是：读出NAND flash中的镜像，挂载镜像到本机，修改镜像，写回到NAND flash。具体过程如下：</p>
+<ol>
+<li>
+<p>开发板上电3s之内通过输入d（串口）可进入uboot；</p>
+</li>
+<li>
+<p>设置ipaddr、serverip环境变量，就是将自己（ebaz4205）设置为tftp客户端；</p>
+</li>
+<li>
+<p>通过nand命令读出NAND flash中的镜像文件，包括uboot、kernel、rootfs等；</p>
+</li>
+<li>
+<p>通过tftp将镜像文件保存到tftp server的tftp目录去；</p>
+</li>
+<li>
+<p>通过xxx命令挂载得到的rootfs；</p>
+</li>
+<li>
+<p>修改挂载的rootfs中的某些文件，就是去除登陆密码，还可以关掉挖矿程序；</p>
+</li>
+<li>
+<p>将修改后的rootfs写回到NAND flash；</p>
+</li>
+<li>
+<p><a href="https://www.codenong.com/cs106175366/">参考链接-通过修改rootfs重置密码</a>，但是我网络配置没成功，失败；</p>
+</li>
+<li>
+<p>[突然找到可直接重置密码的命令！！！！！TODO](<a href="https://github.com/xjtuecho/EBAZ4205">xjtuecho/EBAZ4205: A 5$ Xilinx ZYNQ development board. (github.com)</a>)，进入uboot，然后输入：</p>
+<pre><code class="language-shell">setenv nandboot &quot;echo Copying Linux from NAND flash to RAM... &amp;&amp; nand info &amp;&amp; run nandroot;nand read 0x100000 0x2220000 0x300000 &amp;&amp; fpga loadb 0 0x100000 0x300000 &amp;&amp; nand read ${kernel_load_address} 0x300000 ${kernel_size} &amp;&amp; nand read ${devicetree_load_address} 0x800000 ${devicetree_size}&quot;
+run nandboot
+setenv bootargs 'console=ttyPS0,115200 root=/dev/mtdblock6 rootfstype=jffs2 noinitrd rw rootwait reboot=cold,hard emergency init=/bin/sh'
+bootm ${kernel_load_address} - ${devicetree_load_address} init=/bin/sh
+passwd
+
+还有关闭BTC挖矿程序：
+mv /etc/rcS.d/S95cgminer.sh /etc/rcS.d/K95cgminer.sh
+reboot
+</code></pre>
+</li>
+</ol>
+<p>上面方式2的过程同构建IMX6UL的镜像：</p>
+<ol>
+<li>
+<p>uboot、kernel、rootfs等构建，在网上找到已找到构建好的镜像；</p>
+</li>
+<li>
+<p>后续过程如下：</p>
+<pre><code class="language-shell">谢谢楼主，板子跑起来了。
+发个新手步骤
+先把SD卡分两个区 第一个FAT 第二个 ext4，需要在linux下操作（VM虚拟机装的Linux的Gparted分区工具），  都是最常见的分区方法，FAT分个100M就够
+压缩包拷贝到linux虚拟机里，用命令，
+用su，密码，root账号命令行登陆，解压文件，保证权限正确
+
+tar -xvf /bootfat.tar.bz2 -C /mnt  mnt为你挂载tf卡第一个fat32分区的路径
+tar -xvf /rootfs.tar.gz -C /mnt  mnt为你挂载tf卡第二个ext4分区的路径
+
+插到板子上，然后启动就OK。
+默认用户名osrc 密码root  root 密码也是root
+需要先创建root账号才可以用root登陆,sudo adduser root
+先设置ROOT用户sudo passwd root 再 su
+</code></pre>
+</li>
+<li>
+<p>不过也可以通过Xilinx提供的petalinux进行构建更加方便；</p>
+</li>
+</ol>
+<h2 id="pl部分的开发">PL部分的开发</h2>
+<p>这部分类似于毕业实习时前几天的操作。</p>
+<p>创建Vivado工程、选择芯片或开发板、创建设计源文件、（创建仿真文件）、创建约束文件（可以可视化配置-schematic）、综合仿真、生成bitstream、下载。</p>
+<p>约束文件：比如将代码中的clk port约束到N18接口，leds port约束到 E20.</p>
+<p>ebaz4205的PL端本身是没有时钟源的，需要补焊，晶振是与N18相连的，即N18会产生50MHz的频率。</p>
+<p>PL部分相比于PS，少了创建zynq，并导出硬件信息到SDK中进行开发。</p>
+<p><a href="http://www.hellofpga.com/index.php/2021/07/23/ebaz02ledwater/">参考链接-利用PL资源实现流水灯</a></p>
+<p><a href="http://www.hellofpga.com/index.php/2021/07/24/zbaz_pl_hdmi_test/">参考链接-利用PL资源实现HDMI</a></p>
+<h2 id="ps部分的开发">PS部分的开发</h2>
+<p>在PL部分的基础上，添加zynq IP核，并导出硬件信息到SDK并进行开发。</p>
+<p>Vivado中通过zynq processing system创建ARM核，配置DDR，以及其它非必须操作（比如配置串口、spi等，这部分可以使用MIO资源，也可以使用EMIO，甚至可以利用FPGA资源生成对应的硬件电路并使用）。然后创建HDL，生成bitstream、导出硬件描述信息、启动SDK。在SDK创建工程，进行ARM部分的（逻辑）开发，可以利用自带的一些开发examples。</p>
+<h2 id="ps-pl的联动-axi">PS、PL的联动-AXI</h2>
+<p>方式比较多，目前所了解的通过EMIO、AXI GPIO IP核、创建AXI的IP核并通过reg控制。</p>
+<p><a href="http://www.hellofpga.com/index.php/2021/08/07/zynq_ps_clk_to_pl/">参考链接-PL端利用PS端的时钟</a>，就是将PS端的时钟引脚（<code>M_AXI_GP0_ACLK</code>）连接到PL端的时钟输入引脚（<code>FCLK_CLK0</code>），<code>FCLK_CLK0</code>内部其实有锁相环PLL，可以配置<code>FCLK_CLK0</code>的输出频率。</p>
+<p><img src="https://CDJ-happier.github.io/post-images/1680696558826.png" alt="" loading="lazy"><br>
+然后，如果自己编写的LED IP核需要时钟，则直接连接到<code>FCLK_CLK0</code>。<br>
+<img src="https://CDJ-happier.github.io/post-images/1680696574650.png" alt="" loading="lazy"></p>
+<h3 id="mio">MIO</h3>
+<p>PS部分的原生GPIO，就像STM32中的GPIO、IMX6ULL的GPIO，不存在与PL的联动。</p>
+<p>如何控制呢？有没有实例？和EMIO一起说（其实是可以查看SDK中的官方例程）。</p>
+<p><a href="http://www.hellofpga.com/index.php/2022/04/08/zynq_ps_spi_lcd_blackboard/">参考链接-利用PS中的硬件SPI控制LCD</a></p>
+<h3 id="emio">EMIO</h3>
+<p>资源还是PS部分的，只不过通过AXI将引脚引到PL端，再引到PL端的外设上面。占用PL端的资源很少，就是一些连接线。在配置界面中的IO peripheral可以自由配置，配置之后就<code>Make Eternal</code>，并生成HDL文件，然后就可以看到相关的管脚，并可以在SDK中直接进行编程控制。</p>
+<h3 id="axi-gpio-ip核">AXI GPIO IP核</h3>
+<p>AXI GPIO是Xilinx提供的GPIO IP核，使用FPGA的逻辑资源生成的GPIO硬件电路，占用较多的PL端的资源。<a href="http://www.hellofpga.com/index.php/2021/08/02/zynq_ps_to_pl_led_test/">参考链接-通过AXI GPIO实现PS点亮PL端的led灯</a>。</p>
+<p>基本原理是：</p>
+<ol>
+<li>添加zynq processing system和AXI GPIO IP核；</li>
+<li>配置zynq的DDR、AXI GPIO的引脚（输入还是输出？双channel？等）；</li>
+<li><code>run block automation</code>，此时会<strong>自动</strong>添加AXI相关通信模块，以便PS和PL的通信；</li>
+<li>将AXI GPIO的引脚<code>Make Eternal</code>再重命名为<code>LEDS</code>；</li>
+<li>生成bitstream、导入到SDK，在后续SDK中就可以直接操作<code>LEDS</code>进行开发（实际上是通过step3中自动添加的AXI通信模块实现的）；</li>
+</ol>
+<h3 id="创建axi类型的ip核">创建AXI类型的IP核</h3>
+<p>创建AXI类型IP核通过<code>reg</code>来实现PS控制PL：创建AXI Lite接口，会有<code>slv_reg0</code>变量，这个变量就是PS和PL进行通信的桥梁。<a href="http://www.hellofpga.com/index.php/2022/02/16/zynq_ps_to_pl_reg/">参考链接-ZYNQ端PS访问PL端的reg寄存器，实现PS与PL数据交互</a>，基本过程如下：</p>
+<ol>
+<li>在tools中创建IP核，并选择AXI类型的IP核；</li>
+<li>配置AXI IP核，主要是添加几个<code>reg</code>，每个<code>reg</code>都是32bit；</li>
+<li>编辑AXI IP核，就是在生成的模板上加入自己的Verilog代码（通过<code>slv_reg0</code>的值来执行相应的动作，比如点亮led，而<code>slv_reg0</code>则在SDK中直接控制，即通过<code>slv_reg0</code>作为桥梁，实现PS对PL端的LED的控制），此处看具体示例；</li>
+<li>在block desgin中添加已修改的AXI IP核，然后生成bitsream，导出到SDK中进行开发；</li>
+</ol>
+<p>那如何实现AXI类型的IP核、AXI GPIO一起开发（如何连接？），目的如下：</p>
+<ol>
+<li>PS端有按键，通过按键在SDK代码中控制<code>slv_reg0</code>；===（PS端的按键如何使用，应该是在IO peripheral中使用MIO，然后会有相应的port暴露出来）</li>
+<li>如何在AXI类型IP核的Verilog代码中通过<code>slv_reg0</code>控制AXI GPIO？；（主要疑惑在这一步）</li>
+<li>即PS端的按键在SDK中控制<code>slv_reg0</code>，<code>slv_reg0</code>在Verilog代码中控制AXI GPIO；</li>
+</ol>
+<h2 id="mio-emio-axi-gpio的理解">MIO、EMIO、AXI GPIO的理解</h2>
+<p><a href="http://www.hellofpga.com/index.php/2021/08/08/zynq_emio_mio_axi_gpio/">参考链接-MIO、EMIO、AXI GPIO的理解</a></p>
+<h2 id="如何保证是ps或pl单独运行">如何保证是PS或PL单独运行</h2>
+<p>PL单独运行：Vivado中生成bitstream后下载到开发板，不包含zynq IP核</p>
+<p>PS部分：Vivado中生成zynq IP核，并导出到SDK中进行开发，最后在SDK中下载（bitstream下载，arm部分代码的下载。PL部分没变化时，bitstream可以不用重复下载）。</p>
+<h2 id="疑惑">疑惑</h2>
+<h3 id="用硬件spi驱动lcd的引脚约束问题">用硬件SPI驱动LCD的引脚约束问题</h3>
+<p>扩展板上的LCD是连接到PL端的。</p>
+<p><a href="http://www.hellofpga.com/index.php/2022/04/08/zynq_io_lcd_black_board/">参考链接-利用PS的IO资源模拟SPI驱动LCD</a>：IO资源使用的是EMIO，位宽为5（spi相关引脚），最后需要引脚约束（这我能明白，因为EMIO本身就是处于PS与PL之间的部分）。</p>
+<figure data-type="image" tabindex="1"><img src="https://CDJ-happier.github.io/post-images/1680696679801.png" alt="" loading="lazy"></figure>
+<p><a href="http://www.hellofpga.com/index.php/2022/04/08/zynq_ps_spi_lcd_blackboard/">参考链接-利用PS的硬件SPI驱动LCD</a>：硬件SPI使用的是MIO，在PS端；而LCD在PL端。硬件SPI是接在PS端的，为什么可以控制PL端的LCD？按道理MIO不是只能控制在PS端的外设吗？MIO又没有接到PL端。</p>
+<p>或者这样问：<strong>为什么MIO也需要进行引脚约束？</strong><br>
+<img src="https://CDJ-happier.github.io/post-images/1680696620422.png" alt="" loading="lazy"></p>
+<p>**解答：**MIO和EMIO在使用上几乎一样，则是EMIO接到FPGA/PL端更加灵活。<br>
+<img src="https://CDJ-happier.github.io/post-images/1680696630106.png" alt="" loading="lazy"></p>
+<ol>
+<li>如果上图<code>SPI0</code>选择的是<code>MIO</code>，则硬件SPI的引脚是在PS端，且一般是固定的，spi类型的LCD屏幕的引脚需要对应详解，PS端spi引脚是那些可以查阅相关手册；</li>
+<li>如果上图<code>SPI0</code>选择的是<code>EMIO</code>（上图就是），则硬件SPI的引脚会通过<code>EMIO</code>引出PL端，并且是不固定的，需要自己进行约束，这也是EMIO更灵活的原因；</li>
+<li>上面1、2都是在说硬件SPI，也可用IO模拟SPI协议（自己编写程序模拟spi），也分为使用MIO和EMIO，道理一样；</li>
+</ol>
+<p>end</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#zynq%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93">zynq学习总结</a>
+<ul>
+<li><a href="#%E5%90%AF%E5%8A%A8%E5%BC%80%E5%8F%91%E6%9D%BF-%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F">启动开发板-启动模式</a></li>
+<li><a href="#pl%E9%83%A8%E5%88%86%E7%9A%84%E5%BC%80%E5%8F%91">PL部分的开发</a></li>
+<li><a href="#ps%E9%83%A8%E5%88%86%E7%9A%84%E5%BC%80%E5%8F%91">PS部分的开发</a></li>
+<li><a href="#ps-pl%E7%9A%84%E8%81%94%E5%8A%A8-axi">PS、PL的联动-AXI</a>
+<ul>
+<li><a href="#mio">MIO</a></li>
+<li><a href="#emio">EMIO</a></li>
+<li><a href="#axi-gpio-ip%E6%A0%B8">AXI GPIO IP核</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BAaxi%E7%B1%BB%E5%9E%8B%E7%9A%84ip%E6%A0%B8">创建AXI类型的IP核</a></li>
+</ul>
+</li>
+<li><a href="#mio-emio-axi-gpio%E7%9A%84%E7%90%86%E8%A7%A3">MIO、EMIO、AXI GPIO的理解</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%98%AFps%E6%88%96pl%E5%8D%95%E7%8B%AC%E8%BF%90%E8%A1%8C">如何保证是PS或PL单独运行</a></li>
+<li><a href="#%E7%96%91%E6%83%91">疑惑</a>
+<ul>
+<li><a href="#%E7%94%A8%E7%A1%AC%E4%BB%B6spi%E9%A9%B1%E5%8A%A8lcd%E7%9A%84%E5%BC%95%E8%84%9A%E7%BA%A6%E6%9D%9F%E9%97%AE%E9%A2%98">用硬件SPI驱动LCD的引脚约束问题</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://CDJ-happier.github.io/post/pytorch-ru-men-jiao-cheng/">
+              <h3 class="post-title">
+                pytorch入门教程
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '977674602169f3a5fb6d',
+    clientSecret: '63d678ad300f3ba33e7a53984879ee627e642785',
+    repo: 'CDJ-happier.github.io',
+    owner: 'CDJ-happier',
+    admin: ['CDJ-happier'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://CDJ-happier.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
