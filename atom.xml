@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://CDJ-happier.github.io</id>
     <title>Welcome to CDJ&apos;s Page</title>
-    <updated>2023-04-11T14:09:15.236Z</updated>
+    <updated>2023-04-15T06:59:28.181Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://CDJ-happier.github.io"/>
     <link rel="self" href="https://CDJ-happier.github.io/atom.xml"/>
@@ -10,6 +10,17 @@
     <logo>https://CDJ-happier.github.io/images/avatar.png</logo>
     <icon>https://CDJ-happier.github.io/favicon.ico</icon>
     <rights>All rights reserved 2023, Welcome to CDJ&apos;s Page</rights>
+    <entry>
+        <title type="html"><![CDATA[用深度感知优化提升神经辐射场]]></title>
+        <id>https://CDJ-happier.github.io/post/SfMNeRF/</id>
+        <link href="https://CDJ-happier.github.io/post/SfMNeRF/">
+        </link>
+        <updated>2023-04-14T06:34:36.000Z</updated>
+        <summary type="html"><![CDATA[<p>本文要解决的问题是由于NeRF对geometry的重建效果不好，从而导致视角合成质量差的情况。geometry效果不好有多种情况，如输入视角少sparsr input views、数据/视角本身问题等。本文不是解决稀疏输入，应该属于后者，本文利用多种损失约束geometry，主要是MVS。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>本文要解决的问题是由于NeRF对geometry的重建效果不好，从而导致视角合成质量差的情况。geometry效果不好有多种情况，如输入视角少sparsr input views、数据/视角本身问题等。本文不是解决稀疏输入，应该属于后者，本文利用多种损失约束geometry，主要是MVS。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[HALO-利用低频NeRF实现少样本的视角合成]]></title>
         <id>https://CDJ-happier.github.io/post/HALO-NeRF/</id>
@@ -111,21 +122,6 @@
         <summary type="html"><![CDATA[<p>K个sampled LF(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>p</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">p_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)，PSVs设置为T个(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>d</mi><mi>T</mi></msub></mrow><annotation encoding="application/x-tex">d_T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)，则对每个novel view来说会构建<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>K</mi><mo>∗</mo></msup><mi>T</mi></mrow><annotation encoding="application/x-tex">K^*T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.688696em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.688696em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>个PSVs，然后通过下图中的Disparity Estimation会得到novel view对应的1个Disparity和K个confidence map；K个sampled LF + 1个Disparity得到K个warped LF；K个confidence map与K个warped LF融合得到intermediate LF，经过refine(pseudo 4D convolution + residual)得到novel view。</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>K个sampled LF(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>p</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">p_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)，PSVs设置为T个(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>d</mi><mi>T</mi></msub></mrow><annotation encoding="application/x-tex">d_T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.84444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.13889em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>)，则对每个novel view来说会构建<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>K</mi><mo>∗</mo></msup><mi>T</mi></mrow><annotation encoding="application/x-tex">K^*T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.688696em;vertical-align:0em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.688696em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">∗</span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span>个PSVs，然后通过下图中的Disparity Estimation会得到novel view对应的1个Disparity和K个confidence map；K个sampled LF + 1个Disparity得到K个warped LF；K个confidence map与K个warped LF融合得到intermediate LF，经过refine(pseudo 4D convolution + residual)得到novel view。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Learning Light Field Angular Super-Resolution via a Geometry-Aware Network]]></title>
-        <id>https://CDJ-happier.github.io/post/learning-light-field-angular-super-resolution-via-a-geometry-aware-network/</id>
-        <link href="https://CDJ-happier.github.io/post/learning-light-field-angular-super-resolution-via-a-geometry-aware-network/">
-        </link>
-        <updated>2022-10-27T08:12:06.000Z</updated>
-        <summary type="html"><![CDATA[<p>​						         Jing Jin, Junhui Hou, Hui Yuan, Sam Kwong</p>
-<p>​					        City University of Hong Kong, Shandong University</p>
-<p>​											        AAAI	2020</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>​						         Jing Jin, Junhui Hou, Hui Yuan, Sam Kwong</p>
-<p>​					        City University of Hong Kong, Shandong University</p>
-<p>​											        AAAI	2020</p>
 ]]></content>
     </entry>
 </feed>
