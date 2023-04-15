@@ -246,6 +246,13 @@ p a[href^="http"] {
   text-decoration-thickness: 2px;
   text-underline-offset: 5px;
 }
+/* 增加对列表中的超链接修改蓝色下划线，失败，会引起其它元素变化 */
+/*ul > li > a[href^="http"] {
+  text-decoration-line: underline;
+  text-decoration-color: blue;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}*/
 
 @media (max-width: 961px) {
   .drawer-box {
