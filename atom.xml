@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://CDJ-happier.github.io</id>
     <title>Welcome to CDJ&apos;s Page</title>
-    <updated>2023-04-15T07:53:47.336Z</updated>
+    <updated>2023-04-21T13:40:36.779Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://CDJ-happier.github.io"/>
     <link rel="self" href="https://CDJ-happier.github.io/atom.xml"/>
@@ -10,6 +10,17 @@
     <logo>https://CDJ-happier.github.io/images/avatar.png</logo>
     <icon>https://CDJ-happier.github.io/favicon.ico</icon>
     <rights>All rights reserved 2023, Welcome to CDJ&apos;s Page</rights>
+    <entry>
+        <title type="html"><![CDATA[FreeNeRF：使用频率正则化提升稀疏视角渲染结果]]></title>
+        <id>https://CDJ-happier.github.io/post/FreeNeRF/</id>
+        <link href="https://CDJ-happier.github.io/post/FreeNeRF/">
+        </link>
+        <updated>2023-04-19T13:26:09.000Z</updated>
+        <summary type="html"><![CDATA[<p>这篇文章所要解决的问题是稀疏视角输入时，如何提升NeRF的渲染质量。本文和HALO这篇文章所要解决的问题、解决的大致方向非常类似，只不过HALO使用了低频NeRF作为监督，而本文更加优雅，在训练过程中逐渐增加位置编码的高频分量。某种程度上来说，本文和HALO的解决思路是一样的，只不过具体实现不一样。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>这篇文章所要解决的问题是稀疏视角输入时，如何提升NeRF的渲染质量。本文和HALO这篇文章所要解决的问题、解决的大致方向非常类似，只不过HALO使用了低频NeRF作为监督，而本文更加优雅，在训练过程中逐渐增加位置编码的高频分量。某种程度上来说，本文和HALO的解决思路是一样的，只不过具体实现不一样。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[SfMNeRF-用深度感知优化提升神经辐射场]]></title>
         <id>https://CDJ-happier.github.io/post/SfMNeRF/</id>
@@ -109,19 +120,6 @@
         <summary type="html"><![CDATA[<p>主要是用cone tracing代替ray tracing，消除不确定性。使用多元高斯函数表示一段截头圆锥，并提出IPE(Integrated Positional Encoding)替代原始NeRF中的PE。</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>主要是用cone tracing代替ray tracing，消除不确定性。使用多元高斯函数表示一段截头圆锥，并提出IPE(Integrated Positional Encoding)替代原始NeRF中的PE。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[KeypointNeRF：3D head的重建]]></title>
-        <id>https://CDJ-happier.github.io/post/keypointnerf-3Dhead-reconstruction/</id>
-        <link href="https://CDJ-happier.github.io/post/keypointnerf-3Dhead-reconstruction/">
-        </link>
-        <updated>2022-11-23T08:23:44.000Z</updated>
-        <summary type="html"><![CDATA[<p>KeypointNeRF: Generalizing Image-based Volumetric Avatars using Relative Spatial Encoding of Keypoints<br>
-通过用3D关键点对query point进行相对空间编码，解决全局编码对细节重建不好的缺点；以及使用pixel-aligned feature实现细节重建。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>KeypointNeRF: Generalizing Image-based Volumetric Avatars using Relative Spatial Encoding of Keypoints<br>
-通过用3D关键点对query point进行相对空间编码，解决全局编码对细节重建不好的缺点；以及使用pixel-aligned feature实现细节重建。</p>
 ]]></content>
     </entry>
 </feed>
