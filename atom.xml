@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://CDJ-happier.github.io</id>
     <title>Welcome to CDJ&apos;s Page</title>
-    <updated>2023-04-28T07:11:17.535Z</updated>
+    <updated>2023-05-05T11:27:31.122Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://CDJ-happier.github.io"/>
     <link rel="self" href="https://CDJ-happier.github.io/atom.xml"/>
@@ -10,6 +10,17 @@
     <logo>https://CDJ-happier.github.io/images/avatar.png</logo>
     <icon>https://CDJ-happier.github.io/favicon.ico</icon>
     <rights>All rights reserved 2023, Welcome to CDJ&apos;s Page</rights>
+    <entry>
+        <title type="html"><![CDATA[稀疏NeRF：使用stereo pairs进行新视角渲染]]></title>
+        <id>https://CDJ-happier.github.io/post/wide-baseline-stereo-pairs-NeRF/</id>
+        <link href="https://CDJ-happier.github.io/post/wide-baseline-stereo-pairs-NeRF/">
+        </link>
+        <updated>2023-05-04T11:17:44.000Z</updated>
+        <summary type="html"><![CDATA[<p>本文的稀疏是指仅2个视角，且这两个视角只有很少的重叠区域。使用CNN(high resolution) + Self-Attention(low resolution)的形式得到2个视角各自的像素对齐特征；提出极线采样策略优化像素对齐特征下的采样效果，并使用多视角特征匹配进一步提升采样质量；使用cross-attention得到代表代理几何的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>α</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\alpha_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, 然后通过一个较小的MLP预测颜色。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>本文的稀疏是指仅2个视角，且这两个视角只有很少的重叠区域。使用CNN(high resolution) + Self-Attention(low resolution)的形式得到2个视角各自的像素对齐特征；提出极线采样策略优化像素对齐特征下的采样效果，并使用多视角特征匹配进一步提升采样质量；使用cross-attention得到代表代理几何的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>α</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\alpha_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, 然后通过一个较小的MLP预测颜色。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[HeadNeRF：基于NeRF的参数化人脸重建]]></title>
         <id>https://CDJ-happier.github.io/post/HeadNeRF/</id>
@@ -107,19 +118,6 @@
         <summary type="html"><![CDATA[<p>本文如果没有可见性<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>v</mi><mrow><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">v_{i,j}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>向量，那么就是最基本的IBR渲染，即将图像的特征输入NeRF进行学习。但本文还额外增加了一个可见性向量，用于表示当前input view上的点对target view的重要性。</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>本文如果没有可见性<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>v</mi><mrow><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">v_{i,j}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.716668em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.311664em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathdefault mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span></span></span></span>向量，那么就是最基本的IBR渲染，即将图像的特征输入NeRF进行学习。但本文还额外增加了一个可见性向量，用于表示当前input view上的点对target view的重要性。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Light Field Neural Rendering]]></title>
-        <id>https://CDJ-happier.github.io/post/light-field-neural-rendering/</id>
-        <link href="https://CDJ-happier.github.io/post/light-field-neural-rendering/">
-        </link>
-        <updated>2022-11-30T08:33:14.000Z</updated>
-        <summary type="html"><![CDATA[<p>CVPR 2022 best paper finalist<br>
-本文与IBRNet很相似，基于IBR（但是加入了对极几何约束）。另外，也是使用了类似于像素对其特征进行融合，只不过各个point&amp;view融合的权重是由self-attention计算的。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>CVPR 2022 best paper finalist<br>
-本文与IBRNet很相似，基于IBR（但是加入了对极几何约束）。另外，也是使用了类似于像素对其特征进行融合，只不过各个point&amp;view融合的权重是由self-attention计算的。</p>
 ]]></content>
     </entry>
 </feed>
