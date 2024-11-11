@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://CDJ-happier.github.io</id>
+    <title>Welcome to CDJ&apos;s Page</title>
+    <updated>2024-11-11T01:52:20.815Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://CDJ-happier.github.io"/>
+    <link rel="self" href="https://CDJ-happier.github.io/atom.xml"/>
+    <subtitle>&lt;b&gt;The more disciplined, the more free&lt;/b&gt;</subtitle>
+    <logo>https://CDJ-happier.github.io/images/avatar.png</logo>
+    <icon>https://CDJ-happier.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2024, Welcome to CDJ&apos;s Page</rights>
+    <entry>
+        <title type="html"><![CDATA[无需修改即可让你的网站具有认证功能]]></title>
+        <id>https://CDJ-happier.github.io/post/wu-xu-geng-gai-ji-ke-rang-ni-de-wang-zhan-ju-you-ren-zheng-gong-neng/</id>
+        <link href="https://CDJ-happier.github.io/post/wu-xu-geng-gai-ji-ke-rang-ni-de-wang-zhan-ju-you-ren-zheng-gong-neng/">
+        </link>
+        <updated>2024-11-10T06:43:53.000Z</updated>
+        <summary type="html"><![CDATA[<p>需求：已有一个content website，域名为easy-test。如何在不修改源码的情况下增加认证功能？<br>
+方案：没有什么是加一个中间层不能解决的，如果不行，那就再加一层。<br>
+原本：浏览器→easy-test。用户在浏览器中直接访问网站，网站没有认证功能。<br>
+现在：浏览器→oauth2-proxy→easy-test。首先将网站配置为仅允许特定请求访问，比如只允许来自oauth2的请求访问。现在用户通过oauth2进行间接访问，同时oauth2利用三方API实现认证（如Google账号，WeChat等），认证通过后转发到easy-test。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>需求：已有一个content website，域名为easy-test。如何在不修改源码的情况下增加认证功能？<br>
+方案：没有什么是加一个中间层不能解决的，如果不行，那就再加一层。<br>
+原本：浏览器→easy-test。用户在浏览器中直接访问网站，网站没有认证功能。<br>
+现在：浏览器→oauth2-proxy→easy-test。首先将网站配置为仅允许特定请求访问，比如只允许来自oauth2的请求访问。现在用户通过oauth2进行间接访问，同时oauth2利用三方API实现认证（如Google账号，WeChat等），认证通过后转发到easy-test。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[面试记录 - bd]]></title>
+        <id>https://CDJ-happier.github.io/post/mian-shi-ji-lu-bd/</id>
+        <link href="https://CDJ-happier.github.io/post/mian-shi-ji-lu-bd/">
+        </link>
+        <updated>2024-09-26T12:37:45.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[面试题 - 设计数据结构高效地获取用户积分排名]]></title>
+        <id>https://CDJ-happier.github.io/post/mian-shi-ti/</id>
+        <link href="https://CDJ-happier.github.io/post/mian-shi-ti/">
+        </link>
+        <updated>2024-09-21T12:35:09.000Z</updated>
+        <summary type="html"><![CDATA[<p>有一个社交网站有2000万用户，用户的某些行为可以获得积分，比如登录+5分、评论+3分。现需设计一种合适的数据结构或算法，实现高效地更改用户积分，查询用户积分排名。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>有一个社交网站有2000万用户，用户的某些行为可以获得积分，比如登录+5分、评论+3分。现需设计一种合适的数据结构或算法，实现高效地更改用户积分，查询用户积分排名。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[稀疏NeRF：使用stereo pairs进行新视角渲染]]></title>
+        <id>https://CDJ-happier.github.io/post/wide-baseline-stereo-pairs-NeRF/</id>
+        <link href="https://CDJ-happier.github.io/post/wide-baseline-stereo-pairs-NeRF/">
+        </link>
+        <updated>2023-05-04T11:17:44.000Z</updated>
+        <summary type="html"><![CDATA[<p>本文的稀疏是指仅2个视角，且这两个视角只有很少的重叠区域。使用CNN(high resolution) + Self-Attention(low resolution)的形式得到2个视角各自的像素对齐特征；提出极线采样策略优化像素对齐特征下的采样效果，并使用多视角特征匹配进一步提升采样质量；使用cross-attention得到代表代理几何的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>α</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\alpha_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, 然后通过一个较小的MLP预测颜色。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>本文的稀疏是指仅2个视角，且这两个视角只有很少的重叠区域。使用CNN(high resolution) + Self-Attention(low resolution)的形式得到2个视角各自的像素对齐特征；提出极线采样策略优化像素对齐特征下的采样效果，并使用多视角特征匹配进一步提升采样质量；使用cross-attention得到代表代理几何的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>α</mi><mi>k</mi></msub></mrow><annotation encoding="application/x-tex">\alpha_k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.0037em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, 然后通过一个较小的MLP预测颜色。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[HeadNeRF：基于NeRF的参数化人脸重建]]></title>
+        <id>https://CDJ-happier.github.io/post/HeadNeRF/</id>
+        <link href="https://CDJ-happier.github.io/post/HeadNeRF/">
+        </link>
+        <updated>2023-04-25T06:57:14.000Z</updated>
+        <summary type="html"><![CDATA[<p>HeadNeRF利用NeRF的高保真和多视图一致性解决传统3DMM对人脸细节重建效果差(如头发、耳朵等)，以及解决用GAN结合3DMM能部分程度增加细节但无法保证多视图一致性的缺点。NeRF的一大缺点是速度慢，因此本文提出2D neural rendering <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>π</mi><mi mathvariant="normal">Φ</mi></msub></mrow><annotation encoding="application/x-tex">\pi_{\Phi}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">Φ</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，本质就是不直接预测颜色，而是通过体渲染得到较小的特征图<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mo>∈</mo><msup><mi>R</mi><mrow><mn>256</mn><mo>×</mo><mn>32</mn><mo>×</mo><mn>32</mn></mrow></msup></mrow><annotation encoding="application/x-tex">F{\in}R^{256{\times}32{\times}32}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.853208em;vertical-align:-0.0391em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord"><span class="mrel">∈</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="mord mtight">5</span><span class="mord mtight">6</span><span class="mord mtight"><span class="mord mtight">×</span></span><span class="mord mtight">3</span><span class="mord mtight">2</span><span class="mord mtight"><span class="mord mtight">×</span></span><span class="mord mtight">3</span><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span>，再利用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>π</mi><mi mathvariant="normal">Φ</mi></msub></mrow><annotation encoding="application/x-tex">\pi_{\Phi}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">Φ</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>渲染得到高保真人脸图像。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>HeadNeRF利用NeRF的高保真和多视图一致性解决传统3DMM对人脸细节重建效果差(如头发、耳朵等)，以及解决用GAN结合3DMM能部分程度增加细节但无法保证多视图一致性的缺点。NeRF的一大缺点是速度慢，因此本文提出2D neural rendering <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>π</mi><mi mathvariant="normal">Φ</mi></msub></mrow><annotation encoding="application/x-tex">\pi_{\Phi}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">Φ</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，本质就是不直接预测颜色，而是通过体渲染得到较小的特征图<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mo>∈</mo><msup><mi>R</mi><mrow><mn>256</mn><mo>×</mo><mn>32</mn><mo>×</mo><mn>32</mn></mrow></msup></mrow><annotation encoding="application/x-tex">F{\in}R^{256{\times}32{\times}32}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.853208em;vertical-align:-0.0391em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord"><span class="mrel">∈</span></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="mord mtight">5</span><span class="mord mtight">6</span><span class="mord mtight"><span class="mord mtight">×</span></span><span class="mord mtight">3</span><span class="mord mtight">2</span><span class="mord mtight"><span class="mord mtight">×</span></span><span class="mord mtight">3</span><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span>，再利用<span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>π</mi><mi mathvariant="normal">Φ</mi></msub></mrow><annotation encoding="application/x-tex">\pi_{\Phi}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.32833099999999993em;"><span style="top:-2.5500000000000003em;margin-left:-0.03588em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">Φ</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>渲染得到高保真人脸图像。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[FreeNeRF：使用频率正则化提升稀疏视角渲染结果]]></title>
+        <id>https://CDJ-happier.github.io/post/FreeNeRF/</id>
+        <link href="https://CDJ-happier.github.io/post/FreeNeRF/">
+        </link>
+        <updated>2023-04-19T13:26:09.000Z</updated>
+        <summary type="html"><![CDATA[<p>这篇文章所要解决的问题是稀疏视角输入时，如何提升NeRF的渲染质量。本文和HALO这篇文章所要解决的问题、解决的大致方向非常类似，只不过HALO使用了低频NeRF作为监督，而本文更加优雅，在训练过程中逐渐增加位置编码的高频分量。某种程度上来说，本文和HALO的解决思路是一样的，只不过具体实现不一样。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>这篇文章所要解决的问题是稀疏视角输入时，如何提升NeRF的渲染质量。本文和HALO这篇文章所要解决的问题、解决的大致方向非常类似，只不过HALO使用了低频NeRF作为监督，而本文更加优雅，在训练过程中逐渐增加位置编码的高频分量。某种程度上来说，本文和HALO的解决思路是一样的，只不过具体实现不一样。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[SfMNeRF-用深度感知优化提升神经辐射场]]></title>
+        <id>https://CDJ-happier.github.io/post/SfMNeRF/</id>
+        <link href="https://CDJ-happier.github.io/post/SfMNeRF/">
+        </link>
+        <updated>2023-04-14T06:34:36.000Z</updated>
+        <summary type="html"><![CDATA[<p>本文要解决的问题是由于NeRF对geometry的重建效果不好，从而导致视角合成质量差的情况。geometry效果不好有多种情况，如输入视角少sparsr input views、数据/视角本身问题等。本文不是解决稀疏输入，应该属于后者，本文利用多种损失约束geometry，主要是MVS。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>本文要解决的问题是由于NeRF对geometry的重建效果不好，从而导致视角合成质量差的情况。geometry效果不好有多种情况，如输入视角少sparsr input views、数据/视角本身问题等。本文不是解决稀疏输入，应该属于后者，本文利用多种损失约束geometry，主要是MVS。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[HALO-利用低频NeRF实现少样本的视角合成]]></title>
+        <id>https://CDJ-happier.github.io/post/HALO-NeRF/</id>
+        <link href="https://CDJ-happier.github.io/post/HALO-NeRF/">
+        </link>
+        <updated>2023-04-06T12:51:46.000Z</updated>
+        <summary type="html"><![CDATA[<p>本文利用低频NeRF所提供的geometry prior对稀疏视角输入时的高频NeRF进行约束，解决稀疏视角时欠约束而导致高频NeRF的geometry出现噪点/局外点的情况，具体是通过两个loss，其中一个是empty space loss。另外，将LFN(Light Field Network)引入作为中间模型，对Hi-NeRF的refinement过程加速，具体看本文的分析部分（我给出了较为详细的比较）。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>本文利用低频NeRF所提供的geometry prior对稀疏视角输入时的高频NeRF进行约束，解决稀疏视角时欠约束而导致高频NeRF的geometry出现噪点/局外点的情况，具体是通过两个loss，其中一个是empty space loss。另外，将LFN(Light Field Network)引入作为中间模型，对Hi-NeRF的refinement过程加速，具体看本文的分析部分（我给出了较为详细的比较）。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Instant-NGP：多分辨率哈希编码]]></title>
+        <id>https://CDJ-happier.github.io/post/instant-ngp/</id>
+        <link href="https://CDJ-happier.github.io/post/instant-ngp/">
+        </link>
+        <updated>2023-01-05T04:17:10.000Z</updated>
+        <summary type="html"><![CDATA[<p>原始NeRF不管是训练速度还是推理速度都十分的慢，NVIDIA针对这个问题提出了instant-ngp，实现了训练5min就能得到和NeRF相当的结果。论文全称：Instant Neural Graphics Primitives with a Multiresolution Hash Encoding，主要的思路是：减小MLP的大小；为了保证性能，给MLP的输入是具有特征的向量，而不是单纯的位置加方向（或positional encoding）。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>原始NeRF不管是训练速度还是推理速度都十分的慢，NVIDIA针对这个问题提出了instant-ngp，实现了训练5min就能得到和NeRF相当的结果。论文全称：Instant Neural Graphics Primitives with a Multiresolution Hash Encoding，主要的思路是：减小MLP的大小；为了保证性能，给MLP的输入是具有特征的向量，而不是单纯的位置加方向（或positional encoding）。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[MVSNeRF-利用MVS实现快速且泛化的辐射场重建]]></title>
+        <id>https://CDJ-happier.github.io/post/MVSNeRF/</id>
+        <link href="https://CDJ-happier.github.io/post/MVSNeRF/">
+        </link>
+        <updated>2022-12-21T07:45:34.000Z</updated>
+        <summary type="html"><![CDATA[<p>MVSNeRF: Fast Generalizable Radiance Field Reconstruction from Multi-View Stereo，使用多视立体几何构建代价体P，并用3D CNN将代价体P编码为neural volume，后面用NeRF-like的方法回归color以及<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span></span></span></span>。其中的代价体P是一个3D volume，其中蕴含的是场景外观差异（使用了图像特征的方差作为代价体）。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>MVSNeRF: Fast Generalizable Radiance Field Reconstruction from Multi-View Stereo，使用多视立体几何构建代价体P，并用3D CNN将代价体P编码为neural volume，后面用NeRF-like的方法回归color以及<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>σ</mi></mrow><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">σ</span></span></span></span>。其中的代价体P是一个3D volume，其中蕴含的是场景外观差异（使用了图像特征的方差作为代价体）。</p>
+]]></content>
+    </entry>
+</feed>
